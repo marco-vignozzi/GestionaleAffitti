@@ -1,5 +1,10 @@
+package main;
+
+import dao.DatabaseDAO;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-    }
+        DatabaseDAO databaseDAO = new DatabaseDAO();
+        databaseDAO.connect();
+}
 }

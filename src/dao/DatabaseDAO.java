@@ -1,7 +1,7 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
+
 
 public class DatabaseDAO {
     private Connection connection;
@@ -19,6 +19,25 @@ public class DatabaseDAO {
             System.out.println("Errore di connessione al database: " + e.getMessage()); //e.printStackTrace();
         }
     }
+
+    // ritorna true se l'email è presente, false altrimenti
+    public boolean emailDisponibile(String mail){
+        if(connection == null){
+            connect();
+        }
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM utenti WHERE email = '" + mail + "'");
+            if(resultSet.next()){
+                return false; // se nella tabella non c'è ritorna null e quindi false
+            }
+            return true;
+        } catch(SQLException e) {
+            System.out.println("Errore di connessione al database: " + e.getMessage());     //e.printStackTrace();
+        }
+        return false;
+    }
+
 
 
 }

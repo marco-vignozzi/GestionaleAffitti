@@ -4,8 +4,9 @@ import java.time.LocalDate;
 
 
 public abstract class User {
-    public User(String nome, String cognome, String cf, String dataNascita, String cittàNascita, String residenza,
-                String email, String telefono) {
+    public User(String email, String pwd, String nome, String cognome, String cf, String dataNascita,
+                String cittàNascita, String residenza, String tel)
+    {
         nome = nome;
         cognome = cognome;
         cf = cf;
@@ -14,6 +15,7 @@ public abstract class User {
         residenza = residenza;
         email = email;
         telefono = telefono;
+        password = password;
     }
 
     private String nome;

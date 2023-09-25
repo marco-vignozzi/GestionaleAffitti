@@ -2,10 +2,10 @@ package model;
 
 
 public class Inquilino extends User{
-    public Inquilino(String nome, String cognome, String cf, String dataNascita, String cittàNascita, String residenza,
-                     String email,String tel,String idContratto)
+    public Inquilino(String email, String pwd, String nome, String cognome, String cf, String dataNascita,
+                     String cittàNascita, String residenza, String tel, String idContratto)
     {
-        super(nome, cognome, cf, dataNascita, cittàNascita, residenza, email, tel);
+        super(email, pwd, nome, cognome, cf, dataNascita, cittàNascita, residenza, tel);
         this.idContratto = idContratto;
     }
 

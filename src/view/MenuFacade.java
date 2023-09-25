@@ -1,10 +1,12 @@
 package view;
 
-import com.sun.jdi.request.InvalidRequestStateException;
-
 import java.util.Scanner;
+import controller.Controller;
+import model.Proprietario;
+
 
 public class MenuFacade {
+    private Controller controller;
     private Scanner scanner = new Scanner(System.in);
     int input;
 
@@ -20,23 +22,27 @@ public class MenuFacade {
             switch (input) {
                 case 1:
                     displayRegistrazione();
+                    continue;
                 case 2:
                     displayAccesso();
+                    continue;
                 case 3:
                     terminate = true;
+                    continue;
                 default:
                     System.out.println("Valore inserito invalido come te e tua madre");
             }
         }
     }
 
-    public void displayAccesso(){
+    public void displayAccesso() {
         System.out.println("Inserire mail e password per accedere");
-        System.out.println("Mail: ");
-        String utente = scanner.nextLine();
-        System.out.println("Password: ");
-        String password = scanner.nextLine();
 
+        System.out.print("Mail: ");
+        String utente = scanner.next();
+
+        System.out.print("Password: ");
+        String password = scanner.next();
     }
 
     public void displayRegistrazione() {
@@ -50,7 +56,31 @@ public class MenuFacade {
 
             switch (input) {
                 case 1:
-                    break;
+                    System.out.print("Email: ");
+                    String email = scanner.next();
+                    if(!controller.emailDisponibile(email)) {
+                        System.out.println("Email già associata a un account.");
+                        continue;
+                    }
+                    System.out.print("Password: ");
+                    String pwd = scanner.next();
+                    System.out.print("Nome: ");
+                    String nome = scanner.next();
+                    System.out.print("Cognome: ");
+                    String cognome = scanner.next();
+                    System.out.print("Codice fiscale: ");
+                    String cf = scanner.next();
+                    System.out.print("Data di nascita: ");
+                    String dataNascita = scanner.next();
+                    System.out.print("Città di nascita: ");
+                    String cittàNascita = scanner.next();
+                    System.out.print("Residenza: ");
+                    String residenza = scanner.next();
+                    System.out.print("Telefono: ");
+                    String tel = scanner.next();
+                    Proprietario p = new Proprietario(email, pwd, nome, cognome, cf, dataNascita, cittàNascita, residenza, tel);
+                    controller.aggiungiproprietario(p);
+                    continue;
                 case 2:
                     break;
                 case 3:

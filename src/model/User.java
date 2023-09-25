@@ -23,5 +23,7 @@ public abstract class User {
     private LocalDate dataNascita;
     private String email;
     private String telefono;
+    //TODO: capire se aggiungere o no la password, per ora non è inizializzata
+    private String password;
 
 }

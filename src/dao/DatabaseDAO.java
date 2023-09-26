@@ -21,17 +21,16 @@ public class DatabaseDAO {
     }
 
     // ritorna true se l'email è presente, false altrimenti
-    public boolean emailDisponibile(String mail){
+    public boolean emailDisponibile(String email){
         if(connection == null){
             connect();
         }
         try{
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM utenti WHERE email = '" + mail + "'");
-            if(resultSet.next()){
-                return false; // se nella tabella non c'è ritorna null e quindi false
-            }
-            return true;
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM proprietari JOIN inquilini WHERE email = '" + email + "'");  // join ON email?
+
+            return !resultSet.next();  // ritorna true se non ci sono elementi nella tabella
+
         } catch(SQLException e) {
             System.out.println("Errore di connessione al database: " + e.getMessage());     //e.printStackTrace();
         }

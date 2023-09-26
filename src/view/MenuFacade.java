@@ -2,32 +2,37 @@ package view;
 
 import java.util.Scanner;
 import controller.Controller;
+import model.Inquilino;
 import model.Proprietario;
+import model.User;
 
 
 public class MenuFacade {
-    private Controller controller;
-    private Scanner scanner = new Scanner(System.in);
-    int input;
-
     public void display() {
 //        Scanner scanner = new Scanner(System.in);
         System.out.println("Benvenuto nell'app numero 1 di deste e vigno!");
-        boolean terminate = false;
+        boolean termina = false;
 
-        while(!terminate) {
-            System.out.print("Digita 1 per registrarti, 2 per accedere o 3 per uscire: ");
-            int input = scanner.nextInt();
+        while(!termina) {
+            System.out.println("Digita uno dei seguenti numeri:");
+            System.out.println(" 1 - Accedi");
+            System.out.println(" 2 - Registrati");
+            System.out.println(" 3 - Visualizza immobili in affitto");
+            System.out.println(" 4 - Esci");
+            String input = scanner.next();
 
             switch (input) {
-                case 1:
-                    displayRegistrazione();
-                    continue;
-                case 2:
+                case "1":
                     displayAccesso();
                     continue;
-                case 3:
-                    terminate = true;
+                case "2":
+                    displayRegistrazione();
+                    continue;
+                case "3":
+                    controller.visualizzaImmobili();
+                    continue;
+                case "4":
+                    termina = true;
                     continue;
                 default:
                     System.out.println("Valore inserito invalido come te e tua madre");
@@ -36,13 +41,43 @@ public class MenuFacade {
     }
 
     public void displayAccesso() {
-        System.out.println("Inserire mail e password per accedere");
 
-        System.out.print("Mail: ");
-        String utente = scanner.next();
+        boolean termina = false;
+        char[] riprova = {'0'};            // inizializzo a 0, mi serve per metterci la scelta nell'else
 
-        System.out.print("Password: ");
-        String password = scanner.next();
+        while(!termina) {
+            System.out.println("Inserire email e password per accedere");
+
+            System.out.print("Email: ");
+            String email = scanner.next();
+
+            System.out.print("Password: ");
+            String password = scanner.next();
+
+            if (controller.isInquilino(email, password)) {
+
+                MenuInquilino menuInquilino = new MenuInquilino();
+                menuInquilino.display(controller.getNome(email, password), controller.getCognome(email, password));
+
+            } else if (controller.isProprietario(email, password)) {
+
+                MenuProprietario menuProprietario = new MenuProprietario();
+                menuProprietario.display();
+
+            } else {
+
+                System.out.println("Email o password errate.");
+                System.out.println("Riprovare? (Sì/no)");
+                // se si sceglie qualcosa che inizia con 's' si riprova, altrimenti si esce
+                // quindi scannerizzo l'input, lo rendo minuscolo e estraggo il carattere in prima posizione mettendolo in riprova
+                scanner.next().toLowerCase().getChars(0, 1, riprova, 0);
+                if(riprova[0] != 's') {
+                    termina = true;
+                }
+
+            }
+        }
+
     }
 
     public void displayRegistrazione() {
@@ -86,7 +121,13 @@ public class MenuFacade {
                 case 3:
                     terminate = true;
                 default:
+                    System.out.println("Valore inserito invalido come te e tua madre");
             }
         }
     }
+
+    private final Controller controller = new Controller();
+    private final Scanner scanner = new Scanner(System.in);
+    int input;
+
 }

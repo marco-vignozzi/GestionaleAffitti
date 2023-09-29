@@ -1,28 +1,34 @@
 package view;
 
 import controller.Controller;
-import model.Proprietario;
 
 import java.util.Scanner;
 
 public class MenuProprietario {
+
     // nome e cognome servono per ora solo a mostrare i nomi nel benvenuto
     // TODO: più avanti probabilmente servirà tutta la struttura dati Proprietario, come facciamo?
-    public void display(String nome, String cognome) {
+    Controller controller;
+    Scanner scanner = new Scanner(System.in);
+
+    public MenuProprietario(Controller controller) {
+        this.controller = controller;
+    }
+
+    public void display() {
         // TODO: finire di implementare
         boolean termina = false;
 
-        while(!termina) {
-            System.out.println("Bentornato " + nome + " " + cognome);
+        while (!termina) {
+            System.out.println("Bentornato " + controller.getNomeProprietario() + " " + controller.getCognomeProprietario() + "!");
             System.out.println("Scegli l'operazione da eseguire: ");
             System.out.println(" 1 - Aggiungi inquilino");
             System.out.println(" 2 - Aggiungi contratto");
             System.out.println(" 3 - Aggiungi immobile");
-            System.out.println(" 5 - Visualizza inquilini");
-            System.out.println(" 6 - Visualizza/modifica immobili");
+            System.out.println(" 4 - Visualizza inquilini");
+            System.out.println(" 5 - Visualizza/modifica immobili");
             System.out.println(" 6 - Visualizza/modifica contratti");
-            System.out.println(" 7 - Visualizza resoconto pagamenti");
-            System.out.println(" 8 - Modifica immobile");
+            //System.out.println(" 7 - Visualizza resoconto pagamenti");
             System.out.println(" 0 - Chiudi programma");
 
 
@@ -30,16 +36,24 @@ public class MenuProprietario {
 
             switch (input) {
                 case "1":
-                    controller.pagaAffitto();
+                    displayAggiungiInquilino();
                     continue;
                 case "2":
-                    controller.visualizzaContratto();
+                    displayAggiungiContratto();
                     continue;
                 case "3":
-                    controller.visualizzaNotifiche();
+                    displayAggiungiImmobile();
                     continue;
                 case "4":
-                    System.out.println("Arrivederci");
+                    displayVisualizzaInquilini();
+                    continue;
+                case "5":
+                    displayVisualizzaImmobili();
+                    continue;
+                case "6":
+                    displayVisualizzaContratti();
+                    continue;
+                case "0":
                     termina = true;
                     continue;
                 default:
@@ -48,7 +62,22 @@ public class MenuProprietario {
         }
     }
 
-    Controller controller = new Controller();
-    Scanner scanner = new Scanner(System.in);
+    private void displayVisualizzaContratti() {
+    }
+
+    private void displayVisualizzaImmobili() {
+    }
+
+    private void displayVisualizzaInquilini() {
+    }
+
+    private void displayAggiungiImmobile() {
+    }
+
+    private void displayAggiungiContratto() {
+    }
+
+    private void displayAggiungiInquilino() {
+    }
 
 }

@@ -4,8 +4,42 @@ import java.sql.*;
 
 
 public class DatabaseDAO {
-    private Connection connection;
+    protected Connection connection = null;
+/*
+    // CRUD API per creare le tabelle la prima volta
 
+    public static final String CREATE_UTENTI = "CREATE TABLE IF NOT EXISTS utenti " +
+            "    id INT AUTO_INCREMENT PRIMARY KEY, " +
+            "    nome VARCHAR(255)," +
+            "    cognome VARCHAR(255)," +
+            "    eta INT" +
+            ");";
+    public static final String CREATE_INQUILINI = "";
+    public static final String CREATE_IMMOBILI = "";
+    public static final String CREATE_CONTRATTI = "";
+
+    public DatabaseDAO() {
+        connect();
+        /*DatabaseMetaData dbm = null;
+        try {
+        /*
+            dbm = connection.getMetaData();
+            // controllo se esiste la tabella "utenti"
+            ResultSet tables = dbm.getTables(null, null, "utenti", null);
+            if (!tables.next()) {
+                // se non esiste la creo
+                PreparedStatement stmt = connection.prepareStatement(CREATE_UTENTI);
+                stmt.executeQuery();
+            }
+
+            PreparedStatement stmt = connection.prepareStatement(CREATE_UTENTI);
+            stmt.executeQuery();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+*/
     public void connect() {
         System.out.println("Connessione al database...");
         try{
@@ -21,21 +55,7 @@ public class DatabaseDAO {
     }
 
     // ritorna true se l'email è presente, false altrimenti
-    public boolean emailDisponibile(String email){
-        if(connection == null){
-            connect();
-        }
-        try{
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM proprietari JOIN inquilini WHERE email = '" + email + "'");  // join ON email?
 
-            return !resultSet.next();  // ritorna true se non ci sono elementi nella tabella
-
-        } catch(SQLException e) {
-            System.out.println("Errore di connessione al database: " + e.getMessage());     //e.printStackTrace();
-        }
-        return false;
-    }
 
 
 

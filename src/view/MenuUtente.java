@@ -4,14 +4,14 @@ import controller.Controller;
 
 import java.util.Scanner;
 
-public class MenuProprietario {
+public class MenuUtente {
 
     // nome e cognome servono per ora solo a mostrare i nomi nel benvenuto
     // TODO: più avanti probabilmente servirà tutta la struttura dati Proprietario, come facciamo?
     Controller controller;
     Scanner scanner = new Scanner(System.in);
 
-    public MenuProprietario(Controller controller) {
+    public MenuUtente(Controller controller) {
         this.controller = controller;
     }
 

@@ -9,18 +9,18 @@ import model.Proprietario;
 
 
 public class MenuFacade {
+
+    private final Controller controller = new Controller();
+    private final Scanner scanner = new Scanner(System.in);
+    int input;
+
     public void display() {
-//        Scanner scanner = new Scanner(System.in);
+
         System.out.println("Benvenuto nell'app numero 1 di deste e vigno!");
         boolean termina = false;
 
-<<<<<<< HEAD
-        while (!termina) {
-            System.out.println("Digita uno dei seguenti numeri:");
-=======
         while(!termina) {
             System.out.println("Digita uno dei seguenti numeri per scegliere l'operazione:");
->>>>>>> a5e0514 (Pre rebase)
             System.out.println(" 1 - Accedi");
             System.out.println(" 2 - Registra nuovo utente");
             System.out.println(" 0 - Esci");
@@ -59,6 +59,8 @@ public class MenuFacade {
             if (controller.utenteValido(email, password)) {
 
                 controller.setProprietario(email, password);
+                MenuUtente menuUtente = new MenuUtente(controller);
+                menuUtente.display();
 
             } else {
 
@@ -73,17 +75,25 @@ public class MenuFacade {
 
             }
         }
-
     }
 
     public void displayRegistrazione() {
+
         boolean verificato = false;
+        char[] riprova = {'0'};
+
         String email = "";
         while (!verificato) {
             System.out.print("Email: ");
             email = scanner.next();
             if (!controller.emailDisponibile(email)) {
-                System.out.println("Email già associata a un account.");
+                System.out.println("Email già associata a un account. Riprovare? (Sì/no)");
+                // Ho aggiunto lo stesso giochino del riprova per evitare loop infiniti di email non disponibili
+                scanner.next().toLowerCase().getChars(0, 1, riprova, 0);
+                if (riprova[0] != 's') {
+                    return;
+                };
+
             } else {
                 verificato = true;
             }
@@ -95,16 +105,10 @@ public class MenuFacade {
         System.out.print("Cognome: ");
         String cognome = scanner.next();
         System.out.print("Codice fiscale: ");
-        String cf = scanner.next();
+        String cf = scanner.next(); // FIXME: se il codice fiscale è più lungo di 16 crasha tutto
 
         Proprietario p = new Proprietario(email, pwd, nome, cognome, cf);
         controller.aggiungiUtente(p);
-        // TODO: implementare dao.aggiungiProprietario(p);
     }
-
-
-    private final Controller controller = new Controller();
-    private final Scanner scanner = new Scanner(System.in);
-    int input;
 
 }

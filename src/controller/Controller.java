@@ -70,11 +70,10 @@ public class Controller {
     }
 
     public void setProprietario(String email, String password) {
-        //TODO: implementare
+        proprietario = pdao.getUtente(email, password);
     }
 
     public boolean utenteValido(String email, String password) {
-        //TODO: implementare
-        return false;
+        return pdao.verificaUtente(email, password);
     }
 }

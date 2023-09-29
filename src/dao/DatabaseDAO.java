@@ -54,9 +54,4 @@ public class DatabaseDAO {
         }
     }
 
-    // ritorna true se l'email è presente, false altrimenti
-
-
-
-
 }

@@ -14,8 +14,13 @@ public class MenuFacade {
         System.out.println("Benvenuto nell'app numero 1 di deste e vigno!");
         boolean termina = false;
 
+<<<<<<< HEAD
         while (!termina) {
             System.out.println("Digita uno dei seguenti numeri:");
+=======
+        while(!termina) {
+            System.out.println("Digita uno dei seguenti numeri per scegliere l'operazione:");
+>>>>>>> a5e0514 (Pre rebase)
             System.out.println(" 1 - Accedi");
             System.out.println(" 2 - Registra nuovo utente");
             System.out.println(" 0 - Esci");

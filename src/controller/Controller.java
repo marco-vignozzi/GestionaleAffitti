@@ -2,6 +2,7 @@ package controller;
 
 
 import dao.ContrattoDAO;
+import dao.ImmobileDAO;
 import dao.InquilinoDAO;
 import dao.ProprietarioDAO;
 import model.Contratto;
@@ -15,14 +16,14 @@ public class Controller {
     private ProprietarioDAO proprietarioDao;
     private InquilinoDAO inquilinoDao;
     private Proprietario proprietario;
+    private ImmobileDAO immobileDAO;
 
 
     public Controller() {
-
         contrattoDao = new ContrattoDAO();
         proprietarioDao = new ProprietarioDAO();
         inquilinoDao = new InquilinoDAO();
-
+        immobileDAO = new ImmobileDAO();
     }
 
     // qui passo tipo utente come parametro per decidere se è un proprietario o un inquilino
@@ -49,10 +50,6 @@ public class Controller {
         return false;       // TODO: implementare
     }
 
-    public boolean isProprietario(String email, String password) {
-        return false;       // TODO: implementare
-    }
-
     public String getCognomeProprietario() {
         return proprietario.getCognome();
     }
@@ -65,22 +62,7 @@ public class Controller {
         return proprietario.getCf();
     }
 
-    // questo metodo permette di pagare l'affitto dall'app
-    public void pagaAffitto() {
-        // TODO: implementare
-    }
-
-    // questo metodo permette di visualizzare il contratto di affitto
-    public void visualizzaContratto() {
-        // TODO: implementare
-    }
-
-    // questo metodo permette di visualizzare le notifiche
-    public void visualizzaNotifiche() {
-        // TODO: implementare
-    }
-
-    // questo metodo permette di visualizzare tutti gli immobili disponibili per l'affitto
+    // questo metodo permette di visualizzare tutti gli immobili
     public void visualizzaImmobili() {
         // TODO: implementare
     }
@@ -93,4 +75,14 @@ public class Controller {
         return proprietarioDao.verificaUtente(email, password);
     }
 
+    public void visualizzaInquilini() {
+        inquilinoDao.visualizzaInquilini();
+    }
+    public void visualizzaContratti() {
+        contrattoDao.visualizzaContratti();
+    }
+
+    public void rimuoviInquilino(String idInquilino) {
+        inquilinoDao.rimuoviInquilino(idInquilino);
+    }
 }

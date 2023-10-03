@@ -27,12 +27,11 @@ public class MenuUtente {
             System.out.println(" 1 - Aggiungi inquilino");
             System.out.println(" 2 - Aggiungi contratto");
             System.out.println(" 3 - Aggiungi immobile");
-            System.out.println(" 4 - Visualizza inquilini");
+            System.out.println(" 4 - Visualizza/modifica inquilini");
             System.out.println(" 5 - Visualizza/modifica immobili");
             System.out.println(" 6 - Visualizza/modifica contratti");
             //System.out.println(" 7 - Visualizza resoconto pagamenti");
             System.out.println(" x - Torna al login");
-
 
             String input = scanner.next();
 
@@ -65,12 +64,57 @@ public class MenuUtente {
     }
 
     private void displayVisualizzaContratti() {
+        controller.visualizzaContratti();
     }
 
     private void displayVisualizzaImmobili() {
     }
 
     private void displayVisualizzaInquilini() {
+        controller.visualizzaInquilini();
+        boolean termina = false;
+
+        while(!termina) {
+            System.out.println("Vuoi modificare o rimuovere un inquilino?");
+            System.out.println(" 1 - Modifica");
+            System.out.println(" 2 - Rimuovi");
+            System.out.println(" x - Indietro");
+
+            String idInquilino;
+            String input = scanner.next();
+            String conferma;
+
+            switch (input) {
+                case "1":
+                    System.out.println("Inserire l'ID dell'inquilino che desideri modificare");
+                    System.out.print("ID: ");
+                    idInquilino = scanner.next();
+                    displayModificaInquilino();
+                    break;
+                case "2":
+                    System.out.println("Inserire l'ID dell'inquilino che desideri rimuovere");
+                    System.out.print("ID: ");
+                    idInquilino = scanner.next();
+
+                    System.out.print("Desideri rimuovere definitivamente l'inquilino con ID " + idInquilino +
+                            " e il relativo contratto? (S/n)");
+                    conferma = scanner.next();
+                    if(conferma == "s" || conferma == "S") {
+                        controller.rimuoviInquilino(idInquilino);
+                        System.out.println("Rimosso inquilino con iD " + idInquilino);
+                    }
+                    break;
+                case "x":
+                    termina = true;
+                    break;
+                default:
+                    System.out.println("Valore inserito invalido come te e tua madre");
+            }
+        }
+        // TODO: aggiungi operazioni di modifica
+    }
+
+    private void displayModificaInquilino() {
     }
 
     private void displayAggiungiImmobile() {
@@ -93,14 +137,15 @@ public class MenuUtente {
             String dataFine = scanner.next();
             System.out.print("Inserisci il canone mensile: ");
             float canone = scanner.nextFloat();
+
             System.out.println("Confermi i dati inseriti? (s/n)");
             String confermaInput = scanner.next();
+
             if (confermaInput.equals("s")) {
                 Contratto contratto= new Contratto(idImmobile, cfInquilino, cfProprietario, dataInizio, dataFine, canone);
                 controller.aggiungiContratto(contratto);
                 conferma = true;
             }
-
         }
     }
 

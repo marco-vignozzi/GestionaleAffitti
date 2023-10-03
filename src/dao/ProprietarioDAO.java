@@ -6,13 +6,11 @@ import java.sql.*;
 
 public class ProprietarioDAO extends DatabaseDAO {
 
-    // DDL CRUD APIs
+    // CRUD APIs
     private static final String INSERT_USER = "INSERT INTO utenti" +
             " (cf, nome, cognome, email, password) VALUES " + " (?, ?, ?, ?, ?);";
     private static final String SELECT_ALL_USERS_WITH_MAIL = "SELECT * FROM utenti WHERE email = ?";
     private static final String SELECT_USER = "SELECT * FROM utenti WHERE email = ? and password = ?";
-
-    // DML CRUD APIs
     private static final String CREATE_UTENTI = "CREATE TABLE utenti (" +
             "cf VARCHAR(255) NOT NULL PRIMARY KEY ," +
             "nome VARCHAR(255) NOT NULL," +

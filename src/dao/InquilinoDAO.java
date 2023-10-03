@@ -1,20 +1,15 @@
 package dao;
 
 import model.Inquilino;
-
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class InquilinoDAO extends DatabaseDAO{
-    // DDL CRUD APIs
+    // CRUD APIs
     private static final String INSERT_INQUILINO = "INSERT INTO inquilini" +
             " (cf, nome, cognome, data_di_nascita, città_di_nascita, residenza, telefono, email, pagato) VALUES " +
             " (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
-    // DML CRUD API's
-    private static final String CREATE_UTENTI = "CREATE TABLE inquilini (" +
+    private static final String SELECT_ALL_INQUILINI = "SELECT * FROM inquilini;";
+    private static final String CREATE_INQUILINI = "CREATE TABLE inquilini (" +
             "cf VARCHAR(16) NOT NULL PRIMARY KEY ," +
             "nome VARCHAR(255) NOT NULL," +
             "cognome VARCHAR(255) NOT NULL," +
@@ -25,6 +20,8 @@ public class InquilinoDAO extends DatabaseDAO{
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
             "pagato BOOLEAN NOT NULL" +
             ")";
+    private static final String DELETE_INQUILINO = "DELETE FROM inquilini WHERE id = ?";
+
 
     public InquilinoDAO() {
         super.connect();
@@ -36,7 +33,7 @@ public class InquilinoDAO extends DatabaseDAO{
             DatabaseMetaData metadata= connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "inquilini", null);
             if (!resultSet.next()) {
-                PreparedStatement statementCreazione = connection.prepareStatement(CREATE_UTENTI);
+                PreparedStatement statementCreazione = connection.prepareStatement(CREATE_INQUILINI);
                 statementCreazione.executeUpdate();
             }
         }catch(SQLException e){
@@ -63,6 +60,23 @@ public class InquilinoDAO extends DatabaseDAO{
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void visualizzaInquilini() {
+        if (connection == null) {
+            connect();
+        }
+        try{
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_INQUILINI);
+            ResultSet rs = statement.executeQuery();
+            mostraTabella(rs);
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void rimuoviInquilino(String id) {
+
     }
 
 }

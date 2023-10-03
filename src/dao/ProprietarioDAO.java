@@ -6,12 +6,13 @@ import java.sql.*;
 
 public class ProprietarioDAO extends DatabaseDAO {
 
-    // CRUD APIs
+    // DDL CRUD APIs
     private static final String INSERT_USER = "INSERT INTO utenti" +
-            " (cf, nome, cognome, email, password) VALUES " + " (?, ?, ?, ?, ?);";             // FIXME: cambia mail in email, dhaaai
-    private static final String SELECT_ALL_USERS_WITH_MAIL = "SELECT * FROM utenti WHERE email = ?";        // CAMBIALA DHAAAAAI!
+            " (cf, nome, cognome, email, password) VALUES " + " (?, ?, ?, ?, ?);";
+    private static final String SELECT_ALL_USERS_WITH_MAIL = "SELECT * FROM utenti WHERE email = ?";
     private static final String SELECT_USER = "SELECT * FROM utenti WHERE email = ? and password = ?";
 
+    // DML CRUD APIs
     private static final String CREATE_UTENTI = "CREATE TABLE utenti (" +
             "cf VARCHAR(255) NOT NULL PRIMARY KEY ," +
             "nome VARCHAR(255) NOT NULL," +
@@ -29,7 +30,6 @@ public class ProprietarioDAO extends DatabaseDAO {
 
     public void creaTabella(){
         try{
-
             DatabaseMetaData metadata= connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "utenti", null);
             if (!resultSet.next()) {
@@ -40,6 +40,7 @@ public class ProprietarioDAO extends DatabaseDAO {
             throw new RuntimeException(e);
         }
     }
+
     public void aggiungiUtente(Proprietario p) {
         if (connection == null) {
             connect();

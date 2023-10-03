@@ -23,7 +23,7 @@ public class MenuFacade {
             System.out.println("Digita uno dei seguenti numeri per scegliere l'operazione:");
             System.out.println(" 1 - Accedi");
             System.out.println(" 2 - Registra nuovo utente");
-            System.out.println(" 0 - Esci");
+            System.out.println(" X - Esci");
             String input = scanner.next();
 
             switch (input) {
@@ -33,7 +33,7 @@ public class MenuFacade {
                 case "2":
                     displayRegistrazione();
                     continue;
-                case "0":
+                case "x":
                     termina = true;
                     continue;
                 default:
@@ -100,8 +100,9 @@ public class MenuFacade {
                 verificato = true;
             }
         }
-        System.out.print("Password: ");
 
+
+        System.out.print("Password: ");
         String pwd = scanner.next();
         scanner.nextLine();
         System.out.print("Nome: ");

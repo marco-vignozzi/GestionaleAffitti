@@ -16,7 +16,7 @@ public class Controller {
 
 
     public Controller() {
-        pdao= new ProprietarioDAO();
+        pdao = new ProprietarioDAO();
     }
 
     // qui passo tipo utente come parametro per decidere se è un proprietario o un inquilino
@@ -26,6 +26,7 @@ public class Controller {
     }
 
     public boolean emailDisponibile(String email) {
+        pdao.creazioneTabellaUtenti(); //MESSO QUI MA BISOGNA PARLARE SU QUESTA EMAIL DISPONIBILE
         return pdao.emailDisponibile(email);
     }
 
@@ -42,11 +43,11 @@ public class Controller {
     }
 
     public String getCognomeProprietario() {
-        return null;        // TODO: implementare
+        return proprietario.getCognome();        // TODO: implementare
     }
 
     public String getNomeProprietario() {
-        return null;        // TODO: implementare
+        return proprietario.getNome();        // TODO: implementare
     }
 
     // questo metodo permette di pagare l'affitto dall'app
@@ -70,10 +71,14 @@ public class Controller {
     }
 
     public void setProprietario(String email, String password) {
+
         proprietario = pdao.getUtente(email, password);
     }
 
     public boolean utenteValido(String email, String password) {
         return pdao.verificaUtente(email, password);
+
+
     }
+
 }

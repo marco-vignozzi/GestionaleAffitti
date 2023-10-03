@@ -58,9 +58,11 @@ public class MenuFacade {
 
             if (controller.utenteValido(email, password)) {
 
+
                 controller.setProprietario(email, password);
                 MenuUtente menuUtente = new MenuUtente(controller);
                 menuUtente.display();
+
 
             } else {
 
@@ -99,9 +101,12 @@ public class MenuFacade {
             }
         }
         System.out.print("Password: ");
+
         String pwd = scanner.nextLine();
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
+
+
         System.out.print("Cognome: ");
         String cognome = scanner.nextLine();
         System.out.print("Codice fiscale: ");
@@ -109,7 +114,13 @@ public class MenuFacade {
 
         Proprietario p = new Proprietario(email, pwd, nome, cognome, cf);
         controller.aggiungiUtente(p);
+
         System.out.println("Registrazione avvenuta con successo");
+
     }
 
-}
+
+
+    }
+
+

@@ -2,10 +2,7 @@ package dao;
 
 import model.Proprietario;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ProprietarioDAO extends DatabaseDAO {
 
@@ -15,10 +12,32 @@ public class ProprietarioDAO extends DatabaseDAO {
     private static final String SELECT_ALL_USERS_WITH_MAIL = "SELECT * FROM utenti WHERE email = ?";        // CAMBIALA DHAAAAAI!
     private static final String SELECT_USER = "SELECT * FROM utenti WHERE email = ? and password = ?";
 
+    private static final String CREATE_UTENTI = "CREATE TABLE utenti (" +
+            "id INT AUTO_INCREMENT PRIMARY KEY," +  // questo campo ha degli indici (automatici allora primary key)
+            "cf VARCHAR(255) NOT NULL UNIQUE ," +
+            "nome VARCHAR(255) NOT NULL," +
+            "cognome VARCHAR(255) NOT NULL," +
+            "mail VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
+            "password VARCHAR(255) NOT NULL" +
+            ")";
+
+
     public ProprietarioDAO() {
         super.connect();
     }
+    public void creazioneTabellaUtenti(){
+        try{
 
+            DatabaseMetaData metadata= connection.getMetaData();
+            ResultSet resultSet = metadata.getTables(null, null, "utenti", null);
+            if (!resultSet.next()) {
+                PreparedStatement statementcreazione = connection.prepareStatement(CREATE_UTENTI);
+                statementcreazione.executeUpdate();
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
     public void aggiungiUtente(Proprietario p) {
         if (connection == null) {
             connect();
@@ -37,6 +56,7 @@ public class ProprietarioDAO extends DatabaseDAO {
         }
     }
 
+
     public boolean emailDisponibile(String email){
         if(connection == null){
             connect();
@@ -53,6 +73,7 @@ public class ProprietarioDAO extends DatabaseDAO {
         }
         return false;
     }
+
 
     public boolean verificaUtente(String email, String password) {
         try{
@@ -86,5 +107,7 @@ public class ProprietarioDAO extends DatabaseDAO {
             System.out.println("Errore di connessione al database: " + e.getMessage());     //e.printStackTrace();
         }
         return null; // se avviene qualche problema ritorno null
+
     }
 }
+

@@ -40,6 +40,7 @@ public class DatabaseDAO {
         }
     }
 */
+
     public void connect() {
         System.out.println("Connessione al database...");
         try{

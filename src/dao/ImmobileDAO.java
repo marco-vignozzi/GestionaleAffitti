@@ -1,2 +1,4 @@
-package dao;public class ImmobileDAO {
+package dao;
+
+public class ImmobileDAO {
 }

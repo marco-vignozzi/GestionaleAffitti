@@ -31,7 +31,7 @@ public class MenuUtente {
             System.out.println(" 5 - Visualizza/modifica immobili");
             System.out.println(" 6 - Visualizza/modifica contratti");
             //System.out.println(" 7 - Visualizza resoconto pagamenti");
-            System.out.println(" x - Chiudi programma");
+            System.out.println(" x - Torna al login");
 
 
             String input = scanner.next();
@@ -101,32 +101,41 @@ public class MenuUtente {
                 conferma = true;
             }
 
-    }
+        }
     }
 
     private void displayAggiungiInquilino() {
-        System.out.println("Inserire i seguenti dati");
-        System.out.print("Nome: ");
-        String nome = scanner.next();
-        scanner.nextLine();
-        System.out.print("Cognome: ");
-        String cognome = scanner.nextLine();
-        System.out.print("Codice fiscale: ");
-        String cf = scanner.nextLine();
-        System.out.print("Data di nascita (formato: YYYY-MM-DD): ");
-        String dataNascita = scanner.nextLine();
-        System.out.print("Città di nascita: ");
-        String cittàNascita = scanner.nextLine();
-        System.out.print("Residenza: ");
-        String residenza = scanner.nextLine();
-        System.out.print("Telefono: ");
-        String telefono = scanner.nextLine();
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
+        boolean conferma = false;
+        while (!conferma) {
+            System.out.println("Inserire i seguenti dati");
+            System.out.print("Nome: ");
+            String nome = scanner.next();
+            scanner.nextLine();
+            System.out.print("Cognome: ");
+            String cognome = scanner.nextLine();
+            System.out.print("Codice fiscale: ");
+            String cf = scanner.nextLine();
+            System.out.print("Data di nascita (formato: YYYY-MM-DD): ");
+            String dataNascita = scanner.nextLine();
+            System.out.print("Città di nascita: ");
+            String cittàNascita = scanner.nextLine();
+            System.out.print("Residenza: ");
+            String residenza = scanner.nextLine();
+            System.out.print("Telefono: ");
+            String telefono = scanner.nextLine();
+            System.out.print("Email: ");
+            String email = scanner.nextLine();
+            
+            System.out.println("Confermi i dati inseriti? (s/n)");
+            String confermaInput = scanner.next();
 
-        Inquilino i = new Inquilino(cf, nome, cognome, dataNascita, cittàNascita, residenza, telefono, email);
-        controller.aggiungiInquilino(i);
-        System.out.println("Inquilino aggiunto con successo.");
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                Inquilino i = new Inquilino(cf, nome, cognome, dataNascita, cittàNascita, residenza, telefono, email);
+                controller.aggiungiInquilino(i);
+                System.out.println("Inquilino aggiunto con successo.");
+                conferma = true;
+            }
+        }
     }
 
 }

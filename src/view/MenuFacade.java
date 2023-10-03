@@ -99,16 +99,17 @@ public class MenuFacade {
             }
         }
         System.out.print("Password: ");
-        String pwd = scanner.next();
+        String pwd = scanner.nextLine();
         System.out.print("Nome: ");
-        String nome = scanner.next();
+        String nome = scanner.nextLine();
         System.out.print("Cognome: ");
-        String cognome = scanner.next();
+        String cognome = scanner.nextLine();
         System.out.print("Codice fiscale: ");
         String cf = scanner.next(); // FIXME: se il codice fiscale è più lungo di 16 crasha tutto
 
         Proprietario p = new Proprietario(email, pwd, nome, cognome, cf);
         controller.aggiungiUtente(p);
+        System.out.println("Registrazione avvenuta con successo");
     }
 
 }

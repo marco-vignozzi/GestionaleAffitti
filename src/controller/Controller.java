@@ -26,7 +26,6 @@ public class Controller {
     }
 
     public boolean emailDisponibile(String email) {
-        pdao.creazioneTabellaUtenti(); //MESSO QUI MA BISOGNA PARLARE SU QUESTA EMAIL DISPONIBILE
         return pdao.emailDisponibile(email);
     }
 

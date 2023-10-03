@@ -3,7 +3,7 @@ package dao;
 import java.sql.*;
 
 
-public class DatabaseDAO {
+public abstract class DatabaseDAO {
     protected Connection connection = null;
 /*
     // CRUD API per creare le tabelle la prima volta
@@ -54,5 +54,6 @@ public class DatabaseDAO {
             System.out.println("Errore di connessione al database: " + e.getMessage()); //e.printStackTrace();
         }
     }
+    protected abstract void creaTabella();
 
 }

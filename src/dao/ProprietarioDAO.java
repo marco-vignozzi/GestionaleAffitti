@@ -17,15 +17,18 @@ public class ProprietarioDAO extends DatabaseDAO {
             "cf VARCHAR(255) NOT NULL UNIQUE ," +
             "nome VARCHAR(255) NOT NULL," +
             "cognome VARCHAR(255) NOT NULL," +
-            "mail VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
+            "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
             "password VARCHAR(255) NOT NULL" +
             ")";
 
 
     public ProprietarioDAO() {
         super.connect();
+        creaTabella();
     }
-    public void creazioneTabellaUtenti(){
+
+
+    public void creaTabella(){
         try{
 
             DatabaseMetaData metadata= connection.getMetaData();

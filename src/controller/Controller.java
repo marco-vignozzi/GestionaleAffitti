@@ -1,6 +1,6 @@
 package controller;
 
-import dao.DatabaseDAO;
+import dao.InquilinoDAO;
 import dao.ProprietarioDAO;
 import model.Inquilino;
 import model.Proprietario;
@@ -9,28 +9,31 @@ import java.util.Scanner;
 
 public class Controller {
     private Scanner scanner;
-    private ProprietarioDAO pdao;
-    //private InquilinoDAO idao;
-    //private ContrattoDAO cdao;
+    private ProprietarioDAO proprietarioDao;
+    private InquilinoDAO inquilinoDao;
+    //private ContrattoDAO contrattoDao;
+    //private ImmobileDao immobileDao;
+
     private Proprietario proprietario;
 
 
     public Controller() {
-        pdao = new ProprietarioDAO();
+        proprietarioDao = new ProprietarioDAO();
+        inquilinoDao = new InquilinoDAO();
     }
 
     // qui passo tipo utente come parametro per decidere se è un proprietario o un inquilino
     public void aggiungiUtente(Proprietario p) {
-        proprietario = p;
-        pdao.aggiungiUtente(p);
+        proprietario = p;           // TODO: capire se serve
+        proprietarioDao.aggiungiUtente(p);
     }
 
     public boolean emailDisponibile(String email) {
-        return pdao.emailDisponibile(email);
+        return proprietarioDao.emailDisponibile(email);
     }
 
-    public void aggiungiinquilino(Inquilino inquilino) {
-        // TODO: implementare
+    public void aggiungiInquilino(Inquilino inquilino) {
+        inquilinoDao.aggiungiInquilino(inquilino);
     }
 
     public boolean isInquilino(String email, String password) {
@@ -70,14 +73,11 @@ public class Controller {
     }
 
     public void setProprietario(String email, String password) {
-
-        proprietario = pdao.getUtente(email, password);
+        proprietario = proprietarioDao.getUtente(email, password);
     }
 
     public boolean utenteValido(String email, String password) {
-        return pdao.verificaUtente(email, password);
-
-
+        return proprietarioDao.verificaUtente(email, password);
     }
 
 }

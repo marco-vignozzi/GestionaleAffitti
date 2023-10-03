@@ -1,13 +1,13 @@
 package view;
 
 import controller.Controller;
+import dao.InquilinoDAO;
+import model.Inquilino;
 
 import java.util.Scanner;
 
 public class MenuUtente {
 
-    // nome e cognome servono per ora solo a mostrare i nomi nel benvenuto
-    // TODO: più avanti probabilmente servirà tutta la struttura dati Proprietario, come facciamo?
     Controller controller;
     Scanner scanner = new Scanner(System.in);
 
@@ -29,7 +29,7 @@ public class MenuUtente {
             System.out.println(" 5 - Visualizza/modifica immobili");
             System.out.println(" 6 - Visualizza/modifica contratti");
             //System.out.println(" 7 - Visualizza resoconto pagamenti");
-            System.out.println(" 0 - Chiudi programma");
+            System.out.println(" x - Chiudi programma");
 
 
             String input = scanner.next();
@@ -78,6 +78,28 @@ public class MenuUtente {
     }
 
     private void displayAggiungiInquilino() {
+        System.out.println("Inserire i seguenti dati");
+        System.out.print("Nome: ");
+        String nome = scanner.next();
+        scanner.nextLine();
+        System.out.print("Cognome: ");
+        String cognome = scanner.nextLine();
+        System.out.print("Codice fiscale: ");
+        String cf = scanner.nextLine();
+        System.out.print("Data di nascita (formato: YYYY-MM-DD): ");
+        String dataNascita = scanner.nextLine();
+        System.out.print("Città di nascita: ");
+        String cittàNascita = scanner.nextLine();
+        System.out.print("Residenza: ");
+        String residenza = scanner.nextLine();
+        System.out.print("Telefono: ");
+        String telefono = scanner.nextLine();
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+
+        Inquilino i = new Inquilino(cf, nome, cognome, dataNascita, cittàNascita, residenza, telefono, email);
+        controller.aggiungiInquilino(i);
+        System.out.println("Inquilino aggiunto con successo.");
     }
 
 }

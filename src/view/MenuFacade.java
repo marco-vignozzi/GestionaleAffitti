@@ -102,11 +102,10 @@ public class MenuFacade {
         }
         System.out.print("Password: ");
 
-        String pwd = scanner.nextLine();
+        String pwd = scanner.next();
+        scanner.nextLine();
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
-
-
         System.out.print("Cognome: ");
         String cognome = scanner.nextLine();
         System.out.print("Codice fiscale: ");

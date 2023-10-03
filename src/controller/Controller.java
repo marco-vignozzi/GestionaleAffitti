@@ -1,7 +1,9 @@
 package controller;
 
+import dao.ContrattoDAO;
 import dao.DatabaseDAO;
 import dao.ProprietarioDAO;
+import model.Contratto;
 import model.Inquilino;
 import model.Proprietario;
 
@@ -11,12 +13,14 @@ public class Controller {
     private Scanner scanner;
     private ProprietarioDAO pdao;
     //private InquilinoDAO idao;
-    //private ContrattoDAO cdao;
+    private ContrattoDAO contrattodao;
     private Proprietario proprietario;
 
 
     public Controller() {
         pdao = new ProprietarioDAO();
+        //idao = new InquilinoDAO();
+        contrattodao = new ContrattoDAO();
     }
 
     // qui passo tipo utente come parametro per decidere se è un proprietario o un inquilino
@@ -24,6 +28,12 @@ public class Controller {
         proprietario = p;
         pdao.aggiungiUtente(p);
     }
+
+    public void aggiungiContratto(Contratto c) {
+        contrattodao.aggiungiContratto(c);
+    }
+
+
 
     public boolean emailDisponibile(String email) {
         return pdao.emailDisponibile(email);
@@ -42,11 +52,15 @@ public class Controller {
     }
 
     public String getCognomeProprietario() {
-        return proprietario.getCognome();        // TODO: implementare
+        return proprietario.getCognome();
     }
 
     public String getNomeProprietario() {
-        return proprietario.getNome();        // TODO: implementare
+        return proprietario.getNome();
+    }
+
+    public String getCfProprietario() {
+        return proprietario.getCf();
     }
 
     // questo metodo permette di pagare l'affitto dall'app

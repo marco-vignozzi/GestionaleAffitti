@@ -13,8 +13,7 @@ public class ProprietarioDAO extends DatabaseDAO {
     private static final String SELECT_USER = "SELECT * FROM utenti WHERE email = ? and password = ?";
 
     private static final String CREATE_UTENTI = "CREATE TABLE utenti (" +
-            "id INT AUTO_INCREMENT PRIMARY KEY," +  // questo campo ha degli indici (automatici allora primary key)
-            "cf VARCHAR(255) NOT NULL UNIQUE ," +
+            "cf VARCHAR(255) NOT NULL PRIMARY KEY ," +
             "nome VARCHAR(255) NOT NULL," +
             "cognome VARCHAR(255) NOT NULL," +
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
@@ -47,7 +46,6 @@ public class ProprietarioDAO extends DatabaseDAO {
         }
         try{
             PreparedStatement statement = connection.prepareStatement(INSERT_USER);
-            System.out.println(p.getCf());
             statement.setString(1, p.getCf());
             statement.setString(2, p.getNome());
             statement.setString(3, p.getCognome());
@@ -99,10 +97,11 @@ public class ProprietarioDAO extends DatabaseDAO {
             statement.setString(1, email);
             statement.setString(2, password);
             ResultSet rs = statement.executeQuery();
+            rs.next();
 
             // creo il proprietario con i campi del result set
-            Proprietario p = new Proprietario(rs.getString("cf"), rs.getString("nome"), rs.getString("cognome"),
-                    rs.getString("email"), rs.getString("password"));
+            Proprietario p = new Proprietario(rs.getString("email"), rs.getString("password"), rs.getString("nome"),
+                    rs.getString("cognome"), rs.getString("cf"));
 
             return p;
 

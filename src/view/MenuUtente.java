@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import model.Contratto;
 
 import java.util.Scanner;
 
@@ -75,6 +76,31 @@ public class MenuUtente {
     }
 
     private void displayAggiungiContratto() {
+        boolean conferma=false;
+
+        while (!conferma) {
+            System.out.println("Inserisci i dati del contratto");
+            String cfProprietario = controller.getCfProprietario();
+            System.out.println("Il tuo codice fiscale è: " + cfProprietario);
+            System.out.print("Inserisci il codice fiscale dell'inquilino: ");
+            String cfInquilino = scanner.next();
+            System.out.print("Inserisci l'id dell'immobile: ");
+            String idImmobile = scanner.next();
+            System.out.print("Inserisci la data di inizio del contratto (formato: YYYY-MM-DD): ");
+            String dataInizio = scanner.next();
+            System.out.print("Inserisci la data di fine del contratto (formato: YYYY-MM-DD): ");
+            String dataFine = scanner.next();
+            System.out.print("Inserisci il canone mensile: ");
+            float canone = scanner.nextFloat();
+            System.out.println("Confermi i dati inseriti? (s/n)");
+            String confermaInput = scanner.next();
+            if (confermaInput.equals("s")) {
+                Contratto contratto= new Contratto(idImmobile, cfInquilino, cfProprietario, dataInizio, dataFine, canone);
+                controller.aggiungiContratto(contratto);
+                conferma = true;
+            }
+
+    }
     }
 
     private void displayAggiungiInquilino() {

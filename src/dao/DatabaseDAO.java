@@ -5,41 +5,6 @@ import java.sql.*;
 
 public abstract class DatabaseDAO {
     protected Connection connection = null;
-/*
-    // CRUD API per creare le tabelle la prima volta
-
-    public static final String CREATE_UTENTI = "CREATE TABLE IF NOT EXISTS utenti " +
-            "    id INT AUTO_INCREMENT PRIMARY KEY, " +
-            "    nome VARCHAR(255)," +
-            "    cognome VARCHAR(255)," +
-            "    eta INT" +
-            ");";
-    public static final String CREATE_INQUILINI = "";
-    public static final String CREATE_IMMOBILI = "";
-    public static final String CREATE_CONTRATTI = "";
-
-    public DatabaseDAO() {
-        connect();
-        /*DatabaseMetaData dbm = null;
-        try {
-        /*
-            dbm = connection.getMetaData();
-            // controllo se esiste la tabella "utenti"
-            ResultSet tables = dbm.getTables(null, null, "utenti", null);
-            if (!tables.next()) {
-                // se non esiste la creo
-                PreparedStatement stmt = connection.prepareStatement(CREATE_UTENTI);
-                stmt.executeQuery();
-            }
-
-            PreparedStatement stmt = connection.prepareStatement(CREATE_UTENTI);
-            stmt.executeQuery();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-*/
 
     public void connect() {
         System.out.println("Connessione al database...");

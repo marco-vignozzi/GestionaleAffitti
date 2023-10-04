@@ -64,7 +64,6 @@ public class MenuFacade {
                 termina = true;
 
             } else {
-
                 System.out.println("Email o password errate.");
                 System.out.println("Riprovare? (Sì/no)");
                 // se si sceglie qualcosa che inizia con 's' si riprova, altrimenti si esce

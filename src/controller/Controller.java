@@ -79,7 +79,7 @@ public class Controller {
     }
 
     public void rimuoviInquilino(String idInquilino) {
-        inquilinoDao.rimuoviInquilino(idInquilino);
+        inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino));
     }
 
 }

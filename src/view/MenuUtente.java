@@ -84,7 +84,7 @@ public class MenuUtente {
 
             String idInquilino;
             String input = scanner.next();
-            String conferma;
+            String confermaInput;
 
             switch (input) {
                 case "1":
@@ -94,14 +94,15 @@ public class MenuUtente {
                     displayModificaInquilino();
                     break;
                 case "2":
-                    System.out.println("Inserire l'ID dell'inquilino che desideri rimuovere");
+                    System.out.println("Inserire l'ID dell'inquilino che si desidera rimuovere");
                     System.out.print("ID: ");
                     idInquilino = scanner.next();
 
-                    System.out.print("Desideri rimuovere definitivamente l'inquilino con ID " + idInquilino +
+                    System.out.println("Rimuovere definitivamente l'inquilino con ID " + idInquilino +
                             " e il relativo contratto? (S/n)");
-                    conferma = scanner.next();
-                    if(conferma == "s" || conferma == "S") {
+                    confermaInput = scanner.next();
+                    
+                    if(confermaInput.equals("s") || confermaInput.equals("S")) {
                         controller.rimuoviInquilino(idInquilino);
                         System.out.println("Rimosso inquilino con iD " + idInquilino);
                     }
@@ -117,6 +118,7 @@ public class MenuUtente {
     }
 
     private void displayModificaInquilino() {
+
     }
 
     private void displayAggiungiImmobile() {

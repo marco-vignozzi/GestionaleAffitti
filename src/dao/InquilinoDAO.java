@@ -92,7 +92,23 @@ public class InquilinoDAO extends DatabaseDAO{
         }
     }
 
-    public void rimuoviInquilino(String id) {
+    public void rimuoviInquilino(int id) {
+        if (connection == null) {
+            connect();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(DELETE_INQUILINO);
+            statement.setInt(1, id);
+            if(statement.executeUpdate()>0) {
+                tabella.aggiornaTabella(getAllInquilini());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void MdoificaInquilino(String id) {
 
     }
 

@@ -21,8 +21,8 @@ public class MenuFacade {
 
         while(!termina) {
             System.out.println("Digita uno dei seguenti numeri per scegliere l'operazione:");
-            System.out.println(" 1 - Accedi");
-            System.out.println(" 2 - Registra nuovo utente");
+            System.out.println(" 1 - Accedi ");
+            System.out.println(" 2 - Registrati (nuovo utente)");
             System.out.println(" X - Esci");
             String input = scanner.next();
 
@@ -58,11 +58,10 @@ public class MenuFacade {
 
             if (controller.utenteValido(email, password)) {
 
-
                 controller.setProprietario(email, password);
                 MenuUtente menuUtente = new MenuUtente(controller);
                 menuUtente.display();
-
+                termina = true;
 
             } else {
 

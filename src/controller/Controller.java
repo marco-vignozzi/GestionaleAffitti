@@ -8,6 +8,8 @@ import dao.ProprietarioDAO;
 import model.Contratto;
 import model.Inquilino;
 import model.Proprietario;
+import view.TabellaGUI;
+
 import java.util.Scanner;
 
 public class Controller {
@@ -36,18 +38,12 @@ public class Controller {
         contrattoDao.aggiungiContratto(c);
     }
 
-
-
     public boolean emailDisponibile(String email) {
         return proprietarioDao.emailDisponibile(email);
     }
 
     public void aggiungiInquilino(Inquilino inquilino) {
         inquilinoDao.aggiungiInquilino(inquilino);
-    }
-
-    public boolean isInquilino(String email, String password) {
-        return false;       // TODO: implementare
     }
 
     public String getCognomeProprietario() {
@@ -64,7 +60,7 @@ public class Controller {
 
     // questo metodo permette di visualizzare tutti gli immobili
     public void visualizzaImmobili() {
-        // TODO: implementare
+        immobileDAO.visualizzaImmobili();
     }
 
     public void setProprietario(String email, String password) {
@@ -85,4 +81,5 @@ public class Controller {
     public void rimuoviInquilino(String idInquilino) {
         inquilinoDao.rimuoviInquilino(idInquilino);
     }
+
 }

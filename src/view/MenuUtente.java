@@ -6,6 +6,7 @@ import model.Contratto;
 import model.Inquilino;
 
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MenuUtente {
@@ -68,6 +69,7 @@ public class MenuUtente {
     }
 
     private void displayVisualizzaImmobili() {
+        controller.visualizzaImmobili();
     }
 
     private void displayVisualizzaInquilini() {
@@ -152,7 +154,7 @@ public class MenuUtente {
     private void displayAggiungiInquilino() {
         boolean conferma = false;
         while (!conferma) {
-            System.out.println("Inserire i seguenti dati");
+            System.out.println("Inserire i dati dell'inquilino");
             System.out.print("Nome: ");
             String nome = scanner.next();
             scanner.nextLine();

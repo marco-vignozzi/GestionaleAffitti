@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import model.Immobile;
+import view.TabellaGUI;
 
 public class ImmobileDAO extends DatabaseDAO {
     // CRUD API's
@@ -14,25 +15,29 @@ public class ImmobileDAO extends DatabaseDAO {
     private static final String CREATE_IMMOBILE = "CREATE TABLE immobili (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
             "comune VARCHAR(255) NOT NULL," +
-            "foglio VARCHAR(255) NOT NULL," +
-            "particella VARCHAR(255) NOT NULL," +
-            "subalterno VARCHAR(255) NOT NULL," +
+            "foglio INT NOT NULL," +
+            "particella INT NOT NULL," +
+            "subalterno INT NOT NULL," +
             "categoria VARCHAR(255) NOT NULL," +
             "classe VARCHAR(255) NOT NULL," +
-            "superficie VARCHAR(255) NOT NULL," +
+            "superficie_mq FLOAT NOT NULL," +
             "rendita FLOAT NOT NULL," +
             "cf_proprietario VARCHAR(255) NOT NULL," +
             "indirizzo VARCHAR(255) NOT NULL," +
-            "nCivico VARCHAR(255) NOT NULL," +
+            "n_civico VARCHAR(255) NOT NULL," +
             "affittato BOOLEAN NOT NULL," +
             "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf)" +
             ")";
 
-    private static final String SELECT_ALL_IMMOBILI = "SELECT comune, indirizzo, nCivico, affittato FROM immobili";
+    private static final String SELECT_ALL_IMMOBILI = "SELECT immobili.id, comune, indirizzo, n_civico, subalterno, affittato, " +
+            "cf_inquilino, canone FROM immobili LEFT JOIN contratti ON id_immobile=immobili.id";
+
+    private TabellaGUI tabella;
 
     public ImmobileDAO() {
         connect();
         creaTabella();
+        tabella = new TabellaGUI("Immobili");
     }
 
     public void creaTabella() {
@@ -66,7 +71,9 @@ public class ImmobileDAO extends DatabaseDAO {
             statement.setString(10, i.getIndirizzo());
             statement.setString(11, i.getnCivico());
             statement.setBoolean(12, i.isAffittato());
-            statement.executeUpdate();
+            if(statement.executeUpdate()>0){
+                tabella.aggiornaTabella(getAllImmobili());
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -74,16 +81,25 @@ public class ImmobileDAO extends DatabaseDAO {
     //TODO: implementare con il builder pattern la possibilità di visualizzare caratteristiche immobili diverse
 
 
-    public void visualizzaImmobili() {
+    public ResultSet getAllImmobili() {
         if (connection == null) {
             connect();
         }
         try {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_IMMOBILI);
             ResultSet rs = statement.executeQuery();
-            mostraTabella(rs);
+            return rs;
             } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public void visualizzaImmobili() {
+        try {
+            tabella.mostraTabella(getAllImmobili());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

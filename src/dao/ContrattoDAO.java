@@ -1,12 +1,15 @@
 package dao;
 
 import model.Contratto;
+import view.TabellaGUI;
 
 import java.sql.*;
 
 
 public class ContrattoDAO extends DatabaseDAO {
+    public TabellaGUI tabella= null;
     // CRUD API's
+
     private static final String INSERT_CONTRATTO = "INSERT INTO contratti (cf_proprietario, cf_inquilino, id_immobile, data_inizio, data_fine,canone) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String CREATE_CONTRATTO = "CREATE TABLE contratti (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
@@ -25,6 +28,7 @@ public class ContrattoDAO extends DatabaseDAO {
     public ContrattoDAO() {
         connect();
         creaTabella();
+        tabella = new TabellaGUI("Contratti");
     }
 
     public void creaTabella() {
@@ -52,23 +56,32 @@ public class ContrattoDAO extends DatabaseDAO {
             statement.setString(4, c.getDataInizio());
             statement.setString(5, c.getDataFine());
             statement.setFloat(6, c.getCanone());
-            statement.executeUpdate();
+            if( statement.executeUpdate()>0){
+                tabella.aggiornaTabella(getAllContratti());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet getAllContratti() {
+        if (connection == null) {
+            connect();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_CONTRATTI);
+            return statement.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void visualizzaContratti() {
-        if (connection == null) {
-            connect();
-        }
-        try {
-            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_CONTRATTI);
-            ResultSet rs = statement.executeQuery();
-            mostraTabella(rs);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+       try{
+           tabella.mostraTabella(getAllContratti());
+       }catch (Exception e){
+           throw new RuntimeException(e);
+       }
     }
 
 }

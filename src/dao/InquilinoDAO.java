@@ -1,6 +1,8 @@
 package dao;
 
 import model.Inquilino;
+import view.TabellaGUI;
+
 import java.sql.*;
 
 public class InquilinoDAO extends DatabaseDAO{
@@ -23,10 +25,14 @@ public class InquilinoDAO extends DatabaseDAO{
             ")";
     private static final String DELETE_INQUILINO = "DELETE FROM inquilini WHERE id = ?";
 
+    // attributo che tiene un riferimento alla vista della tabella
+    private TabellaGUI tabella = null;
+
 
     public InquilinoDAO() {
         super.connect();
         creaTabella();
+        tabella = new TabellaGUI("Inquilini");
     }
 
     public void creaTabella() {
@@ -57,21 +63,31 @@ public class InquilinoDAO extends DatabaseDAO{
             statement.setString(7, i.getTelefono());
             statement.setString(8, i.getEmail());
             statement.setBoolean(9, i.isPagato());
-            statement.executeUpdate();
+            if(statement.executeUpdate()>0) {
+                tabella.aggiornaTabella(getAllInquilini());
+            }
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void visualizzaInquilini() {
+    public ResultSet getAllInquilini() {
         if (connection == null) {
             connect();
         }
         try{
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_INQUILINI);
             ResultSet rs = statement.executeQuery();
-            mostraTabella(rs);
+            return rs;
         }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void visualizzaInquilini() {
+        try {
+            tabella.mostraTabella(getAllInquilini());
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

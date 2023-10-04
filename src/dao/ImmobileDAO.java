@@ -12,7 +12,8 @@ public class ImmobileDAO extends DatabaseDAO {
             " (comune, foglio, particella, subalterno, categoria, classe, superficie, rendita, cf_proprietario, indirizzo, nCivico , affittato) VALUES " +
             " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String CREATE_IMMOBILE = "CREATE TABLE immobili (" +
-            "comune VARCHAR(255) NOT NULL PRIMARY KEY ," +
+            "id INT AUTO_INCREMENT PRIMARY KEY," +
+            "comune VARCHAR(255) NOT NULL," +
             "foglio VARCHAR(255) NOT NULL," +
             "particella VARCHAR(255) NOT NULL," +
             "subalterno VARCHAR(255) NOT NULL," +
@@ -24,7 +25,7 @@ public class ImmobileDAO extends DatabaseDAO {
             "indirizzo VARCHAR(255) NOT NULL," +
             "nCivico VARCHAR(255) NOT NULL," +
             "affittato BOOLEAN NOT NULL," +
-            "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf)"+
+            "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf)" +
             ")";
 
     private static final String SELECT_ALL_IMMOBILI = "SELECT comune, indirizzo, nCivico, affittato FROM immobili";
@@ -39,8 +40,8 @@ public class ImmobileDAO extends DatabaseDAO {
             DatabaseMetaData metadata = connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "immobili", null);
             if (!resultSet.next()) {
-                PreparedStatement statementcreazione = connection.prepareStatement(CREATE_IMMOBILE);
-                statementcreazione.executeUpdate();
+                PreparedStatement statementCreazione = connection.prepareStatement(CREATE_IMMOBILE);
+                statementCreazione.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -72,15 +73,17 @@ public class ImmobileDAO extends DatabaseDAO {
     }
     //TODO: implementare con il builder pattern la possibilità di visualizzare caratteristiche immobili diverse
 
-    /*
+
     public void visualizzaImmobili() {
         if (connection == null) {
             connect();
         }
         try {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_IMMOBILI);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                System.out.println("ID: " + resultSet.getString("id") + " Indirizzo: " + resultSet.getString("indir
-                */
+            ResultSet rs = statement.executeQuery();
+            mostraTabella(rs);
+            } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

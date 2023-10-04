@@ -9,9 +9,10 @@ public class ContrattoDAO extends DatabaseDAO {
     // CRUD API's
     private static final String INSERT_CONTRATTO = "INSERT INTO contratti (cf_proprietario, cf_inquilino, id_immobile, data_inizio, data_fine,canone) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String CREATE_CONTRATTO = "CREATE TABLE contratti (" +
+            "id INT AUTO_INCREMENT PRIMARY KEY," +
             "cf_proprietario VARCHAR(255) NOT NULL," +
             "cf_inquilino VARCHAR(255) NOT NULL," +
-            "id_immobile VARCHAR(255) NOT NULL," +
+            "id_immobile INT NOT NULL," +
             "data_inizio VARCHAR(255) NOT NULL," +
             "data_fine VARCHAR(255) NOT NULL," +
             "canone FLOAT NOT NULL," +
@@ -31,8 +32,8 @@ public class ContrattoDAO extends DatabaseDAO {
             DatabaseMetaData metadata = connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "contratti", null);
             if (!resultSet.next()) {
-                PreparedStatement statementcreazione = connection.prepareStatement(CREATE_CONTRATTO);
-                statementcreazione.executeUpdate();
+                PreparedStatement statementCreazione = connection.prepareStatement(CREATE_CONTRATTO);
+                statementCreazione.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -20,10 +20,10 @@ public class Controller {
 
 
     public Controller() {
-        contrattoDao = new ContrattoDAO();
         proprietarioDao = new ProprietarioDAO();
         inquilinoDao = new InquilinoDAO();
         immobileDAO = new ImmobileDAO();
+        contrattoDao = new ContrattoDAO();
     }
 
     // qui passo tipo utente come parametro per decidere se è un proprietario o un inquilino

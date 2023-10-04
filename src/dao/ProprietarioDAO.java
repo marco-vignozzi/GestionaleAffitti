@@ -12,7 +12,7 @@ public class ProprietarioDAO extends DatabaseDAO {
     private static final String SELECT_ALL_USERS_WITH_MAIL = "SELECT * FROM utenti WHERE email = ?";
     private static final String SELECT_USER = "SELECT * FROM utenti WHERE email = ? and password = ?";
     private static final String CREATE_UTENTI = "CREATE TABLE utenti (" +
-            "cf VARCHAR(255) NOT NULL PRIMARY KEY ," +
+            "cf VARCHAR(255) NOT NULL PRIMARY KEY," +
             "nome VARCHAR(255) NOT NULL," +
             "cognome VARCHAR(255) NOT NULL," +
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
@@ -31,8 +31,8 @@ public class ProprietarioDAO extends DatabaseDAO {
             DatabaseMetaData metadata= connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "utenti", null);
             if (!resultSet.next()) {
-                PreparedStatement statementcreazione = connection.prepareStatement(CREATE_UTENTI);
-                statementcreazione.executeUpdate();
+                PreparedStatement statementCreazione = connection.prepareStatement(CREATE_UTENTI);
+                statementCreazione.executeUpdate();
             }
         }catch(SQLException e){
             throw new RuntimeException(e);

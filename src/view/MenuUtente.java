@@ -24,12 +24,12 @@ public class MenuUtente {
         while (!termina) {
             System.out.println("Bentornato " + controller.getNomeProprietario() + " " + controller.getCognomeProprietario() + "!");
             System.out.println("Scegli l'operazione da eseguire: ");
-            System.out.println(" 1 - Aggiungi inquilino");
-            System.out.println(" 2 - Aggiungi contratto");
+            System.out.println(" 1 - Aggiungi inquilino");      // FATTO
+            System.out.println(" 2 - Aggiungi contratto");      // FATTO
             System.out.println(" 3 - Aggiungi immobile");
-            System.out.println(" 4 - Visualizza/modifica inquilini");
+            System.out.println(" 4 - Visualizza/modifica inquilini");       // IN CORSO...
             System.out.println(" 5 - Visualizza/modifica immobili");
-            System.out.println(" 6 - Visualizza/modifica contratti");
+            System.out.println(" 6 - Visualizza/modifica contratti");       // IN CORSO...
             //System.out.println(" 7 - Visualizza resoconto pagamenti");
             System.out.println(" x - Torna al login");
 
@@ -54,7 +54,7 @@ public class MenuUtente {
                 case "6":
                     displayVisualizzaContratti();
                     continue;
-                case "0":
+                case "x":
                     termina = true;
                     continue;
                 default:

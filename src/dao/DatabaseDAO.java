@@ -4,6 +4,8 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public abstract class DatabaseDAO {
@@ -25,6 +27,7 @@ public abstract class DatabaseDAO {
 
     protected abstract void creaTabella();
 
+    // TODO: e se ciascun dao mantenesse la propria tabella? così da poterla gestire per aggiornamenti e chiamate multiple?
     public static void mostraTabella(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
         int numColonne = metaData.getColumnCount();
@@ -49,9 +52,6 @@ public abstract class DatabaseDAO {
         // Aggiungi la tabella a uno JScrollPane
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Aggiungi il JScrollPane al frame
-        frame.add(scrollPane, BorderLayout.CENTER);
-
         tableModel.setRowCount(0);
 
         while(rs.next()) {
@@ -61,10 +61,14 @@ public abstract class DatabaseDAO {
             }
             tableModel.addRow(riga);
         }
+
         int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width,height);
+
+        // Aggiungi il JScrollPane al frame
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.setSize(width, height);
         frame.setVisible(true);
     }
 }

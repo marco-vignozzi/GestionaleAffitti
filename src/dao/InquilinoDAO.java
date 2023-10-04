@@ -10,13 +10,14 @@ public class InquilinoDAO extends DatabaseDAO{
             " (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String SELECT_ALL_INQUILINI = "SELECT * FROM inquilini;";
     private static final String CREATE_INQUILINI = "CREATE TABLE inquilini (" +
-            "cf VARCHAR(16) NOT NULL PRIMARY KEY ," +
+            "id INT AUTO_INCREMENT PRIMARY KEY," +
+            "cf VARCHAR(255) NOT NULL UNIQUE," +
             "nome VARCHAR(255) NOT NULL," +
             "cognome VARCHAR(255) NOT NULL," +
             "data_di_nascita VARCHAR(255) NOT NULL," +
             "città_di_nascita VARCHAR(255) NOT NULL," +
             "residenza VARCHAR(255) NOT NULL," +
-            "telefono VARCHAR(15) NOT NULL," +
+            "telefono VARCHAR(255) NOT NULL," +
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
             "pagato BOOLEAN NOT NULL" +
             ")";

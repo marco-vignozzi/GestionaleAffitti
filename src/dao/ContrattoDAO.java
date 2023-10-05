@@ -23,7 +23,7 @@ public class ContrattoDAO extends DatabaseDAO {
             "FOREIGN KEY (cf_inquilino) REFERENCES inquilini(cf)," +
             "FOREIGN KEY (id_immobile) REFERENCES immobili(id)" +
             ")";
-    private static final String SELECT_ALL_CONTRATTI = "SELECT * FROM contratti WHERE cf_propprietario = ?";
+    private static final String SELECT_ALL_CONTRATTI = "SELECT * FROM contratti WHERE cf_proprietario = ?";
 
     public ContrattoDAO() {
         connect();

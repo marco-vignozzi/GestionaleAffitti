@@ -13,8 +13,8 @@ public class InquilinoDAO extends DatabaseDAO{
             " (cf, nome, cognome, data_di_nascita, città_di_nascita, residenza, telefono, email, pagato) VALUES " +
             " (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String SELECT_ALL_INQUILINI = "SELECT inquilini.cf, inquilini.nome, inquilini.cognome, data_di_nascita, " +
-            "residenza, telefono, inquilini.email, pagato FROM inquilini JOIN contratti JOIN utenti ON " +
-            "cf_proprietario=utenti.cf WHERE utenti.cf = ?;";
+            "residenza, telefono, inquilini.email, pagato FROM inquilini JOIN contratti ON cf_inquilino = inquilini.cf JOIN utenti ON " +
+            "cf_proprietario=utenti.cf  WHERE utenti.cf = ?;";
     private static final String CREATE_INQUILINI = "CREATE TABLE inquilini (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
             "cf VARCHAR(255) NOT NULL UNIQUE," +

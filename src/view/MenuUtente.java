@@ -21,9 +21,11 @@ public class MenuUtente {
 
     public void display() {
         // TODO: finire di implementare
-                ina = fals while (!termina) {
-            System.out.println(
-                    "Scegli l'operazione da eseguire: ");
+        boolean termina = false;
+        System.out.println("Bentornato nell'app N° 1 di DESTE e VIGNOZ!");
+
+        while(!termina){
+            System.out.println("Scegli l'operazione da eseguire: ");
             System.out.println(" 1 - Aggiungi inquilino");      // FATTO
             System.out.println(" 2 - Aggiungi immobile");
             System.out.println(" 3 - Visualizza/modifica inquilini");       // IN CORSO...
@@ -52,6 +54,7 @@ public class MenuUtente {
                     continue;
                 case "x":
                     termina = true;
+                    controller.reset();
                     continue;
                 default:
                     System.out.println("Valore inserito invalido come te e tua madre");
@@ -166,7 +169,7 @@ public class MenuUtente {
 
             }
 
-            System.out.println("Confermi i dati inseriti? (s/n)");
+            System.out.println("Confermi i dati inseriti? (S/n)");
             confermaInput = scanner.next();
 
             Immobile immobile = builder.build();
@@ -219,7 +222,7 @@ public class MenuUtente {
             System.out.print("Canone mensile: ");
             String canone = scanner.next();
 
-            System.out.println("Confermi inquilino dati inseriti? (s/n)");
+            System.out.println("Confermi i dati inseriti? (s/n)");
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
@@ -261,7 +264,7 @@ public class MenuUtente {
             System.out.print("Email: ");
             String email = scanner.nextLine();
 
-            System.out.println("Confermi i dati inseriti? (s/n)");
+            System.out.println("Confermi i dati inseriti? (S/n)");
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {

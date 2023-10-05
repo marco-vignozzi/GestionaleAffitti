@@ -34,7 +34,7 @@ public class ProprietarioDAO extends DatabaseDAO {
                 PreparedStatement statementCreazione = connection.prepareStatement(CREATE_UTENTI);
                 statementCreazione.executeUpdate();
             }
-        }catch(SQLException e){
+        }catch(SQLException e) {
             throw new RuntimeException(e);
         }
     }

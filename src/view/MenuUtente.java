@@ -21,9 +21,10 @@ public class MenuUtente {
 
     public void display() {
         // TODO: finire di implementare
-                ina = fals while (!termina) {
-            System.out.println(
-                    "Scegli l'operazione da eseguire: ");
+        boolean termina = false;
+
+     while (!termina) {
+            System.out.println("Scegli l'operazione da eseguire: ");
             System.out.println(" 1 - Aggiungi inquilino");      // FATTO
             System.out.println(" 2 - Aggiungi immobile");
             System.out.println(" 3 - Visualizza/modifica inquilini");       // IN CORSO...

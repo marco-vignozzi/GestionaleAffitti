@@ -3,11 +3,11 @@ package view;
 import controller.Controller;
 
 import model.Contratto;
+import model.Immobile;
 import model.Inquilino;
 
-
-import java.sql.SQLException;
 import java.util.Scanner;
+
 
 public class MenuUtente {
 
@@ -122,6 +122,32 @@ public class MenuUtente {
     }
 
     private void displayAggiungiImmobile() {
+        boolean conferma=false;
+
+        while (!conferma) {
+            System.out.println("Inserire i dati dell'immobile");
+            System.out.print("Comune: ");
+            String comune = scanner.next();
+            System.out.print("");
+            String cfInquilino = scanner.next();
+            System.out.print("");
+            String idImmobile = scanner.next();
+            System.out.print("");
+            String dataInizio = scanner.next();
+            System.out.print("");
+            String dataFine = scanner.next();
+            System.out.print("");
+            float canone = scanner.nextFloat();
+
+            System.out.println("Confermi i dati inseriti? (s/n)");
+            String confermaInput = scanner.next();
+
+            if (confermaInput.equals("s")) {/*
+                Immobile immobile = new Immobile();
+                controller.aggiungiImmobile(immobile);*/
+                conferma = true;
+            }
+        }
     }
 
     private void displayAggiungiContratto() {
@@ -129,24 +155,22 @@ public class MenuUtente {
 
         while (!conferma) {
             System.out.println("Inserisci i dati del contratto");
-            String cfProprietario = controller.getCfProprietario();
-            System.out.println("Il tuo codice fiscale è: " + cfProprietario);
-            System.out.print("Inserisci il codice fiscale dell'inquilino: ");
+            System.out.print("Codice fiscale dell'inquilino: ");
             String cfInquilino = scanner.next();
-            System.out.print("Inserisci l'id dell'immobile: ");
+            System.out.print("ID dell'immobile: ");
             String idImmobile = scanner.next();
-            System.out.print("Inserisci la data di inizio del contratto (formato: YYYY-MM-DD): ");
+            System.out.print("Data di inizio contratto (formato: YYYY-MM-DD): ");
             String dataInizio = scanner.next();
-            System.out.print("Inserisci la data di fine del contratto (formato: YYYY-MM-DD): ");
+            System.out.print("Data di fine contratto (formato: YYYY-MM-DD): ");
             String dataFine = scanner.next();
-            System.out.print("Inserisci il canone mensile: ");
+            System.out.print("Canone mensile: ");
             float canone = scanner.nextFloat();
 
             System.out.println("Confermi i dati inseriti? (s/n)");
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s")) {
-                Contratto contratto= new Contratto(idImmobile, cfInquilino, cfProprietario, dataInizio, dataFine, canone);
+                Contratto contratto = new Contratto(idImmobile, cfInquilino, controller.getCfProprietario(), dataInizio, dataFine, canone);
                 controller.aggiungiContratto(contratto);
                 conferma = true;
             }

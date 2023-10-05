@@ -6,14 +6,14 @@ import dao.ImmobileDAO;
 import dao.InquilinoDAO;
 import dao.ProprietarioDAO;
 import model.Contratto;
+import model.Immobile;
 import model.Inquilino;
 import model.Proprietario;
-import view.TabellaGUI;
 
 import java.util.Scanner;
 
 public class Controller {
-    private Scanner scanner;
+    private Scanner scanner;            // TODO: capire se serve
     private ContrattoDAO contrattoDao;
     private ProprietarioDAO proprietarioDao;
     private InquilinoDAO inquilinoDao;
@@ -82,4 +82,7 @@ public class Controller {
         inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino));
     }
 
+    public void aggiungiImmobile(Immobile immobile) {
+        immobileDAO.aggiungiImmobile(immobile);
+    }
 }

@@ -55,6 +55,7 @@ public class MenuUtente {
                     continue;
                 case "x":
                     termina = true;
+                    controller.elimina_finestre();
                     controller.reset();
                     continue;
                 default:

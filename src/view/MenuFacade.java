@@ -9,10 +9,8 @@ import model.Proprietario;
 
 
 public class MenuFacade {
-
     private final Controller controller = new Controller();
     private final Scanner scanner = new Scanner(System.in);
-    int input;
 
     public void display() {
 
@@ -65,7 +63,7 @@ public class MenuFacade {
 
             } else {
                 System.out.println("Email o password errate.");
-                System.out.println("Riprovare? (Sì/no)");
+                System.out.println("Riprovare? (S/n)");
                 // se si sceglie qualcosa che inizia con 's' si riprova, altrimenti si esce
                 // quindi scannerizzo l'input, lo rendo minuscolo e estraggo il carattere in prima posizione mettendolo in riprova
                 scanner.next().toLowerCase().getChars(0, 1, riprova, 0);
@@ -87,7 +85,7 @@ public class MenuFacade {
             System.out.print("Email: ");
             email = scanner.next();
             if (!controller.emailDisponibile(email)) {
-                System.out.println("Email già associata a un account. Riprovare? (Sì/no)");
+                System.out.println("Email già associata a un account. Riprovare? (S/n)");
                 // Ho aggiunto lo stesso giochino del riprova per evitare loop infiniti di email non disponibili
                 scanner.next().toLowerCase().getChars(0, 1, riprova, 0);
                 if (riprova[0] != 's') {
@@ -98,7 +96,6 @@ public class MenuFacade {
                 verificato = true;
             }
         }
-
 
         System.out.print("Password: ");
         String pwd = scanner.next();
@@ -114,11 +111,6 @@ public class MenuFacade {
         controller.aggiungiUtente(p);
 
         System.out.println("Registrazione avvenuta con successo");
-
     }
 
-
-
-    }
-
-
+}

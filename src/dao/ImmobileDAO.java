@@ -16,7 +16,9 @@ public class ImmobileDAO extends DatabaseDAO {
     private static final String SELECT_IMMOBILE = "SELECT id FROM immobili WHERE comune = ? AND indirizzo = ? AND n_civico = ? " +
             "AND subalterno = ? ";
     private static final String SELECT_ALL_IMMOBILI = "SELECT immobili.id, comune, indirizzo, n_civico, subalterno, affittato, " +
-            "cf_inquilino, canone FROM immobili LEFT JOIN contratti ON id_immobile=immobili.id JOIN utenti ON cf_proprietario = ?";
+            "cf_inquilino, canone FROM utenti JOIN contratti ON utenti.cf = ? RIGHT JOIN immobili ON id_immobile = immobili.id " +
+            "WHERE utenti.cf = immobili.cf_proprietario";
+
     private static final String CREATE_IMMOBILE = "CREATE TABLE immobili (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
             "comune VARCHAR(255) NOT NULL," +

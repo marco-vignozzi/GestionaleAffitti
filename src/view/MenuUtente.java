@@ -23,7 +23,9 @@ public class MenuUtente {
         // TODO: finire di implementare
         boolean termina = false;
 
-     while (!termina) {
+        System.out.println("Bentornato nell'app N° 1 di DESTE e VIGNOZ!");
+
+        while(!termina){
             System.out.println("Scegli l'operazione da eseguire: ");
             System.out.println(" 1 - Aggiungi inquilino");      // FATTO
             System.out.println(" 2 - Aggiungi immobile");
@@ -53,6 +55,7 @@ public class MenuUtente {
                     continue;
                 case "x":
                     termina = true;
+                    controller.reset();
                     continue;
                 default:
                     System.out.println("Valore inserito invalido come te e tua madre");
@@ -167,7 +170,7 @@ public class MenuUtente {
 
             }
 
-            System.out.println("Confermi i dati inseriti? (s/n)");
+            System.out.println("Confermi i dati inseriti? (S/n)");
             confermaInput = scanner.next();
 
             Immobile immobile = builder.build();
@@ -220,7 +223,7 @@ public class MenuUtente {
             System.out.print("Canone mensile: ");
             String canone = scanner.next();
 
-            System.out.println("Confermi inquilino dati inseriti? (s/n)");
+            System.out.println("Confermi i dati inseriti? (s/n)");
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
@@ -262,7 +265,7 @@ public class MenuUtente {
             System.out.print("Email: ");
             String email = scanner.nextLine();
 
-            System.out.println("Confermi i dati inseriti? (s/n)");
+            System.out.println("Confermi i dati inseriti? (S/n)");
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {

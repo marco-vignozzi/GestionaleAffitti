@@ -10,27 +10,23 @@ import model.Immobile;
 import model.Inquilino;
 import model.Proprietario;
 
-import java.util.Scanner;
 
 public class Controller {
-    private Scanner scanner;            // TODO: capire se serve
     private ContrattoDAO contrattoDao;
     private ProprietarioDAO proprietarioDao;
     private InquilinoDAO inquilinoDao;
+    private ImmobileDAO immobileDao;
     private Proprietario proprietario;
-    private ImmobileDAO immobileDAO;
-
 
     public Controller() {
         proprietarioDao = new ProprietarioDAO();
         inquilinoDao = new InquilinoDAO();
-        immobileDAO = new ImmobileDAO();
+        immobileDao = new ImmobileDAO();
         contrattoDao = new ContrattoDAO();
     }
 
     // qui passo tipo utente come parametro per decidere se è un proprietario o un inquilino
     public void aggiungiUtente(Proprietario p) {
-        proprietario = p;           // TODO: capire se serve
         proprietarioDao.aggiungiUtente(p);
     }
 
@@ -60,7 +56,7 @@ public class Controller {
 
     // questo metodo permette di visualizzare tutti gli immobili
     public void visualizzaImmobili() {
-        immobileDAO.visualizzaImmobili(proprietario.getCf());
+        immobileDao.visualizzaImmobili(proprietario.getCf());
     }
 
     public void setProprietario(String email, String password) {
@@ -85,10 +81,21 @@ public class Controller {
 
     public void aggiungiImmobile(Immobile immobile) {
         immobile.setIdProprietario(proprietario.getCf());
-        immobileDAO.aggiungiImmobile(immobile);
+        immobileDao.aggiungiImmobile(immobile);
     }
 
     public boolean isImmobile(int idImmobile) {
-        return immobileDAO.verificaImmobile(idImmobile, proprietario.getCf());
+        return immobileDao.verificaImmobile(idImmobile, proprietario.getCf());
     }
+
+    // serve per resettare il controller quando si esce dal menu utente, per evitare di mantenere i dati dell'utente
+    // acceduto in precedenza
+    public void reset() {
+        this.immobileDao = new ImmobileDAO();
+        this.inquilinoDao = new InquilinoDAO();
+        this.contrattoDao = new ContrattoDAO();
+        this.proprietarioDao = new ProprietarioDAO();
+        this.proprietario = null;
+    }
+
 }

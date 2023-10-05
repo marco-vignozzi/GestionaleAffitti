@@ -3,7 +3,7 @@ package model;
 
 public class Contratto {
 
-    public Contratto(String idImmobile, String cfInquilino, String cfProprietario, String dataInizio, String dataFine,
+    public Contratto(int idImmobile, String cfInquilino, String cfProprietario, String dataInizio, String dataFine,
                      float canone)
     {
         this.idImmobile = idImmobile;
@@ -14,11 +14,11 @@ public class Contratto {
         this.canone = canone;
     }
 
-    public String getIdImmobile() {
+    public int getIdImmobile() {
         return idImmobile;
     }
 
-    public void setIdImmobile(String idImmobile) {
+    public void setIdImmobile(int idImmobile) {
         this.idImmobile = idImmobile;
     }
 
@@ -62,7 +62,7 @@ public class Contratto {
         this.canone = canone;
     }
 
-    private String idImmobile;
+    private int idImmobile;
     private String cfInquilino;
     private String cfProprietario;
     private String dataInizio;

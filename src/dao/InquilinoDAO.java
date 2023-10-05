@@ -1,16 +1,20 @@
 package dao;
 
 import model.Inquilino;
+import model.Proprietario;
 import view.TabellaGUI;
 
 import java.sql.*;
+
 
 public class InquilinoDAO extends DatabaseDAO{
     // CRUD APIs
     private static final String INSERT_INQUILINO = "INSERT INTO inquilini" +
             " (cf, nome, cognome, data_di_nascita, città_di_nascita, residenza, telefono, email, pagato) VALUES " +
             " (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String SELECT_ALL_INQUILINI = "SELECT * FROM inquilini;";
+    private static final String SELECT_ALL_INQUILINI = "SELECT inquilini.cf, inquilini.nome, inquilini.cognome, data_di_nascita, " +
+            "residenza, telefono, inquilini.email, pagato FROM inquilini JOIN contratti JOIN utenti ON " +
+            "cf_proprietario=utenti.cf WHERE utenti.cf = ?;";
     private static final String CREATE_INQUILINI = "CREATE TABLE inquilini (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
             "cf VARCHAR(255) NOT NULL UNIQUE," +
@@ -23,6 +27,7 @@ public class InquilinoDAO extends DatabaseDAO{
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
             "pagato BOOLEAN NOT NULL" +
             ")";
+
     private static final String DELETE_INQUILINO = "DELETE FROM inquilini WHERE id = ?";
 
     // attributo che tiene un riferimento alla vista della tabella
@@ -48,7 +53,7 @@ public class InquilinoDAO extends DatabaseDAO{
         }
     }
 
-    public void aggiungiInquilino(Inquilino i) {
+    public void aggiungiInquilino(Inquilino i, String cfProprietario) {
         if (connection == null) {
             connect();
         }
@@ -64,19 +69,20 @@ public class InquilinoDAO extends DatabaseDAO{
             statement.setString(8, i.getEmail());
             statement.setBoolean(9, i.isPagato());
             if(statement.executeUpdate()>0) {
-                tabella.aggiornaTabella(getAllInquilini());
+                tabella.aggiornaTabella(getAllInquilini(cfProprietario));
             }
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ResultSet getAllInquilini() {
+    public ResultSet getAllInquilini(String cfProprietario) {
         if (connection == null) {
             connect();
         }
         try{
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_INQUILINI);
+            statement.setString(1, cfProprietario);
             ResultSet rs = statement.executeQuery();
             return rs;
         }catch (SQLException e) {
@@ -84,15 +90,15 @@ public class InquilinoDAO extends DatabaseDAO{
         }
     }
 
-    public void visualizzaInquilini() {
+    public void visualizzaInquilini(String cfProprietario) {
         try {
-            tabella.mostraTabella(getAllInquilini());
+            tabella.mostraTabella(getAllInquilini(cfProprietario));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void rimuoviInquilino(int id) {
+    public void rimuoviInquilino(int id, String cfProprietario) {
         if (connection == null) {
             connect();
         }
@@ -100,7 +106,7 @@ public class InquilinoDAO extends DatabaseDAO{
             PreparedStatement statement = connection.prepareStatement(DELETE_INQUILINO);
             statement.setInt(1, id);
             if(statement.executeUpdate()>0) {
-                tabella.aggiornaTabella(getAllInquilini());
+                tabella.aggiornaTabella(getAllInquilini(cfProprietario));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

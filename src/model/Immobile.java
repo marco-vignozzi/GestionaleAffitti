@@ -14,20 +14,23 @@ public class Immobile {
     private String idProprietario;
     private String indirizzo;
     private String nCivico;
+    private int id;
 
-    public Immobile(String comune, int foglio, int particella, int subalterno, String categoria, String classe,
-                    float superficie, float rendita, String idProprietario, String indirizzo, String nCivico) {
-        this.comune = comune;
-        this.foglio = foglio;
-        this.particella = particella;
-        this.subalterno = subalterno;
-        this.categoria = categoria;
-        this.classe = classe;
-        this.superficie = superficie;
-        this.rendita = rendita;
-        this.idProprietario = idProprietario;
-        this.indirizzo = indirizzo;
-        this.nCivico = nCivico;
+
+    protected Immobile(ImmobileBuilder builder) {
+        this.comune = builder.comune;
+        this.foglio = builder.foglio;
+        this.particella = builder.particella;
+        this.subalterno = builder.subalterno;
+        this.categoria = builder.categoria;
+        this.classe = builder.classe;
+        this.superficie = builder.superficie;
+        this.rendita = builder.rendita;
+        this.idProprietario = builder.idProprietario;
+        this.indirizzo = builder.indirizzo;
+        this.nCivico = builder.nCivico;
+        this.affittato = builder.affittato;
+        this.id = builder.id;
     }
 
     public boolean isAffittato() {
@@ -126,5 +129,12 @@ public class Immobile {
         this.nCivico = nCivico;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
 }

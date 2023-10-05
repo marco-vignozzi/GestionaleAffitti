@@ -43,7 +43,7 @@ public class Controller {
     }
 
     public void aggiungiInquilino(Inquilino inquilino) {
-        inquilinoDao.aggiungiInquilino(inquilino);
+        inquilinoDao.aggiungiInquilino(inquilino, proprietario.getCf());
     }
 
     public String getCognomeProprietario() {
@@ -60,7 +60,7 @@ public class Controller {
 
     // questo metodo permette di visualizzare tutti gli immobili
     public void visualizzaImmobili() {
-        immobileDAO.visualizzaImmobili();
+        immobileDAO.visualizzaImmobili(proprietario.getCf());
     }
 
     public void setProprietario(String email, String password) {
@@ -72,17 +72,23 @@ public class Controller {
     }
 
     public void visualizzaInquilini() {
-        inquilinoDao.visualizzaInquilini();
+        inquilinoDao.visualizzaInquilini(proprietario.getCf());
     }
+
     public void visualizzaContratti() {
-        contrattoDao.visualizzaContratti();
+        contrattoDao.visualizzaContratti(proprietario.getCf());
     }
 
     public void rimuoviInquilino(String idInquilino) {
-        inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino));
+        inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
     }
 
     public void aggiungiImmobile(Immobile immobile) {
+        immobile.setIdProprietario(proprietario.getCf());
         immobileDAO.aggiungiImmobile(immobile);
+    }
+
+    public boolean isImmobile(int idImmobile) {
+        return immobileDAO.verificaImmobile(idImmobile, proprietario.getCf());
     }
 }

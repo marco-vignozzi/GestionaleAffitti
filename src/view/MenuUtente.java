@@ -4,6 +4,7 @@ import controller.Controller;
 
 import model.Contratto;
 import model.Immobile;
+import model.ImmobileBuilder;
 import model.Inquilino;
 
 import java.util.Scanner;
@@ -20,17 +21,14 @@ public class MenuUtente {
 
     public void display() {
         // TODO: finire di implementare
-        boolean termina = false;
-
-        while (!termina) {
-            System.out.println("Bentornato " + controller.getNomeProprietario() + " " + controller.getCognomeProprietario() + "!");
-            System.out.println("Scegli l'operazione da eseguire: ");
+                ina = fals while (!termina) {
+            System.out.println(
+                    "Scegli l'operazione da eseguire: ");
             System.out.println(" 1 - Aggiungi inquilino");      // FATTO
-            System.out.println(" 2 - Aggiungi contratto");      // FATTO
-            System.out.println(" 3 - Aggiungi immobile");
-            System.out.println(" 4 - Visualizza/modifica inquilini");       // IN CORSO...
-            System.out.println(" 5 - Visualizza/modifica immobili");
-            System.out.println(" 6 - Visualizza/modifica contratti");       // IN CORSO...
+            System.out.println(" 2 - Aggiungi immobile");
+            System.out.println(" 3 - Visualizza/modifica inquilini");       // IN CORSO...
+            System.out.println(" 4 - Visualizza/modifica immobili");
+            System.out.println(" 5 - Visualizza/modifica contratti");       // IN CORSO...
             //System.out.println(" 7 - Visualizza resoconto pagamenti");
             System.out.println(" x - Torna al login");
 
@@ -41,18 +39,15 @@ public class MenuUtente {
                     displayAggiungiInquilino();
                     continue;
                 case "2":
-                    displayAggiungiContratto();
-                    continue;
-                case "3":
                     displayAggiungiImmobile();
                     continue;
-                case "4":
+                case "3":
                     displayVisualizzaInquilini();
                     continue;
-                case "5":
+                case "4":
                     displayVisualizzaImmobili();
                     continue;
-                case "6":
+                case "5":
                     displayVisualizzaContratti();
                     continue;
                 case "x":
@@ -121,65 +116,132 @@ public class MenuUtente {
 
     }
 
-    private void displayAggiungiImmobile() {
+    private Immobile displayAggiungiImmobile() {
         boolean conferma=false;
+        ImmobileBuilder builder = new ImmobileBuilder();
 
         while (!conferma) {
             System.out.println("Inserire i dati dell'immobile");
             System.out.print("Comune: ");
             String comune = scanner.next();
-            System.out.print("");
-            String cfInquilino = scanner.next();
-            System.out.print("");
-            String idImmobile = scanner.next();
-            System.out.print("");
-            String dataInizio = scanner.next();
-            System.out.print("");
-            String dataFine = scanner.next();
-            System.out.print("");
-            float canone = scanner.nextFloat();
+            System.out.print("Indirizzo: ");
+            String indirizzo = scanner.next();
+            System.out.print("Numero Civico: ");
+            String nCivico = scanner.next();
+            scanner.nextLine();
+            System.out.print("Subalterno: ");
+            String subalterno = scanner.next();
+            System.out.print("Affittato (S/n): ");
+            String confermaInput = scanner.next();
+            boolean affittato;
+
+            if(confermaInput.equals("s") || confermaInput.equals("S")) {
+                affittato = true;
+            }
+            else {
+                affittato = false;
+            }
+
+            builder.comune(comune).indirizzo(indirizzo).nCivico(nCivico).subalterno(Integer.parseInt(subalterno)).affittato(affittato);
+
+            System.out.println("Vuoi aggiungere i dati catastali? (altrimenti sarà possibile aggiungerli più tardi dal menu utente)");
+            System.out.print("S/n : ");
+            confermaInput = scanner.next();
+            if (confermaInput.equals("s") || confermaInput.equals("S")){
+                System.out.print("Foglio: ");
+                String foglio = scanner.next();
+                System.out.print("Particella: ");
+                String particella = scanner.next();
+                System.out.print("Categoria: ");
+                String categoria = scanner.next();
+                System.out.print("Classe: ");
+                String classe = scanner.next();
+                System.out.print("Superficie: ");
+                String superficie = scanner.next();
+                System.out.print("Rendita: ");
+                String rendita = scanner.next();
+
+                builder.foglio(Integer.parseInt(foglio)).particella(Integer.parseInt(particella)).categoria(categoria)
+                        .classe(classe).superficie(Float.parseFloat(superficie)).rendita(Float.parseFloat(rendita));
+
+            }
 
             System.out.println("Confermi i dati inseriti? (s/n)");
-            String confermaInput = scanner.next();
+            confermaInput = scanner.next();
 
-            if (confermaInput.equals("s")) {/*
-                Immobile immobile = new Immobile();
-                controller.aggiungiImmobile(immobile);*/
+            Immobile immobile = builder.build();
+
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                controller.aggiungiImmobile(immobile);
                 conferma = true;
+                System.out.println("Immobile aggiunto con successo.");
+                return immobile;
             }
         }
+        return null;
     }
 
-    private void displayAggiungiContratto() {
+    private Contratto displayAggiungiContratto(Inquilino inquilino) {
         boolean conferma=false;
+        String cfInquilino = inquilino.getCf();
 
         while (!conferma) {
+            controller.visualizzaImmobili();
             System.out.println("Inserisci i dati del contratto");
-            System.out.print("Codice fiscale dell'inquilino: ");
-            String cfInquilino = scanner.next();
-            System.out.print("ID dell'immobile: ");
-            String idImmobile = scanner.next();
+            System.out.print("ID dell'immobile come indicato nella tabella: ");
+            int idImmobile = scanner.nextInt();
+            if(!controller.isImmobile(idImmobile)) {
+                System.out.println("L'immobile selezionato non è presente nel database. Si desidera crearlo adesso? (S/n)");
+                String confermaInput = scanner.next();
+
+                if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                    Immobile immobile = displayAggiungiImmobile();
+                    if(immobile != null) {
+                        idImmobile = immobile.getId();
+                    }
+                    else {
+                        return null;
+                    }
+                }
+                else {
+                    System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
+                    confermaInput = scanner.next();
+
+                    if (confermaInput.equals("s")) {
+                        conferma = true;
+                    }
+                }
+            }
             System.out.print("Data di inizio contratto (formato: YYYY-MM-DD): ");
             String dataInizio = scanner.next();
             System.out.print("Data di fine contratto (formato: YYYY-MM-DD): ");
             String dataFine = scanner.next();
             System.out.print("Canone mensile: ");
-            float canone = scanner.nextFloat();
+            String canone = scanner.next();
 
-            System.out.println("Confermi i dati inseriti? (s/n)");
+            System.out.println("Confermi inquilino dati inseriti? (s/n)");
             String confermaInput = scanner.next();
 
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                Contratto contratto = new Contratto(idImmobile, cfInquilino, controller.getCfProprietario(), dataInizio, dataFine, Float.parseFloat(canone));
+                return contratto;
+            }
+
+            System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
+            confermaInput = scanner.next();
+
             if (confermaInput.equals("s")) {
-                Contratto contratto = new Contratto(idImmobile, cfInquilino, controller.getCfProprietario(), dataInizio, dataFine, canone);
-                controller.aggiungiContratto(contratto);
                 conferma = true;
             }
         }
+        return null;
     }
 
     private void displayAggiungiInquilino() {
         boolean conferma = false;
         while (!conferma) {
+            System.out.println("Dopo aver aggiunto i dati dell'inquilino verrà richiesto " +
+                    "di inserire i dati del relativo contratto");
             System.out.println("Inserire i dati dell'inquilino");
             System.out.print("Nome: ");
             String nome = scanner.next();
@@ -198,14 +260,24 @@ public class MenuUtente {
             String telefono = scanner.nextLine();
             System.out.print("Email: ");
             String email = scanner.nextLine();
-            
+
             System.out.println("Confermi i dati inseriti? (s/n)");
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
                 Inquilino i = new Inquilino(cf, nome, cognome, dataNascita, cittàNascita, residenza, telefono, email);
-                controller.aggiungiInquilino(i);
-                System.out.println("Inquilino aggiunto con successo.");
+                Contratto c = displayAggiungiContratto(i);
+                if(c != null) {
+                    controller.aggiungiInquilino(i);
+                    controller.aggiungiContratto(c);
+                    System.out.println("Inquilino e relativo contratto aggiunti con successo.");
+                }
+                return;
+            }
+
+            System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
+            confermaInput = scanner.next();
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
                 conferma = true;
             }
         }

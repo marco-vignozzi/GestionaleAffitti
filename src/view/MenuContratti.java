@@ -6,14 +6,14 @@ import model.Immobile;
 import model.Inquilino;
 
 public class MenuContratti extends Menu {
+
     public MenuContratti(Controller controller) {
         super(controller);
     }
-    public void display() {
-        // TODO: finire di implementare
-        boolean termina = false;
 
-        System.out.println("Bentornato nell'app N° 1 di DESTE e VIGNOZ!");
+    public void display() {
+
+        boolean termina = false;
 
         while(!termina){
             System.out.println("Scegli l'operazione da eseguire: ");
@@ -30,7 +30,7 @@ public class MenuContratti extends Menu {
                     displayAggiungiContratto();
                     continue;
                 case "2":
-                    displayVisualizzaContratti();
+                    controller.visualizzaContratti();
                     continue;
                 case "3":
                     displayModificaContratto();         // TODO: implementare
@@ -48,7 +48,7 @@ public class MenuContratti extends Menu {
     }
 
     public void displayAggiungiContratto() {
-        System.out.println("Per creare un contratto è necessario creare l'inquilino a cui è associato.");
+        System.out.println("Per creare un contratto è necessario creare prima l'inquilino a cui è associato.");
         MenuInquilini menuInquilini = new MenuInquilini(this.controller);
         menuInquilini.displayAggiungiInquilino();
     }
@@ -89,6 +89,8 @@ public class MenuContratti extends Menu {
             String dataInizio = scanner.next();
             System.out.print("Data di fine contratto (formato: YYYY-MM-DD): ");
             String dataFine = scanner.next();
+            System.out.print("Data di pagamento (formato: MM-DD): ");
+            String dataPagamento = scanner.next();
             System.out.print("Canone mensile: ");
             String canone = scanner.next();
 
@@ -96,7 +98,8 @@ public class MenuContratti extends Menu {
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(), dataInizio, dataFine, Float.parseFloat(canone));
+                Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(),
+                        dataInizio, dataFine, dataPagamento, Float.parseFloat(canone));
                 return contratto;
             }
 
@@ -108,10 +111,6 @@ public class MenuContratti extends Menu {
             }
         }
         return null;
-    }
-
-    private void displayVisualizzaContratti() {
-        controller.visualizzaContratti();
     }
 
     private void displayModificaContratto() {

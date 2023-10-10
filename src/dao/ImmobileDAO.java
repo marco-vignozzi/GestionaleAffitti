@@ -15,10 +15,10 @@ public class ImmobileDAO extends DatabaseDAO {
     private static final String SELECT_IMMOBILE_BY_ID = "SELECT * FROM immobili WHERE id = ? AND cf_proprietario = ?";
     private static final String SELECT_IMMOBILE = "SELECT id FROM immobili WHERE comune = ? AND indirizzo = ? AND n_civico = ? " +
             "AND subalterno = ? ";
+    // TODO: vedere se usare una query che ti seleziona tutti i dati degli immobili e mettere questa come query di "resoconto"
     private static final String SELECT_ALL_IMMOBILI = "SELECT immobili.id, comune, indirizzo, n_civico, subalterno, affittato, " +
-            "cf_inquilino, canone, debito FROM contratti JOIN inquilini ON inquilini.cf = contratti.cf_inquilino " +
-            "RIGHT JOIN immobili ON id_immobile = immobili.id WHERE immobili.cf_proprietario = ?";
-
+            "cf_inquilino, inquilini.nome, inquilini.cognome, canone, debito FROM contratti JOIN inquilini ON " +
+            "inquilini.cf = contratti.cf_inquilino RIGHT JOIN immobili ON id_immobile = immobili.id WHERE immobili.cf_proprietario = ?";
     private static final String CREATE_IMMOBILE = "CREATE TABLE immobili (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
             "comune VARCHAR(255) NOT NULL," +

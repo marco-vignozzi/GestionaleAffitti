@@ -6,15 +6,14 @@ import model.ImmobileBuilder;
 
 
 public class MenuImmobili extends Menu {
+
     public MenuImmobili(Controller controller) {
         super(controller);
     }
 
     public void display() {
-        // TODO: finire di implementare
-        boolean termina = false;
 
-        System.out.println("Bentornato nell'app N° 1 di DESTE e VIGNOZ!");
+        boolean termina = false;
 
         while(!termina){
             System.out.println("Scegli l'operazione da eseguire: ");
@@ -31,7 +30,7 @@ public class MenuImmobili extends Menu {
                     displayAggiungiImmobile();
                     continue;
                 case "2":
-                    displayVisualizzaImmobili();
+                    controller.visualizzaImmobili();
                     continue;
                 case "3":
                     displayModificaImmobile();         // TODO: implementare
@@ -118,10 +117,6 @@ public class MenuImmobili extends Menu {
             }
         }
         return null;
-    }
-
-    private void displayVisualizzaImmobili() {
-        controller.visualizzaImmobili();
     }
 
     private void displayModificaImmobile() {

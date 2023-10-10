@@ -5,15 +5,14 @@ import model.Contratto;
 import model.Inquilino;
 
 public class MenuInquilini extends Menu {
+
     public MenuInquilini(Controller controller) {
         super(controller);
     }
 
     public void display() {
-        // TODO: finire di implementare
-        boolean termina = false;
 
-        System.out.println("Bentornato nell'app N° 1 di DESTE e VIGNOZ!");
+        boolean termina = false;
 
         while(!termina){
             System.out.println("Scegli l'operazione da eseguire: ");
@@ -30,7 +29,7 @@ public class MenuInquilini extends Menu {
                     displayAggiungiInquilino();
                     continue;
                 case "2":
-                    displayVisualizzaInquilini();
+                    controller.visualizzaInquilini();
                     continue;
                 case "3":
                     displayModificaInquilino();         // TODO: implementare
@@ -94,10 +93,6 @@ public class MenuInquilini extends Menu {
             }
         }
         return null;
-    }
-
-    public void displayVisualizzaInquilini() {
-        controller.visualizzaInquilini();
     }
 
     public void displayModificaInquilino() {

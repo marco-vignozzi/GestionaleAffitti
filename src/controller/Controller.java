@@ -2,10 +2,9 @@ package controller;
 
 
 import dao.*;
-import model.Contratto;
-import model.Immobile;
-import model.Inquilino;
-import model.Proprietario;
+import model.*;
+
+import java.time.format.DateTimeFormatter;
 
 
 public class Controller {
@@ -13,7 +12,7 @@ public class Controller {
     private ProprietarioDAO proprietarioDao;
     private InquilinoDAO inquilinoDao;
     private ImmobileDAO immobileDao;
-    private Proprietario proprietario;
+    private Proprietario proprietario = null;
 
     public Controller() {
         proprietarioDao = new ProprietarioDAO();
@@ -22,7 +21,6 @@ public class Controller {
         contrattoDao = new ContrattoDAO();
     }
 
-    // qui passo tipo utente come parametro per decidere se è un proprietario o un inquilino
     public void aggiungiUtente(Proprietario p) {
         proprietarioDao.aggiungiUtente(p);
     }
@@ -43,13 +41,16 @@ public class Controller {
         return proprietario.getCf();
     }
 
-    // questo metodo permette di visualizzare tutti gli immobili
     public void visualizzaImmobili() {
         immobileDao.visualizzaImmobili(proprietario.getCf());
     }
 
     public void setProprietario(String email, String password) {
         proprietario = proprietarioDao.getUtente(email, password);
+    }
+
+    public Proprietario getProprietario() {
+        return proprietario;
     }
 
     public boolean isUtente(String email, String password) {
@@ -129,8 +130,7 @@ public class Controller {
         return false;
     }
 
-    // serve per resettare il controller quando si esce dal menu utente, per evitare di mantenere i dati dell'utente
-    // acceduto in precedenza
+    // serve per resettare il controller quando si esce dal menu facade
     public void reset() {
         this.contrattoDao.tabella.dispose();
         this.immobileDao.tabella.dispose();
@@ -143,4 +143,19 @@ public class Controller {
         this.proprietario = null;
     }
 
+    public void aggiornaDebito(Contratto contratto, String idInquilino) {
+        float nuovoDebito;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        inquilinoDao.aggiornaDebito(idInquilino, nuovoDebito, proprietario.getCf());
+    }
+
+    public void aggiungiPagamento(String idInquilino, String pagamento) {
+        try {
+            inquilinoDao.aggiungiPagamento(Integer.parseInt(idInquilino), Float.parseFloat(pagamento), proprietario.getCf());
+            Contratto contratto = contrattoDao.getDateContratto(Integer.parseInt(idInquilino), proprietario.getCf());
+            aggiornaDebito(contratto, idInquilino);
+        }catch (NumberFormatException e) {
+            System.out.println("Valore non valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        }
+    }
 }

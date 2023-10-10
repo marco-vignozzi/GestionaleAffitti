@@ -3,18 +3,16 @@ package view;
 import controller.Controller;
 import model.Proprietario;
 
-import java.util.Scanner;
 
 public class MenuLogin extends Menu {
-    private final Scanner scanner = new Scanner(System.in);
 
-    public MenuLogin() {
-        super(new Controller());
+    public MenuLogin(Controller controller) {
+        super(controller);
     }
 
     public void display() {
 
-        System.out.println("Benvenuto nell'app numero 1 di deste e vigno!");
+        System.out.println("Benvenuto nell'app di gestione immobili by DESTE e VIGNOZ!");
         boolean termina = false;
 
         while(!termina) {
@@ -26,7 +24,9 @@ public class MenuLogin extends Menu {
 
             switch (input) {
                 case "1":
-                    displayAccesso();
+                    if(displayAccesso()) {
+                        termina = true;
+                    }
                     continue;
                 case "2":
                     displayRegistrazione();
@@ -40,7 +40,7 @@ public class MenuLogin extends Menu {
         }
     }
 
-    public void displayAccesso() {
+    public boolean displayAccesso() {
 
         boolean termina = false;
         char[] riprova = {'0'};            // inizializzo a 0, mi serve per metterci la scelta nell'else
@@ -57,10 +57,8 @@ public class MenuLogin extends Menu {
             if (controller.isUtente(email, password)) {
 
                 controller.setProprietario(email, password);
-                MenuFacade menu = new MenuFacade(controller);
-                menu.display();
-                termina = true;
-
+                termina = true;         // TODO: magari si toglie termina
+                return true;
             } else {
                 System.out.println("Email o password errate.");
                 System.out.println("Riprovare? (S/n)");
@@ -69,10 +67,11 @@ public class MenuLogin extends Menu {
                 scanner.next().toLowerCase().getChars(0, 1, riprova, 0);
                 if (riprova[0] != 's') {
                     termina = true;
+                    return false;
                 }
-
             }
         }
+        return false;
     }
 
     public void displayRegistrazione() {

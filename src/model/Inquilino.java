@@ -13,6 +13,7 @@ public class Inquilino {
     private String telefono;
     private String email;
     private float debito = 0;
+    private float sommaPagamenti = 0;
 
     public Inquilino(String cf, String nome, String cognome, String dataNascita,
                      String cittàNascita, String residenza, String tel, String email)
@@ -98,4 +99,13 @@ public class Inquilino {
     public void setDebito(float debito) {
         this.debito = debito;
     }
+
+    public float getSommaPagamenti() {
+        return sommaPagamenti;
+    }
+
+    public void setSommaPagamenti(float sommaPagamenti) {
+        this.sommaPagamenti = sommaPagamenti;
+    }
+
 }

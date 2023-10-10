@@ -16,8 +16,8 @@ public class ImmobileDAO extends DatabaseDAO {
     private static final String SELECT_IMMOBILE = "SELECT id FROM immobili WHERE comune = ? AND indirizzo = ? AND n_civico = ? " +
             "AND subalterno = ? ";
     private static final String SELECT_ALL_IMMOBILI = "SELECT immobili.id, comune, indirizzo, n_civico, subalterno, affittato, " +
-            "cf_inquilino, canone FROM contratti RIGHT JOIN immobili ON id_immobile = immobili.id " +
-            "WHERE immobili.cf_proprietario = ?";
+            "cf_inquilino, canone, debito FROM contratti JOIN inquilini ON inquilini.cf = contratti.cf_inquilino " +
+            "RIGHT JOIN immobili ON id_immobile = immobili.id WHERE immobili.cf_proprietario = ?";
 
     private static final String CREATE_IMMOBILE = "CREATE TABLE immobili (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
@@ -33,8 +33,9 @@ public class ImmobileDAO extends DatabaseDAO {
             "indirizzo VARCHAR(255) NOT NULL," +
             "n_civico VARCHAR(255) NOT NULL," +
             "affittato BOOLEAN NOT NULL," +
-            "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf)" +
+            "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf) ON DELETE CASCADE" +
             ")";
+    private static final String DELETE_IMMOBILE = "DELETE FROM immobili WHERE id = ?";
 
     public TabellaGUI tabella;
 
@@ -83,8 +84,6 @@ public class ImmobileDAO extends DatabaseDAO {
             throw new RuntimeException(e);
         }
     }
-    //TODO: implementare con il builder pattern la possibilità di visualizzare caratteristiche immobili diverse
-
 
     public ResultSet getAllImmobili(String cfProprietario) {
         if (connection == null) {
@@ -141,4 +140,20 @@ public class ImmobileDAO extends DatabaseDAO {
         }
 
     }
+
+    public void rimuoviImmobile(int idImmobile, String cfProprietario) {
+        if (connection == null) {
+            connect();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(DELETE_IMMOBILE);
+            statement.setInt(1, idImmobile);
+            if(statement.executeUpdate()>0) {
+                tabella.aggiornaTabella(getAllImmobili(cfProprietario));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

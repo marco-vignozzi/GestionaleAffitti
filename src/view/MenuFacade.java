@@ -52,7 +52,7 @@ public class MenuFacade {
             System.out.print("Password: ");
             String password = scanner.next();
 
-            if (controller.utenteValido(email, password)) {
+            if (controller.isUtente(email, password)) {
 
                 controller.setProprietario(email, password);
                 MenuUtente menuUtente = new MenuUtente(controller);

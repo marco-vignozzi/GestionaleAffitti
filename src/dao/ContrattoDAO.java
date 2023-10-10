@@ -19,9 +19,9 @@ public class ContrattoDAO extends DatabaseDAO {
             "data_inizio VARCHAR(255) NOT NULL," +
             "data_fine VARCHAR(255) NOT NULL," +
             "canone FLOAT NOT NULL," +
-            "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf)," +
-            "FOREIGN KEY (cf_inquilino) REFERENCES inquilini(cf)," +
-            "FOREIGN KEY (id_immobile) REFERENCES immobili(id)" +
+            "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf) ON DELETE CASCADE," +
+            "FOREIGN KEY (cf_inquilino) REFERENCES inquilini(cf) ON DELETE CASCADE," +
+            "FOREIGN KEY (id_immobile) REFERENCES immobili(id) ON DELETE CASCADE" +
             ")";
     private static final String SELECT_ALL_CONTRATTI = "SELECT * FROM contratti WHERE cf_proprietario = ?";
 

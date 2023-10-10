@@ -55,7 +55,6 @@ public class MenuUtente {
                     continue;
                 case "x":
                     termina = true;
-                    controller.elimina_finestre();
                     controller.reset();
                     continue;
                 default:
@@ -70,6 +69,58 @@ public class MenuUtente {
 
     private void displayVisualizzaImmobili() {
         controller.visualizzaImmobili();
+        boolean termina = false;
+
+        while(!termina) {
+            System.out.println("Scegliere l'operazione:");
+            System.out.println(" 1 - Modifica dati immobile");
+            System.out.println(" 2 - Rimuovi immobile");
+            System.out.println(" x - Indietro");
+
+            String idImmobile;
+            String input = scanner.next();
+            String confermaInput;
+
+            switch (input) {
+                case "1":
+                    System.out.println("Inserire l'ID dell'immobile che si desidera modificare (come indicato in tabella)");
+                    System.out.print("ID: ");
+                    idImmobile = scanner.next();
+                    displayModificaImmobile(Integer.parseInt(idImmobile));
+                    break;
+
+                case "2":
+                    System.out.println("Inserire l'ID dell'immobile che si desidera rimuovere (come indicato in tabella)");
+                    System.out.print("ID: ");
+                    idImmobile = scanner.next();
+                    if(controller.isImmobile(idImmobile)) {
+                        System.out.println("Rimuovere definitivamente l'immobile con ID " + idImmobile +
+                                "? Verranno rimossi anche eventuali inquilino e contratto ad esso associati (S/n)");
+                        confermaInput = scanner.next();
+                        if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                            controller.rimuoviImmobile(idImmobile);
+                            System.out.println("Rimosso immobile con ID " + idImmobile);
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else {
+                        System.out.println("Non esiste nessun immobile con l'ID selezionato.");
+                    }
+                    break;
+
+                case "x":
+                    termina = true;
+                    break;
+                default:
+                    System.out.println("Valore inserito invalido come te e tua madre");
+            }
+        }
+    }
+
+    private void displayModificaImmobile(int idImmobile) {
+
     }
 
     private void displayVisualizzaInquilini() {
@@ -77,9 +128,9 @@ public class MenuUtente {
         boolean termina = false;
 
         while(!termina) {
-            System.out.println("Vuoi modificare o rimuovere un inquilino?");
-            System.out.println(" 1 - Modifica");
-            System.out.println(" 2 - Rimuovi");
+            System.out.println("Scegliere l'operazione:");
+            System.out.println(" 1 - Modifica dati inquilino");
+            System.out.println(" 2 - Rimuovi inquilino");
             System.out.println(" x - Indietro");
 
             String idInquilino;
@@ -88,25 +139,33 @@ public class MenuUtente {
 
             switch (input) {
                 case "1":
-                    System.out.println("Inserire l'ID dell'inquilino che desideri modificare");
+                    System.out.println("Inserire l'ID dell'inquilino che si desidera modificare (come indicato in tabella)");
                     System.out.print("ID: ");
                     idInquilino = scanner.next();
-                    displayModificaInquilino();
+                    displayModificaInquilino(Integer.parseInt(idInquilino));
                     break;
+
                 case "2":
-                    System.out.println("Inserire l'ID dell'inquilino che si desidera rimuovere");
+                    System.out.println("Inserire l'ID dell'inquilino che si desidera rimuovere (come indicato in tabella)");
                     System.out.print("ID: ");
                     idInquilino = scanner.next();
-
-                    System.out.println("Rimuovere definitivamente l'inquilino con ID " + idInquilino +
-                            " e il relativo contratto? (S/n)");
-                    confermaInput = scanner.next();
-                    
-                    if(confermaInput.equals("s") || confermaInput.equals("S")) {
-                        controller.rimuoviInquilino(idInquilino);
-                        System.out.println("Rimosso inquilino con iD " + idInquilino);
+                    if(controller.isInquilino(idInquilino)) {
+                        System.out.println("Rimuovere definitivamente l'inquilino con ID " + idInquilino +
+                                " e il relativo contratto? (S/n)");
+                        confermaInput = scanner.next();
+                        if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                            controller.rimuoviInquilino(idInquilino);
+                            System.out.println("Rimosso inquilino con ID " + idInquilino);
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else {
+                        System.out.println("Non esiste nessun inquilino con l'ID selezionato.");
                     }
                     break;
+
                 case "x":
                     termina = true;
                     break;
@@ -114,10 +173,9 @@ public class MenuUtente {
                     System.out.println("Valore inserito invalido come te e tua madre");
             }
         }
-        // TODO: aggiungi operazioni di modifica
     }
 
-    private void displayModificaInquilino() {
+    private void displayModificaInquilino(int idInquilino) {
 
     }
 
@@ -150,7 +208,7 @@ public class MenuUtente {
             builder.comune(comune).indirizzo(indirizzo).nCivico(nCivico).subalterno(Integer.parseInt(subalterno)).affittato(affittato);
 
             System.out.println("Vuoi aggiungere i dati catastali? (altrimenti sarà possibile aggiungerli più tardi dal menu utente)");
-            System.out.print("S/n : ");
+            System.out.print("(S/n) : ");
             confermaInput = scanner.next();
             if (confermaInput.equals("s") || confermaInput.equals("S")){
                 System.out.print("Foglio: ");
@@ -194,7 +252,7 @@ public class MenuUtente {
             controller.visualizzaImmobili();
             System.out.println("Inserisci i dati del contratto");
             System.out.print("ID dell'immobile come indicato nella tabella: ");
-            int idImmobile = scanner.nextInt();
+            String idImmobile = scanner.next();
             if(!controller.isImmobile(idImmobile)) {
                 System.out.println("L'immobile selezionato non è presente nel database. Si desidera crearlo adesso? (S/n)");
                 String confermaInput = scanner.next();
@@ -202,7 +260,7 @@ public class MenuUtente {
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
                     Immobile immobile = displayAggiungiImmobile();
                     if(immobile != null) {
-                        idImmobile = immobile.getId();
+                        idImmobile = Integer.toString(immobile.getId());
                     }
                     else {
                         return null;
@@ -228,7 +286,7 @@ public class MenuUtente {
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                Contratto contratto = new Contratto(idImmobile, cfInquilino, controller.getCfProprietario(), dataInizio, dataFine, Float.parseFloat(canone));
+                Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(), dataInizio, dataFine, Float.parseFloat(canone));
                 return contratto;
             }
 

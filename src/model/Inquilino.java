@@ -12,7 +12,7 @@ public class Inquilino {
     private String residenza;
     private String telefono;
     private String email;
-    private boolean pagato = false;
+    private float debito = 0;
 
     public Inquilino(String cf, String nome, String cognome, String dataNascita,
                      String cittàNascita, String residenza, String tel, String email)
@@ -91,11 +91,11 @@ public class Inquilino {
         this.email = email;
     }
 
-    public boolean isPagato() {
-        return pagato;
+    public float getDebito() {
+        return debito;
     }
 
-    public void setPagato(boolean pagato) {
-        this.pagato = pagato;
+    public void setDebito(float debito) {
+        this.debito = debito;
     }
 }

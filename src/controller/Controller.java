@@ -39,14 +39,6 @@ public class Controller {
         inquilinoDao.aggiungiInquilino(inquilino, proprietario.getCf());
     }
 
-    public String getCognomeProprietario() {
-        return proprietario.getCognome();
-    }
-
-    public String getNomeProprietario() {
-        return proprietario.getNome();
-    }
-
     public String getCfProprietario() {
         return proprietario.getCf();
     }
@@ -60,7 +52,7 @@ public class Controller {
         proprietario = proprietarioDao.getUtente(email, password);
     }
 
-    public boolean utenteValido(String email, String password) {
+    public boolean isUtente(String email, String password) {
         return proprietarioDao.verificaUtente(email, password);
     }
 
@@ -81,24 +73,35 @@ public class Controller {
         immobileDao.aggiungiImmobile(immobile);
     }
 
-    public boolean isImmobile(int idImmobile) {
-        return immobileDao.verificaImmobile(idImmobile, proprietario.getCf());
+    public boolean isInquilino(String idInquilino) {
+        return inquilinoDao.verificaInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
+    }
+
+    public boolean isImmobile(String idImmobile) {
+        try {
+            return immobileDao.verificaImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
+        }catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        }
+        return false;
+    }
+
+    public void rimuoviImmobile(String idImmobile) {
+        immobileDao.rimuoviImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
     }
 
     // serve per resettare il controller quando si esce dal menu utente, per evitare di mantenere i dati dell'utente
     // acceduto in precedenza
     public void reset() {
+        this.contrattoDao.tabella.dispose();
+        this.immobileDao.tabella.dispose();
+        this.inquilinoDao.tabella.dispose();
+
         this.immobileDao = new ImmobileDAO();
         this.inquilinoDao = new InquilinoDAO();
         this.contrattoDao = new ContrattoDAO();
         this.proprietarioDao = new ProprietarioDAO();
         this.proprietario = null;
-    }
-
-    public void elimina_finestre(){
-        this.contrattoDao.tabella.dispose();
-        this.immobileDao.tabella.dispose();
-        this.inquilinoDao.tabella.dispose();
     }
 
 }

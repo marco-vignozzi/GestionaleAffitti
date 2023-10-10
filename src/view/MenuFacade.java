@@ -1,36 +1,57 @@
 package view;
 
+import controller.Controller;
+
+import model.Contratto;
+import model.Immobile;
+import model.ImmobileBuilder;
+import model.Inquilino;
+
 import java.util.Scanner;
 
-import controller.Controller;
-import model.Proprietario;
 
+public class MenuFacade extends Menu {
 
-public class MenuFacade {
-    private final Controller controller = new Controller();
-    private final Scanner scanner = new Scanner(System.in);
+    public MenuFacade(Controller controller) {
+        super(controller);
+    }
 
     public void display() {
-
-        System.out.println("Benvenuto nell'app numero 1 di deste e vigno!");
+        // TODO: finire di implementare
         boolean termina = false;
 
-        while(!termina) {
-            System.out.println("Digita uno dei seguenti numeri per scegliere l'operazione:");
-            System.out.println(" 1 - Accedi ");
-            System.out.println(" 2 - Registrati (nuovo utente)");
-            System.out.println(" x - Esci");
+        System.out.println("Bentornato nell'app N° 1 di DESTE e VIGNOZ!");
+
+        while(!termina){
+            System.out.println("Scegliere quale menu visualizzare: ");
+            System.out.println(" 1 - Menu operazioni utente");      // FATTO
+            System.out.println(" 2 - Menu gestione inquilini");
+            System.out.println(" 3 - Menu gestione immobili");       // IN CORSO...
+            System.out.println(" 4 - Menu gestione contratti");
+            System.out.println(" x - Torna al login");
+
             String input = scanner.next();
 
             switch (input) {
                 case "1":
-                    displayAccesso();
+                    MenuUtente menuUtente = new MenuUtente(controller);
+                    menuUtente.display();
                     continue;
                 case "2":
-                    displayRegistrazione();
+                    MenuInquilini menuInquilini = new MenuInquilini(controller);
+                    menuInquilini.display();
+                    continue;
+                case "3":
+                    MenuImmobili menuImmobili = new MenuImmobili(controller);
+                    menuImmobili.display();
+                    continue;
+                case "4":
+                    MenuContratti menuContratti = new MenuContratti(controller);
+                    menuContratti.display();
                     continue;
                 case "x":
                     termina = true;
+                    controller.reset();
                     continue;
                 default:
                     System.out.println("Valore inserito invalido come te e tua madre");
@@ -38,77 +59,287 @@ public class MenuFacade {
         }
     }
 
-    public void displayAccesso() {
+    private void displayVisualizzaContratti() {
+        controller.visualizzaContratti();
+    }
 
+    private void displayVisualizzaImmobili() {
+        controller.visualizzaImmobili();
         boolean termina = false;
-        char[] riprova = {'0'};            // inizializzo a 0, mi serve per metterci la scelta nell'else
 
-        while (!termina) {
-            System.out.println("Inserire email e password per accedere");
+        while(!termina) {
+            System.out.println("Scegliere l'operazione:");
+            System.out.println(" 1 - Modifica dati immobile");
+            System.out.println(" 2 - Rimuovi immobile");
+            System.out.println(" x - Indietro");
 
-            System.out.print("Email: ");
-            String email = scanner.next();
+            String idImmobile;
+            String input = scanner.next();
+            String confermaInput;
 
-            System.out.print("Password: ");
-            String password = scanner.next();
+            switch (input) {
+                case "1":
+                    System.out.println("Inserire l'ID dell'immobile che si desidera modificare (come indicato in tabella)");
+                    System.out.print("ID: ");
+                    idImmobile = scanner.next();
+                    displayModificaImmobile(Integer.parseInt(idImmobile));
+                    break;
 
-            if (controller.isUtente(email, password)) {
+                case "2":
+                    System.out.println("Inserire l'ID dell'immobile che si desidera rimuovere (come indicato in tabella)");
+                    System.out.print("ID: ");
+                    idImmobile = scanner.next();
+                    if(controller.isImmobile(idImmobile)) {
+                        System.out.println("Rimuovere definitivamente l'immobile con ID " + idImmobile +
+                                "? Verranno rimossi anche eventuali inquilino e contratto ad esso associati (S/n)");
+                        confermaInput = scanner.next();
+                        if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                            controller.rimuoviImmobile(idImmobile);
+                            System.out.println("Rimosso immobile con ID " + idImmobile);
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else {
+                        System.out.println("Non esiste nessun immobile con l'ID selezionato.");
+                    }
+                    break;
 
-                controller.setProprietario(email, password);
-                MenuUtente menuUtente = new MenuUtente(controller);
-                menuUtente.display();
-                termina = true;
-
-            } else {
-                System.out.println("Email o password errate.");
-                System.out.println("Riprovare? (S/n)");
-                // se si sceglie qualcosa che inizia con 's' si riprova, altrimenti si esce
-                // quindi scannerizzo l'input, lo rendo minuscolo e estraggo il carattere in prima posizione mettendolo in riprova
-                scanner.next().toLowerCase().getChars(0, 1, riprova, 0);
-                if (riprova[0] != 's') {
+                case "x":
                     termina = true;
-                }
-
+                    break;
+                default:
+                    System.out.println("Valore inserito invalido come te e tua madre");
             }
         }
     }
 
-    public void displayRegistrazione() {
+    private void displayModificaImmobile(int idImmobile) {
 
-        boolean verificato = false;
-        char[] riprova = {'0'};
+    }
 
-        String email = "";
-        while (!verificato) {
-            System.out.print("Email: ");
-            email = scanner.next();
-            if (!controller.emailDisponibile(email)) {
-                System.out.println("Email già associata a un account. Riprovare? (S/n)");
-                // Ho aggiunto lo stesso giochino del riprova per evitare loop infiniti di email non disponibili
-                scanner.next().toLowerCase().getChars(0, 1, riprova, 0);
-                if (riprova[0] != 's') {
-                    return;
-                };
+    private void displayVisualizzaInquilini() {
+        controller.visualizzaInquilini();
+        boolean termina = false;
 
-            } else {
-                verificato = true;
+        while(!termina) {
+            System.out.println("Scegliere l'operazione:");
+            System.out.println(" 1 - Modifica dati inquilino");
+            System.out.println(" 2 - Rimuovi inquilino");
+            System.out.println(" x - Indietro");
+
+            String idInquilino;
+            String input = scanner.next();
+            String confermaInput;
+
+            switch (input) {
+                case "1":
+                    System.out.println("Inserire l'ID dell'inquilino che si desidera modificare (come indicato in tabella)");
+                    System.out.print("ID: ");
+                    idInquilino = scanner.next();
+                    displayModificaInquilino(Integer.parseInt(idInquilino));
+                    break;
+
+                case "2":
+                    System.out.println("Inserire l'ID dell'inquilino che si desidera rimuovere (come indicato in tabella)");
+                    System.out.print("ID: ");
+                    idInquilino = scanner.next();
+                    if(controller.isInquilino(idInquilino)) {
+                        System.out.println("Rimuovere definitivamente l'inquilino con ID " + idInquilino +
+                                " e il relativo contratto? (S/n)");
+                        confermaInput = scanner.next();
+                        if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                            controller.rimuoviInquilino(idInquilino);
+                            System.out.println("Rimosso inquilino con ID " + idInquilino);
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else {
+                        System.out.println("Non esiste nessun inquilino con l'ID selezionato.");
+                    }
+                    break;
+
+                case "x":
+                    termina = true;
+                    break;
+                default:
+                    System.out.println("Valore inserito invalido come te e tua madre");
             }
         }
+    }
 
-        System.out.print("Password: ");
-        String pwd = scanner.next();
-        scanner.nextLine();
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Cognome: ");
-        String cognome = scanner.nextLine();
-        System.out.print("Codice fiscale: ");
-        String cf = scanner.next(); // FIXME: se il codice fiscale è più lungo di 16 crasha tutto
+    private void displayModificaInquilino(int idInquilino) {
 
-        Proprietario p = new Proprietario(email, pwd, nome, cognome, cf);
-        controller.aggiungiUtente(p);
+    }
 
-        System.out.println("Registrazione avvenuta con successo");
+    private Immobile displayAggiungiImmobile() {
+        boolean conferma=false;
+        ImmobileBuilder builder = new ImmobileBuilder();
+
+        while (!conferma) {
+            System.out.println("Inserire i dati dell'immobile");
+            System.out.print("Comune: ");
+            String comune = scanner.next();
+            System.out.print("Indirizzo: ");
+            String indirizzo = scanner.next();
+            System.out.print("Numero Civico: ");
+            String nCivico = scanner.next();
+            scanner.nextLine();
+            System.out.print("Subalterno: ");
+            String subalterno = scanner.next();
+            System.out.print("Affittato (S/n): ");
+            String confermaInput = scanner.next();
+            boolean affittato;
+
+            if(confermaInput.equals("s") || confermaInput.equals("S")) {
+                affittato = true;
+            }
+            else {
+                affittato = false;
+            }
+
+            builder.comune(comune).indirizzo(indirizzo).nCivico(nCivico).subalterno(Integer.parseInt(subalterno)).affittato(affittato);
+
+            System.out.println("Vuoi aggiungere i dati catastali? (altrimenti sarà possibile aggiungerli più tardi dal menu utente)");
+            System.out.print("(S/n) : ");
+            confermaInput = scanner.next();
+            if (confermaInput.equals("s") || confermaInput.equals("S")){
+                System.out.print("Foglio: ");
+                String foglio = scanner.next();
+                System.out.print("Particella: ");
+                String particella = scanner.next();
+                System.out.print("Categoria: ");
+                String categoria = scanner.next();
+                System.out.print("Classe: ");
+                String classe = scanner.next();
+                System.out.print("Superficie: ");
+                String superficie = scanner.next();
+                System.out.print("Rendita: ");
+                String rendita = scanner.next();
+
+                builder.foglio(Integer.parseInt(foglio)).particella(Integer.parseInt(particella)).categoria(categoria)
+                        .classe(classe).superficie(Float.parseFloat(superficie)).rendita(Float.parseFloat(rendita));
+
+            }
+
+            System.out.println("Confermi i dati inseriti? (S/n)");
+            confermaInput = scanner.next();
+
+            Immobile immobile = builder.build();
+
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                controller.aggiungiImmobile(immobile);
+                conferma = true;
+                System.out.println("Immobile aggiunto con successo.");
+                return immobile;
+            }
+        }
+        return null;
+    }
+
+    private Contratto displayAggiungiContratto(Inquilino inquilino) {
+        boolean conferma=false;
+        String cfInquilino = inquilino.getCf();
+
+        while (!conferma) {
+            controller.visualizzaImmobili();
+            System.out.println("Inserisci i dati del contratto");
+            System.out.print("ID dell'immobile come indicato nella tabella: ");
+            String idImmobile = scanner.next();
+            if(!controller.isImmobile(idImmobile)) {
+                System.out.println("L'immobile selezionato non è presente nel database. Si desidera crearlo adesso? (S/n)");
+                String confermaInput = scanner.next();
+
+                if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                    Immobile immobile = displayAggiungiImmobile();
+                    if(immobile != null) {
+                        idImmobile = Integer.toString(immobile.getId());
+                    }
+                    else {
+                        return null;
+                    }
+                }
+                else {
+                    System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
+                    confermaInput = scanner.next();
+
+                    if (confermaInput.equals("s")) {
+                        conferma = true;
+                    }
+                }
+            }
+            System.out.print("Data di inizio contratto (formato: YYYY-MM-DD): ");
+            String dataInizio = scanner.next();
+            System.out.print("Data di fine contratto (formato: YYYY-MM-DD): ");
+            String dataFine = scanner.next();
+            System.out.print("Canone mensile: ");
+            String canone = scanner.next();
+
+            System.out.println("Confermi i dati inseriti? (s/n)");
+            String confermaInput = scanner.next();
+
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(), dataInizio, dataFine, Float.parseFloat(canone));
+                return contratto;
+            }
+
+            System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
+            confermaInput = scanner.next();
+
+            if (confermaInput.equals("s")) {
+                conferma = true;
+            }
+        }
+        return null;
+    }
+
+    private void displayAggiungiInquilino() {
+        boolean conferma = false;
+        while (!conferma) {
+            System.out.println("Dopo aver aggiunto i dati dell'inquilino verrà richiesto " +
+                    "di inserire i dati del relativo contratto");
+            System.out.println("Inserire i dati dell'inquilino");
+            System.out.print("Nome: ");
+            String nome = scanner.next();
+            scanner.nextLine();
+            System.out.print("Cognome: ");
+            String cognome = scanner.nextLine();
+            System.out.print("Codice fiscale: ");
+            String cf = scanner.nextLine();
+            System.out.print("Data di nascita (formato: YYYY-MM-DD): ");
+            String dataNascita = scanner.nextLine();
+            System.out.print("Città di nascita: ");
+            String cittàNascita = scanner.nextLine();
+            System.out.print("Residenza: ");
+            String residenza = scanner.nextLine();
+            System.out.print("Telefono: ");
+            String telefono = scanner.nextLine();
+            System.out.print("Email: ");
+            String email = scanner.nextLine();
+
+            System.out.println("Confermi i dati inseriti? (S/n)");
+            String confermaInput = scanner.next();
+
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                Inquilino i = new Inquilino(cf, nome, cognome, dataNascita, cittàNascita, residenza, telefono, email);
+                Contratto c = displayAggiungiContratto(i);
+                if(c != null) {
+                    controller.aggiungiInquilino(i);
+                    controller.aggiungiContratto(c);
+                    System.out.println("Inquilino e relativo contratto aggiunti con successo.");
+                }
+                return;
+            }
+
+            System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
+            confermaInput = scanner.next();
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                conferma = true;
+            }
+        }
     }
 
 }

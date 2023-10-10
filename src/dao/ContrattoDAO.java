@@ -24,6 +24,8 @@ public class ContrattoDAO extends DatabaseDAO {
             "FOREIGN KEY (id_immobile) REFERENCES immobili(id) ON DELETE CASCADE" +
             ")";
     private static final String SELECT_ALL_CONTRATTI = "SELECT * FROM contratti WHERE cf_proprietario = ?";
+    private static final String SELECT_CONTRATTO_BY_ID = "SELECT * FROM contratti WHERE cf_proprietario = ? AND id = ?";
+    private static final String DELETE_CONTRATTO = "DELETE FROM contratti WHERE id = ?";
 
     public ContrattoDAO() {
         connect();
@@ -85,4 +87,33 @@ public class ContrattoDAO extends DatabaseDAO {
        }
     }
 
+    public void rimuoviContratto(int idContratto, String cfProprietario) {
+        if (connection == null) {
+            connect();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(DELETE_CONTRATTO);
+            statement.setInt(1, idContratto);
+            if(statement.executeUpdate()>0) {
+                tabella.aggiornaTabella(getAllContratti(cfProprietario));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean verificaContratto(int idContratto, String cfProprietario) {
+        if (connection == null) {
+            connect();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_CONTRATTO_BY_ID);
+            statement.setString(1, cfProprietario);
+            statement.setInt(2, idContratto);
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -65,7 +65,11 @@ public class Controller {
     }
 
     public void rimuoviInquilino(String idInquilino) {
-        inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
+        try {
+            inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
+        } catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        }
     }
 
     public void aggiungiImmobile(Immobile immobile) {
@@ -74,7 +78,12 @@ public class Controller {
     }
 
     public boolean isInquilino(String idInquilino) {
-        return inquilinoDao.verificaInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
+        try {
+            return inquilinoDao.verificaInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
+        }catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        }
+        return false;
     }
 
     public boolean isImmobile(String idImmobile) {
@@ -87,7 +96,37 @@ public class Controller {
     }
 
     public void rimuoviImmobile(String idImmobile) {
-        immobileDao.rimuoviImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
+        try {
+            immobileDao.rimuoviImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
+        } catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        }
+    }
+
+    public Inquilino getInquilino(String idInquilino) {
+        try {
+            return inquilinoDao.getInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
+        }catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        }
+        return null;
+    }
+
+    public void rimuoviContratto(String idContratto) {
+        try {
+            contrattoDao.rimuoviContratto(Integer.parseInt(idContratto), proprietario.getCf());
+        }catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        }
+    }
+
+    public boolean isContratto(String idContratto) {
+        try {
+            return contrattoDao.verificaContratto(Integer.parseInt(idContratto), proprietario.getCf());
+        } catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        }
+        return false;
     }
 
     // serve per resettare il controller quando si esce dal menu utente, per evitare di mantenere i dati dell'utente

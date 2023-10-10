@@ -27,7 +27,6 @@ public class InquilinoDAO extends DatabaseDAO{
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
             "debito FLOAT NOT NULL" +
             ")";
-
     private static final String DELETE_INQUILINO = "DELETE FROM inquilini WHERE id = ?";
 
     // attributo che tiene un riferimento alla vista della tabella
@@ -128,4 +127,24 @@ public class InquilinoDAO extends DatabaseDAO{
         }
     }
 
+    public Inquilino getInquilino(int idInquilino, String cfProprietario) {
+        if (connection == null) {
+            connect();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINO_BY_ID);
+            statement.setString(1, cfProprietario);
+            statement.setInt(2, idInquilino);
+            ResultSet rs = statement.executeQuery();
+            Inquilino inquilino = null;
+            if(rs.next()){
+               inquilino = new Inquilino(rs.getString("cf"), rs.getString("nome"),
+                       rs.getString("cognome"), rs.getString("data_di_nascita"), rs.getString("città_di_nascita"),
+                       rs.getString("residenza"), rs.getString("telefono"), rs.getString("email"));
+            }
+            return inquilino;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

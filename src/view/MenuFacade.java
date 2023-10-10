@@ -1,10 +1,8 @@
 package view;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 import controller.Controller;
-import model.Inquilino;
 import model.Proprietario;
 
 
@@ -21,7 +19,7 @@ public class MenuFacade {
             System.out.println("Digita uno dei seguenti numeri per scegliere l'operazione:");
             System.out.println(" 1 - Accedi ");
             System.out.println(" 2 - Registrati (nuovo utente)");
-            System.out.println(" X - Esci");
+            System.out.println(" x - Esci");
             String input = scanner.next();
 
             switch (input) {

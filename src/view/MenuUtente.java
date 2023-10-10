@@ -22,6 +22,7 @@ public class MenuUtente {
     public void display() {
         // TODO: finire di implementare
         boolean termina = false;
+
         System.out.println("Bentornato nell'app N° 1 di DESTE e VIGNOZ!");
 
         while(!termina){
@@ -54,6 +55,7 @@ public class MenuUtente {
                     continue;
                 case "x":
                     termina = true;
+                    controller.elimina_finestre();
                     controller.reset();
                     continue;
                 default:

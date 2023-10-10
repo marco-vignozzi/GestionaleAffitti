@@ -1,10 +1,7 @@
 package controller;
 
 
-import dao.ContrattoDAO;
-import dao.ImmobileDAO;
-import dao.InquilinoDAO;
-import dao.ProprietarioDAO;
+import dao.*;
 import model.Contratto;
 import model.Immobile;
 import model.Inquilino;
@@ -96,6 +93,12 @@ public class Controller {
         this.contrattoDao = new ContrattoDAO();
         this.proprietarioDao = new ProprietarioDAO();
         this.proprietario = null;
+    }
+
+    public void elimina_finestre(){
+        this.contrattoDao.tabella.dispose();
+        this.immobileDao.tabella.dispose();
+        this.inquilinoDao.tabella.dispose();
     }
 
 }

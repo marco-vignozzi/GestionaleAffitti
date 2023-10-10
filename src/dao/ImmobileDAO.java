@@ -36,7 +36,7 @@ public class ImmobileDAO extends DatabaseDAO {
             "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf)" +
             ")";
 
-    private TabellaGUI tabella;
+    public TabellaGUI tabella;
 
     public ImmobileDAO() {
         connect();

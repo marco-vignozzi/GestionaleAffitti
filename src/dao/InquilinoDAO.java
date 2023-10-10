@@ -31,7 +31,7 @@ public class InquilinoDAO extends DatabaseDAO{
     private static final String DELETE_INQUILINO = "DELETE FROM inquilini WHERE id = ?";
 
     // attributo che tiene un riferimento alla vista della tabella
-    private TabellaGUI tabella = null;
+    public TabellaGUI tabella = null;
 
 
     public InquilinoDAO() {

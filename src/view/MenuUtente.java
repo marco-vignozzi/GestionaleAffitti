@@ -20,7 +20,7 @@ public class MenuUtente extends Menu {
             System.out.println(" 2 - Invia email a un inquilino");
             System.out.println(" 3 - Aggiungi pagamento inquilino");
             System.out.println(" 4 - Aggiungi spesa inquilino");
-            System.out.println(" 5 - Aggiungi sfratto");
+            System.out.println(" 5 - Mostra tabella resoconto");
             System.out.println(" x - Indietro");
 
             String input = scanner.next();
@@ -39,7 +39,7 @@ public class MenuUtente extends Menu {
   //                  displaySpesa();
                     continue;
                 case "5":
-   //                 displaySfratto();
+   //                 controller.visualizzaResoconto();
                     continue;
                 case "x":
                     termina = true;
@@ -57,12 +57,11 @@ public class MenuUtente extends Menu {
         if(controller.isInquilino(idInquilino)) {
             System.out.print("Inserire la cifra versata: ");
             String pagamento = scanner.next();
-            System.out.print("Confermi di voler aggiungere un pagamento di euro " +
-                    pagamento + " a carico dell'inquilino con ID " + idInquilino + "? (S/n) ");
+            System.out.print("Confermi di voler aggiungere un pagamento di " +
+                    pagamento + " euro a carico dell'inquilino con ID " + idInquilino + "? (S/n) ");
             String confermaInput = scanner.next();
             if(confermaInput.equals("s") || confermaInput.equals("S")) {
                 controller.aggiungiPagamento(idInquilino, pagamento);
-                System.out.println("Pagamento salvato.");
             }
         }else {
             System.out.println("L'ID selezionato non è associato a nessun inquilino");

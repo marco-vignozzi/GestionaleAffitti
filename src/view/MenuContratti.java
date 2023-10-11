@@ -108,7 +108,7 @@ public class MenuContratti extends Menu {
 
             System.out.println("Confermi i dati inseriti? (S/n) ");
             confermaInput = scanner.next();
-            try {
+            try {                   // TODO: si prova a creare, se ci sono valori non validi lancia eccezione
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
                     Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(),
                             dataInizio, dataFine, dataPagamento, Float.parseFloat(canone), proroga);

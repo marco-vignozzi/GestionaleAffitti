@@ -3,23 +3,11 @@ package dao;
 import java.sql.*;
 
 import model.Immobile;
-import model.ImmobileBuilder;
 import view.TabellaGUI;
 
 
 public class ImmobileDAO extends DatabaseDAO {
-    // CRUD API's
-    private static final String INSERT_IMMOBILE = "INSERT INTO immobili" +
-            " (comune, foglio, particella, subalterno, categoria, classe, superficie_mq, rendita, cf_proprietario, " +
-            "indirizzo, n_civico , affittato) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String SELECT_IMMOBILE_BY_ID = "SELECT * FROM immobili WHERE id = ? AND cf_proprietario = ?";
-    private static final String SELECT_IMMOBILE = "SELECT id FROM immobili WHERE comune = ? AND indirizzo = ? AND n_civico = ? " +
-            "AND subalterno = ? ";
-    // TODO: vedere se usare una query che ti seleziona tutti i dati degli immobili e mettere questa come query di "resoconto"
-//    private static final String SELECT_ALL_IMMOBILI = "SELECT immobili.id, comune, indirizzo, n_civico, subalterno, affittato, " +
-//            "cf_inquilino, inquilini.nome, inquilini.cognome, canone, (totale_dovuto-totale_pagato) as debito FROM contratti JOIN inquilini ON " +
-//            "inquilini.cf = contratti.cf_inquilino RIGHT JOIN immobili ON id_immobile = immobili.id WHERE immobili.cf_proprietario = ?";
-    private static final String SELECT_ALL_IMMOBILI = "SELECT * FROM immobili WHERE cf_proprietario = ?";
+    // CREATE CRUD API's
     private static final String CREATE_IMMOBILE = "CREATE TABLE immobili (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
             "comune VARCHAR(255) NOT NULL," +
@@ -36,7 +24,31 @@ public class ImmobileDAO extends DatabaseDAO {
             "affittato BOOLEAN NOT NULL," +
             "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf) ON DELETE CASCADE" +
             ")";
+    private static final String CREATE_TRIGGER = "CREATE TRIGGER elimina_contratto_trigger " +
+            "BEFORE DELETE ON immobili " +
+            "FOR EACH ROW " +
+            "BEGIN " +
+            "    DELETE FROM contratti WHERE OLD.id = id_immobile; " +
+            "END;";
+    // INSERT CRUD API
+    private static final String INSERT_IMMOBILE = "INSERT INTO immobili" +
+            " (comune, foglio, particella, subalterno, categoria, classe, superficie_mq, rendita, cf_proprietario, " +
+            "indirizzo, n_civico , affittato) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    // DELETE CRUD API
     private static final String DELETE_IMMOBILE = "DELETE FROM immobili WHERE id = ?";
+    // UPDATE CRUD API's
+    private static final String UPDATE_AFFITTATO = "UPDATE immobili SET affittato = ? WHERE id = ?";
+    // SELECT CRUD API's
+    private static final String SELECT_IMMOBILE_AND_CONTRATTO_BY_ID = "SELECT * FROM immobili LEFT JOIN contratti ON immobili.id = id_immobile " +
+            "WHERE immobili.id = ? AND immobili.cf_proprietario = ?";
+    private static final String SELECT_IMMOBILE = "SELECT id FROM immobili WHERE comune = ? AND indirizzo = ? AND n_civico = ? " +
+            "AND subalterno = ? AND cf_proprietario = ?";
+    // TODO: vedere se usare una query che ti seleziona tutti i dati degli immobili e mettere questa come query di "resoconto"
+//    private static final String SELECT_ALL_IMMOBILI = "SELECT immobili.id, comune, indirizzo, n_civico, subalterno, affittato, " +
+//            "cf_inquilino, inquilini.nome, inquilini.cognome, canone, (totale_dovuto-totale_pagato) as debito FROM contratti JOIN inquilini ON " +
+//            "inquilini.cf = contratti.cf_inquilino RIGHT JOIN immobili ON id_immobile = immobili.id WHERE immobili.cf_proprietario = ?";
+    private static final String SELECT_ALL_IMMOBILI = "SELECT id, comune, indirizzo, n_civico, subalterno, affittato, " +
+            "foglio, particella, categoria, classe, superficie_mq, rendita FROM immobili WHERE cf_proprietario = ?";
 
     public TabellaGUI tabella;
 
@@ -53,6 +65,9 @@ public class ImmobileDAO extends DatabaseDAO {
             if (!resultSet.next()) {
                 PreparedStatement statementCreazione = connection.prepareStatement(CREATE_IMMOBILE);
                 statementCreazione.executeUpdate();
+                // aggiungo trigger di eliminazione
+                PreparedStatement statement = connection.prepareStatement(CREATE_TRIGGER);
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -118,6 +133,7 @@ public class ImmobileDAO extends DatabaseDAO {
             statement.setString(2, i.getIndirizzo());
             statement.setString(3, i.getnCivico());
             statement.setInt(4, i.getSubalterno());
+            statement.setString(5, i.getIdProprietario());
             ResultSet rs = statement.executeQuery();
             rs.next();
             return rs.getInt("id");
@@ -131,7 +147,7 @@ public class ImmobileDAO extends DatabaseDAO {
             connect();
         }
         try{
-            PreparedStatement statement = connection.prepareStatement(SELECT_IMMOBILE_BY_ID);
+            PreparedStatement statement = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
             statement.setInt(1, idImmobile);
             statement.setString(2, cfProprietario);
             ResultSet rs = statement.executeQuery();
@@ -157,4 +173,31 @@ public class ImmobileDAO extends DatabaseDAO {
         }
     }
 
+    public void aggiornaAffittato(String cfProprietario) {
+        try{
+            PreparedStatement statement;
+            ResultSet allImmobili = getAllImmobili(cfProprietario);
+            while(allImmobili.next()) {
+                statement = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
+                statement.setInt(1, allImmobili.getInt("id"));
+                statement.setString(2, cfProprietario);
+                ResultSet rs = statement.executeQuery();
+                rs.next();
+
+                statement = connection.prepareStatement(UPDATE_AFFITTATO);
+                statement.setInt(2, allImmobili.getInt("id"));
+
+                if (allImmobili.getBoolean("affittato") && rs.getInt("contratti.id") == 0) {
+                    statement.setBoolean(1, false);
+                    statement.executeUpdate();
+                } else if (!allImmobili.getBoolean("affittato") && rs.getInt("contratti.id") > 0) {
+                    statement.setBoolean(1, true);
+                    statement.executeUpdate();
+                }
+                tabella.aggiornaTabella(getAllImmobili(cfProprietario));
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

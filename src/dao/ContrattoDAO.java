@@ -22,7 +22,7 @@ public class ContrattoDAO extends DatabaseDAO {
             "id_immobile INT NOT NULL," +
             "data_inizio VARCHAR(255) NOT NULL," +
             "data_fine VARCHAR(255) NOT NULL," +
-            "prossimo_pagamento VARCHAR(255) NOT NULL," +
+            "prossimo_pagamento VARCHAR(255)," +
             "canone FLOAT NOT NULL," +
             "sfratto BOOLEAN NOT NULL, " +
             "proroga BOOLEAN NOT NULL," +
@@ -30,6 +30,12 @@ public class ContrattoDAO extends DatabaseDAO {
             "FOREIGN KEY (cf_inquilino) REFERENCES inquilini(cf) ON DELETE CASCADE," +
             "FOREIGN KEY (id_immobile) REFERENCES immobili(id) ON DELETE CASCADE" +
             ")";
+    private static final String CREATE_TRIGGER = "CREATE TRIGGER elimina_inquilino_trigger " +
+            "BEFORE DELETE ON contratti " +
+            "FOR EACH ROW " +
+            "BEGIN " +
+            "    DELETE FROM inquilini WHERE inquilini.cf = OLD.cf_inquilino; " +
+            "END;";
     private static final String SELECT_ALL_CONTRATTI = "SELECT * FROM contratti WHERE cf_proprietario = ?";
     private static final String SELECT_CONTRATTO_BY_ID = "SELECT * FROM contratti WHERE cf_proprietario = ? AND id = ?";
     private static final String SELECT_CONTRATTO_BY_INQUILINO = "SELECT data_inizio, data_fine, prossimo_pagamento FROM " +
@@ -50,6 +56,9 @@ public class ContrattoDAO extends DatabaseDAO {
             if (!resultSet.next()) {
                 PreparedStatement statementCreazione = connection.prepareStatement(CREATE_CONTRATTO);
                 statementCreazione.executeUpdate();
+                // aggiungo trigger di eliminazione
+                PreparedStatement statement = connection.prepareStatement(CREATE_TRIGGER);
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -140,17 +149,19 @@ public class ContrattoDAO extends DatabaseDAO {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate oggi = LocalDate.now();
 
-            while (rs.next()) {
-                LocalDate prossimoPagamento = LocalDate.parse(rs.getString("prossimo_pagamento"), formatter);
-                if(!oggi.isAfter(LocalDate.parse(rs.getString("data_fine"),formatter)) && oggi.isAfter(prossimoPagamento)) {
-                    prossimoPagamento = prossimoPagamento.plusMonths(1);
-                    statement = connection.prepareStatement(UPDATE_PAGAMENTO);
-                    statement.setString(1, prossimoPagamento.toString());
-                    statement.setInt(2, rs.getInt("contratti.id"));
-                    statement.executeUpdate();
-                    statement = connection.prepareStatement(UPDATE_DEVE_PAGARE);
-                    statement.setInt(1, rs.getInt("inquilini.id"));
-                    statement.executeUpdate();
+            while(rs.next()) {
+                if (!rs.getString("prossimo_pagamento").isEmpty()) {
+                    LocalDate prossimoPagamento = LocalDate.parse(rs.getString("prossimo_pagamento"), formatter);
+                    if (!oggi.isAfter(LocalDate.parse(rs.getString("data_fine"), formatter)) && oggi.isAfter(prossimoPagamento)) {
+                        prossimoPagamento = prossimoPagamento.plusMonths(1);
+                        statement = connection.prepareStatement(UPDATE_PAGAMENTO);
+                        statement.setString(1, prossimoPagamento.toString());
+                        statement.setInt(2, rs.getInt("contratti.id"));
+                        statement.executeUpdate();
+                        statement = connection.prepareStatement(UPDATE_DEVE_PAGARE);
+                        statement.setInt(1, rs.getInt("inquilini.id"));
+                        statement.executeUpdate();
+                    }
                 }
             }
             tabella.aggiornaTabella(getAllContratti(cfProprietario));

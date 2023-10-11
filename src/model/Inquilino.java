@@ -14,7 +14,7 @@ public class Inquilino {
     private String email;
     private float totaleDovuto = 0;
     private float totalePagato = 0;
-    private boolean devePagare = true;
+    private boolean devePagare = false;
 
     public Inquilino(String cf, String nome, String cognome, String dataNascita,
                      String cittàNascita, String residenza, String tel, String email)

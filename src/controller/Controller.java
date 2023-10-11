@@ -5,6 +5,8 @@ import dao.*;
 import model.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 
 public class Controller {
@@ -26,13 +28,24 @@ public class Controller {
     }
 
     public void aggiungiContratto(Contratto contratto) {
-        LocalDate oggi = LocalDate.now();
-        String prossimoPagamento;
-        if(oggi.getDayOfMonth() > Integer.parseInt(contratto.getProssimoPagamento())) {
-            oggi = oggi.plusMonths(1);
+        try {
+            LocalDate oggi = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String prossimoPagamento;
+            if (oggi.getDayOfMonth() > Integer.parseInt(contratto.getProssimoPagamento())) {
+                oggi = oggi.plusMonths(1);
+            }
+            if (!oggi.isAfter(LocalDate.parse(contratto.getDataFine(), formatter))) {
+                prossimoPagamento = oggi.getYear() + "-" + oggi.getMonthValue() + "-" + contratto.getProssimoPagamento();
+                contratto.setProssimoPagamento(prossimoPagamento);
+            } else {
+                contratto.setProssimoPagamento("");
+            }
+        }catch (DateTimeParseException | NumberFormatException e) {
+            System.out.println("ATTENZIONE! sono stati inseriti valori non validi per le date");
+            System.out.println("Per poter utilizzare tutte le funzionalità del programma " +
+                    "è necessario modificarle dal menu gestione contratti");
         }
-        prossimoPagamento = oggi.getYear() + "-" + oggi.getMonthValue() + "-" + contratto.getProssimoPagamento();
-        contratto.setProssimoPagamento(prossimoPagamento);
         contrattoDao.aggiungiContratto(contratto);
         aggiorna();
     }
@@ -51,6 +64,7 @@ public class Controller {
     }
 
     public void visualizzaImmobili() {
+        aggiorna();
         immobileDao.visualizzaImmobili(proprietario.getCf());
     }
 
@@ -81,7 +95,7 @@ public class Controller {
             inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
         }
     }
 
@@ -94,8 +108,8 @@ public class Controller {
     public boolean isInquilino(String idInquilino) {
         try {
             return inquilinoDao.verificaInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
-        }catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        } catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
         }
         return false;
     }
@@ -103,8 +117,8 @@ public class Controller {
     public boolean isImmobile(String idImmobile) {
         try {
             return immobileDao.verificaImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
-        }catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        } catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
         }
         return false;
     }
@@ -114,15 +128,15 @@ public class Controller {
             immobileDao.rimuoviImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
         }
     }
 
     public Inquilino getInquilino(String idInquilino) {
         try {
             return inquilinoDao.getInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
-        }catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        } catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
         }
         return null;
     }
@@ -131,8 +145,8 @@ public class Controller {
         try {
             contrattoDao.rimuoviContratto(Integer.parseInt(idContratto), proprietario.getCf());
             aggiorna();
-        }catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+        } catch (NumberFormatException e) {
+            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
         }
     }
 
@@ -140,7 +154,7 @@ public class Controller {
         try {
             return contrattoDao.verificaContratto(Integer.parseInt(idContratto), proprietario.getCf());
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
         }
         return false;
     }
@@ -149,15 +163,25 @@ public class Controller {
         try {
             inquilinoDao.aggiungiPagamento(Integer.parseInt(idInquilino), Float.parseFloat(pagamento), proprietario.getCf());
             aggiorna();
-        }catch (NumberFormatException e) {
-            System.out.println("Valore non valido.");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("Pagamento salvato");
+        } catch (NumberFormatException e) {
+            System.out.println("Valore in denaro non valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
         }
     }
 
     // serve ad aggiornare la logica dei pagamenti
     public void aggiorna() {
-        contrattoDao.aggiornaDatePagamento(proprietario.getCf());
-        inquilinoDao.aggiornaFinanze(proprietario.getCf());
+        try {
+            immobileDao.aggiornaAffittato(proprietario.getCf());
+            contrattoDao.aggiornaDatePagamento(proprietario.getCf());
+            inquilinoDao.aggiornaFinanze(proprietario.getCf());
+        }catch (DateTimeParseException | NumberFormatException e) {
+            System.out.println(e);
+            System.out.println("ATTENZIONE! nel database sono presenti date in un formato non riconosciuto");
+            System.out.println("Se non si effettuano le dovute modifiche alla tabella contratti il programma " +
+                    "potrebbe non funzionare correttamente");
+            System.out.println("(è possibile modificare le date dei contratti dal menu gestione contratti)");
+        }
     }
 
     // serve per resettare il controller quando si esce dal menu facade

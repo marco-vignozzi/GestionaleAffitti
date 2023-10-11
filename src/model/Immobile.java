@@ -10,7 +10,7 @@ public class Immobile {
     private String classe;
     private float superficie;  // in metri quadri
     private float rendita;      // in generale diversa dal canone
-    private boolean affittato;
+    private boolean affittato = false;
     private String idProprietario;
     private String indirizzo;
     private String nCivico;

@@ -54,7 +54,6 @@ public class MenuImmobili extends Menu {
         while (!termina) {
             System.out.println("Inserire i dati dell'immobile");
             System.out.print("Comune: ");
-            scanner.nextLine();
             String comune = scanner.nextLine();
             System.out.print("Indirizzo: ");
             String indirizzo = scanner.nextLine();
@@ -62,56 +61,63 @@ public class MenuImmobili extends Menu {
             String nCivico = scanner.nextLine();
             System.out.print("Subalterno: ");
             String subalterno = scanner.next();
-            System.out.print("Affittato (S/n): ");
-            String confermaInput = scanner.next();
-            boolean affittato;
+            //            System.out.print("Affittato (S/n): ");
+//            String confermaInput = scanner.next();
+//            boolean affittato;
+//
+//            if(confermaInput.equals("s") || confermaInput.equals("S")) {
+//                affittato = true;
+//            }
+//            else {
+//                affittato = false;
+//            }
+            String confermaInput;
 
-            if(confermaInput.equals("s") || confermaInput.equals("S")) {
-                affittato = true;
-            }
-            else {
-                affittato = false;
-            }
+            try {       // TODO: se vengono inseriti valori non validi si lancia eccezione
+                builder.comune(comune).indirizzo(indirizzo).nCivico(nCivico).subalterno(Integer.parseInt(subalterno));
 
-            builder.comune(comune).indirizzo(indirizzo).nCivico(nCivico).subalterno(Integer.parseInt(subalterno)).affittato(affittato);
-
-            System.out.println("Vuoi aggiungere i dati catastali? (altrimenti sarà possibile aggiungerli più tardi " +
-                    "dal menu di modifica immobili)");
-            System.out.print("(S/n) : ");
-            confermaInput = scanner.next();
-            if (confermaInput.equals("s") || confermaInput.equals("S")){
-                System.out.print("Foglio: ");
-                String foglio = scanner.next();
-                System.out.print("Particella: ");
-                String particella = scanner.next();
-                System.out.print("Categoria: ");
-                String categoria = scanner.next();
-                System.out.print("Classe: ");
-                String classe = scanner.next();
-                System.out.print("Superficie: ");
-                String superficie = scanner.next();
-                System.out.print("Rendita: ");
-                String rendita = scanner.next();
-
-                builder.foglio(Integer.parseInt(foglio)).particella(Integer.parseInt(particella)).categoria(categoria)
-                        .classe(classe).superficie(Float.parseFloat(superficie)).rendita(Float.parseFloat(rendita));
-
-            }
-
-            System.out.println("Confermi i dati inseriti? (S/n)");
-            confermaInput = scanner.next();
-
-            Immobile immobile = builder.build();
-
-            if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                controller.aggiungiImmobile(immobile);
-                System.out.println("Immobile aggiunto con successo.");
-                return immobile;
-            }
-            else {
-                System.out.println("Riprovare?");
+                System.out.println("Vuoi aggiungere i dati catastali? (altrimenti sarà possibile aggiungerli più tardi " +
+                        "dal menu di modifica immobili)");
+                System.out.print("(S/n) : ");
                 confermaInput = scanner.next();
-                if(!confermaInput.equals("s") || !confermaInput.equals("S")) {
+                if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                    System.out.print("Foglio: ");
+                    String foglio = scanner.next();
+                    System.out.print("Particella: ");
+                    String particella = scanner.next();
+                    System.out.print("Categoria: ");
+                    String categoria = scanner.next();
+                    System.out.print("Classe: ");
+                    String classe = scanner.next();
+                    System.out.print("Superficie: ");
+                    String superficie = scanner.next();
+                    System.out.print("Rendita: ");
+                    String rendita = scanner.next();
+
+                    builder.foglio(Integer.parseInt(foglio)).particella(Integer.parseInt(particella)).categoria(categoria)
+                            .classe(classe).superficie(Float.parseFloat(superficie)).rendita(Float.parseFloat(rendita));
+
+                }
+
+                System.out.println("Confermi i dati inseriti? (S/n) ");
+                confermaInput = scanner.next();
+
+                if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                    Immobile immobile = builder.build();
+                    controller.aggiungiImmobile(immobile);
+                    System.out.println("Immobile aggiunto con successo.");
+                    return immobile;
+                } else {
+                    System.out.println("Riprovare? (S/n) ");
+                    confermaInput = scanner.next();
+                    if (!confermaInput.equals("s") || !confermaInput.equals("S")) {
+                        termina = true;
+                    }
+                }
+            }catch (NumberFormatException e) {
+                System.out.println("Sono stati inseriti valori non validi. Riprovare? (S/n) ");
+                confermaInput = scanner.next();
+                if (!confermaInput.equals("s") && !confermaInput.equals("S")) {
                     termina = true;
                 }
             }

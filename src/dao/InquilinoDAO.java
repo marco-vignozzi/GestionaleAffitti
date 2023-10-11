@@ -17,8 +17,10 @@ public class InquilinoDAO extends DatabaseDAO {
 //            "inquilini.cognome, data_di_nascita, residenza, telefono, inquilini.email, (totale_dovuto-totale_pagato) " +
 //            "as debito, data_inizio, data_fine, prossimo_pagamento, canone FROM inquilini JOIN contratti ON " +
 //            "cf_inquilino = inquilini.cf JOIN utenti ON cf_proprietario=utenti.cf  WHERE utenti.cf = ?;";
-    private static final String SELECT_ALL_INQUILINI = "SELECT inquilini.* FROM inquilini JOIN contratti ON cf = cf_inquilino " +
-            "WHERE cf_proprietario = ?";
+    private static final String SELECT_ALL_INQUILINI = "SELECT inquilini.id, inquilini.cf, inquilini.nome, inquilini.cognome, " +
+        "inquilini.data_di_nascita, inquilini.città_di_nascita, inquilini.residenza, inquilini.telefono, inquilini.email, " +
+        "inquilini.totale_dovuto, inquilini.totale_pagato, (totale_dovuto-totale_pagato) as debito FROM inquilini JOIN " +
+        "contratti ON cf = cf_inquilino WHERE cf_proprietario = ?";
     private static final String SELECT_INQUILINO_BY_ID = "SELECT * FROM inquilini JOIN contratti ON cf_proprietario = ? " +
             "WHERE inquilini.id = ?";
     private static final String CREATE_INQUILINI = "CREATE TABLE inquilini (" +

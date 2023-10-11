@@ -75,7 +75,7 @@ public class MenuInquilini extends Menu {
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
                 Inquilino inquilino = new Inquilino(cf, nome, cognome, dataNascita, cittàNascita, residenza, telefono, email);
-                MenuContratti menuContratti = new MenuContratti(this.controller);
+                MenuContratti menuContratti = new MenuContratti(controller);
                 Contratto contratto = menuContratti.displayAggiungiContratto(inquilino);
                 if(contratto != null) {
                     controller.aggiungiInquilino(inquilino);

@@ -54,10 +54,10 @@ public class MenuImmobili extends Menu {
         while (!termina) {
             System.out.println("Inserire i dati dell'immobile");
             System.out.print("Comune: ");
-            String comune = scanner.next();
+            scanner.nextLine();
+            String comune = scanner.nextLine();
             System.out.print("Indirizzo: ");
             String indirizzo = scanner.nextLine();
-            scanner.nextLine();
             System.out.print("Numero Civico: ");
             String nCivico = scanner.nextLine();
             System.out.print("Subalterno: ");

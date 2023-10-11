@@ -86,6 +86,8 @@ public class MenuContratti extends Menu {
                         termina = true;
                     }
                 }
+            }else {
+                // TODO: aggiungere verifica che non sia già affittato
             }
             System.out.print("Data di inizio contratto (formato: YYYY-MM-DD): ");
             String dataInizio = scanner.next();

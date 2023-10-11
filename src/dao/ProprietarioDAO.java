@@ -1,6 +1,7 @@
 package dao;
 
 import model.Proprietario;
+import view.TabellaGUI;
 
 import java.sql.*;
 
@@ -18,13 +19,13 @@ public class ProprietarioDAO extends DatabaseDAO {
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
             "password VARCHAR(255) NOT NULL" +
             ")";
-
+    private TabellaGUI tabella;
 
     public ProprietarioDAO() {
         super.connect();
         creaTabella();
+        tabella = new TabellaGUI("Resoconto");
     }
-
 
     public void creaTabella(){
         try{
@@ -55,7 +56,6 @@ public class ProprietarioDAO extends DatabaseDAO {
             throw new RuntimeException(e);
         }
     }
-
 
     public boolean emailDisponibile(String email){
         if(connection == null){

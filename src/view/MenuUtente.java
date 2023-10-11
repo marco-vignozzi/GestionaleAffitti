@@ -64,6 +64,8 @@ public class MenuUtente extends Menu {
                 controller.aggiungiPagamento(idInquilino, pagamento);
                 System.out.println("Pagamento salvato.");
             }
+        }else {
+            System.out.println("L'ID selezionato non è associato a nessun inquilino");
         }
     }
 

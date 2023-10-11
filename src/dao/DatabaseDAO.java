@@ -9,8 +9,10 @@ import java.awt.event.WindowEvent;
 
 
 public abstract class DatabaseDAO {
+    protected static final String SELECT_INQUILINI_AND_CONTRATTI = "SELECT * FROM inquilini JOIN contratti ON cf = cf_inquilino " +
+            "WHERE cf_proprietario = ?";
+    protected static final String UPDATE_DEVE_PAGARE = "UPDATE inquilini SET deve_pagare = true WHERE id = ?";
     protected Connection connection = null;
-    // protected static JFrame tabella = null;
 
     public void connect() {
         System.out.println("Connessione al database...");

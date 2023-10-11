@@ -2,17 +2,17 @@ package model;
 
 
 public class Contratto {
-
     public Contratto(int idImmobile, String cfInquilino, String cfProprietario, String dataInizio, String dataFine,
-                     String dataPagamento, float canone)
+                     String prossimoPagamento, float canone, boolean proroga)
     {
         this.idImmobile = idImmobile;
         this.cfInquilino = cfInquilino;
         this.cfProprietario = cfProprietario;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
-        this.dataPagamento = dataPagamento;
+        this.prossimoPagamento = prossimoPagamento;
         this.canone = canone;
+        this.proroga = proroga;
     }
 
     protected Contratto(ContrattoBuilder contrattoBuilder) {
@@ -21,9 +21,10 @@ public class Contratto {
         this.cfProprietario = contrattoBuilder.cfProprietario;
         this.dataInizio = contrattoBuilder.dataInizio;
         this.dataFine = contrattoBuilder.dataFine;
-        this.dataPagamento = contrattoBuilder.dataPagamento;
+        this.prossimoPagamento = contrattoBuilder.prossimoPagamento;
         this.canone = contrattoBuilder.canone;
         this.sfratto = contrattoBuilder.sfratto;
+        this.proroga = contrattoBuilder.proroga;
     }
 
 
@@ -75,12 +76,12 @@ public class Contratto {
         this.canone = canone;
     }
 
-    public String getDataPagamento() {
-        return dataPagamento;
+    public String getProssimoPagamento() {
+        return prossimoPagamento;
     }
 
-    public void setDataPagamento(String dataPagamento) {
-        this.dataPagamento = dataPagamento;
+    public void setProssimoPagamento(String prossimoPagamento) {
+        this.prossimoPagamento = prossimoPagamento;
     }
 
     public boolean isSfratto() {
@@ -91,13 +92,22 @@ public class Contratto {
         this.sfratto = sfratto;
     }
 
+    public boolean isProroga() {
+        return proroga;
+    }
+
+    public void setProroga(boolean proroga) {
+        this.proroga = proroga;
+    }
+
     private int idImmobile;
     private String cfInquilino;
     private String cfProprietario;
     private String dataInizio;
     private String dataFine;
-    private String dataPagamento;
+    private String prossimoPagamento;
     private float canone;   // prezzo affitto
     private boolean sfratto = false;
+    private boolean proroga;
 
 }

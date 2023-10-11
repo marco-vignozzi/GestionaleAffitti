@@ -5,6 +5,8 @@ import model.Contratto;
 import model.Immobile;
 import model.Inquilino;
 
+import java.time.LocalDate;
+
 public class MenuContratti extends Menu {
 
     public MenuContratti(Controller controller) {
@@ -54,10 +56,10 @@ public class MenuContratti extends Menu {
     }
 
     public Contratto displayAggiungiContratto(Inquilino inquilino) {
-        boolean conferma = false;
+        boolean termina = false;
         String cfInquilino = inquilino.getCf();
 
-        while (!conferma) {
+        while (!termina) {
             controller.visualizzaImmobili();
             System.out.println("Inserisci i dati del contratto");
             System.out.print("ID dell'immobile come indicato nella tabella: ");
@@ -81,7 +83,7 @@ public class MenuContratti extends Menu {
                     confermaInput = scanner.next();
 
                     if (confermaInput.equals("s")) {
-                        conferma = true;
+                        termina = true;
                     }
                 }
             }
@@ -89,25 +91,36 @@ public class MenuContratti extends Menu {
             String dataInizio = scanner.next();
             System.out.print("Data di fine contratto (formato: YYYY-MM-DD): ");
             String dataFine = scanner.next();
-            System.out.print("Data di pagamento (formato: MM-DD): ");
+            System.out.print("Data di pagamento (formato: DD): ");
             String dataPagamento = scanner.next();
             System.out.print("Canone mensile: ");
             String canone = scanner.next();
-
-            System.out.println("Confermi i dati inseriti? (s/n)");
+            System.out.print("Aggiungere possibilità di proroga? (S/n) ");
             String confermaInput = scanner.next();
-
+            boolean proroga;
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(),
-                        dataInizio, dataFine, dataPagamento, Float.parseFloat(canone));
-                return contratto;
+                proroga = true;
+            }else {
+                proroga = false;
             }
 
-            System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
+            System.out.println("Confermi i dati inseriti? (S/n) ");
+            confermaInput = scanner.next();
+            try {
+                if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                    Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(),
+                            dataInizio, dataFine, dataPagamento, Float.parseFloat(canone), proroga);
+                    return contratto;
+                }
+            }catch (NumberFormatException e) {
+                System.out.println("Sono stati inseriti dei valori non validi");
+            }
+
+            System.out.println("Riprovare? (S/n)");
             confermaInput = scanner.next();
 
-            if (confermaInput.equals("s")) {
-                conferma = true;
+            if (!confermaInput.equals("s") && !confermaInput.equals("S")) {
+                termina = true;
             }
         }
         return null;

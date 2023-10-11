@@ -6,9 +6,10 @@ public class ContrattoBuilder {
     protected String cfProprietario;
     protected String dataInizio;
     protected String dataFine;
-    protected String dataPagamento;
+    protected String prossimoPagamento;
     protected float canone;   // prezzo affitto
     protected boolean sfratto = false;
+    protected boolean proroga;
 
     public ContrattoBuilder idImmobile(int idImmobile) {
         this.idImmobile = idImmobile;
@@ -36,7 +37,7 @@ public class ContrattoBuilder {
     }
 
     public ContrattoBuilder dataPagamento(String dataPagamento) {
-        this.dataPagamento = dataPagamento;
+        this.prossimoPagamento = dataPagamento;
         return this;
     }
 
@@ -47,6 +48,11 @@ public class ContrattoBuilder {
 
     public ContrattoBuilder sfratto(boolean sfratto) {
         this.sfratto = sfratto;
+        return this;
+    }
+
+    public ContrattoBuilder proroga(boolean proroga) {
+        this.proroga = proroga;
         return this;
     }
 

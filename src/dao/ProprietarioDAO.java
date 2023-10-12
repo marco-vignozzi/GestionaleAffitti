@@ -19,7 +19,7 @@ public class ProprietarioDAO extends DatabaseDAO {
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
             "password VARCHAR(255) NOT NULL" +
             ")";
-    private TabellaGUI tabella;
+    public TabellaGUI tabella;
 
     public ProprietarioDAO() {
         super.connect();
@@ -109,6 +109,20 @@ public class ProprietarioDAO extends DatabaseDAO {
         }
         return null; // se avviene qualche problema ritorno null
 
+    }
+
+    public void visualizzaResoconto(String cfProprietario) {
+        if (connection == null) {
+            connect();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_RESOCONTO);
+            statement.setString(1, cfProprietario);
+            ResultSet rs = statement.executeQuery();
+            tabella.mostraTabella(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

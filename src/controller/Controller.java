@@ -2,8 +2,10 @@ package controller;
 
 
 import dao.*;
+import mail_service.JavaMailUtil;
 import model.*;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -15,6 +17,9 @@ public class Controller {
     private InquilinoDAO inquilinoDao;
     private ImmobileDAO immobileDao;
     private Proprietario proprietario = null;
+    private String testoSollecito = "Salve {0} {1},\n la presente lettera è per ricordarle gentilmente che il pagamento " +
+            "del suo debito è ancora in sospeso. L'importo totale del debito, che la prego di estinguere al più presto, " +
+            "è di € {2}.\nCordiali saluti,\n{3} {4}";
 
     public Controller() {
         proprietarioDao = new ProprietarioDAO();
@@ -189,6 +194,7 @@ public class Controller {
         this.contrattoDao.tabella.dispose();
         this.immobileDao.tabella.dispose();
         this.inquilinoDao.tabella.dispose();
+        this.proprietarioDao.tabella.dispose();
 
         this.immobileDao = new ImmobileDAO();
         this.inquilinoDao = new InquilinoDAO();
@@ -197,4 +203,25 @@ public class Controller {
         this.proprietario = null;
     }
 
+    public void aggiungiSpesa(String idInquilino, String spesa) {
+        try {
+            inquilinoDao.aggiungiSpesa(Integer.parseInt(idInquilino), Float.parseFloat(spesa), proprietario.getCf());
+        }catch (NumberFormatException e) {
+            System.out.println("Valore in denaro non valido");
+        }
+    }
+
+    public void visualizzaResoconto() {
+        proprietarioDao.visualizzaResoconto(proprietario.getCf());
+    }
+
+    public void inviaSollecito() {
+        Inquilino[] inquilini = inquilinoDao.getInquiliniSollecito(proprietario.getCf());
+        JavaMailUtil mailService = new JavaMailUtil(proprietario.getEmail());
+        for(int i=0; i < inquilini.length; i++) {
+            Object[] argomenti = {inquilini[i].getNome(), inquilini[i].getCognome(), inquilini[i].getTotaleDovuto(),
+                                    proprietario.getNome(), proprietario.getCognome()};
+            mailService.send(inquilini[i].getEmail(), "Sollecito di pagamento", MessageFormat.format(testoSollecito, argomenti));
+        }
+    }
 }

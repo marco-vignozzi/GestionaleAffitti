@@ -1,5 +1,7 @@
 package dao;
 
+import view.TabellaGUI;
+
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -11,6 +13,12 @@ import java.awt.event.WindowEvent;
 public abstract class DatabaseDAO {
     protected static final String SELECT_INQUILINI_AND_CONTRATTI = "SELECT * FROM inquilini JOIN contratti ON cf = cf_inquilino " +
             "WHERE cf_proprietario = ?";
+    protected static final String SELECT_RESOCONTO = "SELECT immobili.id AS id_immobile, immobili.comune, immobili.indirizzo, " +
+            "immobili.n_civico, immobili.subalterno, immobili.affittato, inquilini.nome, inquilini.cognome, inquilini.email, " +
+            "(inquilini.totale_dovuto-inquilini.totale_pagato) AS debito, contratti.data_fine, contratti.prossimo_pagamento," +
+            "contratti.canone, contratti.sfratto, contratti.proroga FROM contratti JOIN inquilini ON cf_inquilino = inquilini.cf " +
+            "RIGHT JOIN immobili ON immobili.id = id_immobile WHERE immobili.cf_proprietario = ? " +
+            "ORDER BY immobili.comune ASC, immobili.indirizzo ASC, immobili.n_civico ASC, immobili.subalterno ASC;";
     protected static final String UPDATE_DEVE_PAGARE = "UPDATE inquilini SET deve_pagare = true WHERE id = ?";
     protected Connection connection = null;
 

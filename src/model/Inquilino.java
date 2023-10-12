@@ -29,6 +29,20 @@ public class Inquilino {
         this.email = email;
     }
 
+    protected Inquilino(InquilinoBuilder inquilinoBuilder) {
+        this.nome = inquilinoBuilder.nome;
+        this.cognome = inquilinoBuilder.cognome;
+        this.cf = inquilinoBuilder.cf;
+        this.dataNascita = inquilinoBuilder.dataNascita;
+        this.cittàNascita = inquilinoBuilder.cittàNascita;
+        this.residenza = inquilinoBuilder.residenza;
+        this.telefono = inquilinoBuilder.telefono;
+        this.email = inquilinoBuilder.email;
+        this.totaleDovuto = inquilinoBuilder.totaleDovuto;
+        this.totalePagato = inquilinoBuilder.totalePagato;
+        this.devePagare = inquilinoBuilder.devePagare;
+    }
+
     public String getNome() {
         return nome;
     }

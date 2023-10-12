@@ -27,7 +27,7 @@ public class MenuUtente extends Menu {
 
             switch (input) {
                 case "1":
-//                    controller.inviaSollecito();
+                    controller.inviaSollecito();
                     continue;
                 case "2":
 //                    displayInviaEmail();
@@ -36,10 +36,10 @@ public class MenuUtente extends Menu {
                     displayPagamento();
                     continue;
                 case "4":
-  //                  displaySpesa();
+                    displaySpesa();
                     continue;
                 case "5":
-   //                 controller.visualizzaResoconto();
+                    controller.visualizzaResoconto();
                     continue;
                 case "x":
                     termina = true;
@@ -48,6 +48,25 @@ public class MenuUtente extends Menu {
                     System.out.println("Valore inserito invalido come te e tua madre");
             }
         }
+    }
+
+    private void displaySpesa() {
+        controller.visualizzaInquilini();
+        System.out.print("Inserire l'ID dell'inquilino al quale addebitare la spesa (come indicato in tabella): ");
+        String idInquilino = scanner.next();
+        if(controller.isInquilino(idInquilino)) {
+            System.out.print("Inserire la cifra da addebitare: ");
+            String spesa = scanner.next();
+            System.out.print("Confermi di voler aggiungere una spesa di " +
+                    spesa + " euro a carico dell'inquilino con ID " + idInquilino + "? (S/n) ");
+            String confermaInput = scanner.next();
+            if(confermaInput.equals("s") || confermaInput.equals("S")) {
+                controller.aggiungiSpesa(idInquilino, spesa);
+            }
+        }else {
+            System.out.println("L'ID selezionato non è associato a nessun inquilino");
+        }
+
     }
 
     private void displayPagamento() {

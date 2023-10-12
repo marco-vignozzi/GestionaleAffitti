@@ -42,7 +42,7 @@ public class TabellaGUI extends JFrame {
             Object[] nomiColonne = new Object[numColonne];
 
             for (int i = 0; i < numColonne; i++) {
-                nomiColonne[i] = metaData.getColumnName(i + 1);
+                nomiColonne[i] = metaData.getColumnLabel(i + 1);
             }
 
             modelloTabella.setColumnIdentifiers(nomiColonne);
@@ -51,7 +51,7 @@ public class TabellaGUI extends JFrame {
             while (rs.next()) {
                 Object[] riga = new Object[numColonne];
                 for (int i = 0; i < numColonne; i++) {
-                    riga[i] = rs.getString(metaData.getColumnName(i + 1));
+                    riga[i] = rs.getString(metaData.getColumnLabel(i + 1));
                 }
                 modelloTabella.addRow(riga);
             }

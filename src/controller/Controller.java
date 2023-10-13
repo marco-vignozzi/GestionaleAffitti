@@ -37,9 +37,9 @@ public class Controller {
             LocalDate oggi = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String prossimoPagamento;
-            if (oggi.getDayOfMonth() > Integer.parseInt(contratto.getProssimoPagamento())) {
-                oggi = oggi.plusMonths(1);
-            }
+//            if (oggi.getDayOfMonth() > Integer.parseInt(contratto.getProssimoPagamento())) {
+//                oggi = oggi.plusMonths(1);
+//            }
             if (!oggi.isAfter(LocalDate.parse(contratto.getDataFine(), formatter))) {
                 prossimoPagamento = oggi.getYear() + "-" + oggi.getMonthValue() + "-" + contratto.getProssimoPagamento();
                 contratto.setProssimoPagamento(prossimoPagamento);
@@ -174,21 +174,6 @@ public class Controller {
         }
     }
 
-    // serve ad aggiornare la logica dei pagamenti
-    public void aggiorna() {
-        try {
-            immobileDao.aggiornaAffittato(proprietario.getCf());
-            contrattoDao.aggiornaDatePagamento(proprietario.getCf());
-            inquilinoDao.aggiornaFinanze(proprietario.getCf());
-        }catch (DateTimeParseException | NumberFormatException e) {
-            System.out.println(e);
-            System.out.println("ATTENZIONE! nel database sono presenti date in un formato non riconosciuto");
-            System.out.println("Se non si effettuano le dovute modifiche alla tabella contratti il programma " +
-                    "potrebbe non funzionare correttamente");
-            System.out.println("(è possibile modificare le date dei contratti dal menu gestione contratti)");
-        }
-    }
-
     public void aggiungiSpesa(String idInquilino, String spesa) {
         try {
             inquilinoDao.aggiungiSpesa(Integer.parseInt(idInquilino), Float.parseFloat(spesa), proprietario.getCf());
@@ -215,6 +200,21 @@ public class Controller {
 
     public Inquilino[] getInquiliniSollecito() {
         return inquilinoDao.getInquiliniSollecito(proprietario.getCf());
+    }
+
+    // serve ad aggiornare la logica dei pagamenti
+    public void aggiorna() {
+        try {
+            contrattoDao.aggiornaDatePagamento(proprietario.getCf());
+            immobileDao.aggiornaAffittato(proprietario.getCf());
+            inquilinoDao.aggiornaFinanze(proprietario.getCf());
+        }catch (DateTimeParseException | NumberFormatException e) {
+            System.out.println(e);
+            System.out.println("ATTENZIONE! nel database sono presenti date in un formato non riconosciuto");
+            System.out.println("Se non si effettuano le dovute modifiche alla tabella contratti il programma " +
+                    "potrebbe non funzionare correttamente");
+            System.out.println("(è possibile modificare le date dei contratti dal menu gestione contratti)");
+        }
     }
 
     // serve per resettare il controller quando si esce dal menu facade

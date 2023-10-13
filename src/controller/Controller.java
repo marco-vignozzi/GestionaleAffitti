@@ -17,9 +17,9 @@ public class Controller {
     private InquilinoDAO inquilinoDao;
     private ImmobileDAO immobileDao;
     private Proprietario proprietario = null;
-    private String testoSollecito = "Salve {0} {1},\n la presente lettera è per ricordarle gentilmente che il pagamento " +
-            "del suo debito è ancora in sospeso. L'importo totale del debito, che la prego di estinguere al più presto, " +
-            "è di € {2}.\nCordiali saluti,\n{3} {4}";
+    private String testoSollecito = "Salve {0} {1},\nla presente lettera è per ricordarle gentilmente che il pagamento " +
+            "del suo debito è ancora in sospeso. L''importo totale del debito, che la prego di estinguere al più presto, " +
+            "è di {2, number, currency}.\nCordiali saluti,\n{3} {4}";
 
     public Controller() {
         proprietarioDao = new ProprietarioDAO();
@@ -189,6 +189,34 @@ public class Controller {
         }
     }
 
+    public void aggiungiSpesa(String idInquilino, String spesa) {
+        try {
+            inquilinoDao.aggiungiSpesa(Integer.parseInt(idInquilino), Float.parseFloat(spesa), proprietario.getCf());
+        }catch (NumberFormatException e) {
+            System.out.println("Valore in denaro non valido");
+        }
+    }
+
+    public void visualizzaResoconto() {
+        proprietarioDao.visualizzaResoconto(proprietario.getCf());
+    }
+
+    public void inviaSollecito(Inquilino[] inquilini) {
+        JavaMailUtil mailService = new JavaMailUtil(proprietario.getEmail());
+        for(int i=0; i < inquilini.length; i++) {
+            Object[] argomenti = {inquilini[i].getNome(), inquilini[i].getCognome(),
+                    inquilini[i].getTotaleDovuto()-inquilini[i].getTotalePagato(),
+                    proprietario.getNome(), proprietario.getCognome()};
+
+            System.out.println("Invio email di sollecito all'inquilino con ID " + inquilini[i].getID() + " in corso...");
+            mailService.send(inquilini[i].getEmail(), "Sollecito di pagamento", MessageFormat.format(testoSollecito, argomenti));
+        }
+    }
+
+    public Inquilino[] getInquiliniSollecito() {
+        return inquilinoDao.getInquiliniSollecito(proprietario.getCf());
+    }
+
     // serve per resettare il controller quando si esce dal menu facade
     public void reset() {
         this.contrattoDao.tabella.dispose();
@@ -203,25 +231,4 @@ public class Controller {
         this.proprietario = null;
     }
 
-    public void aggiungiSpesa(String idInquilino, String spesa) {
-        try {
-            inquilinoDao.aggiungiSpesa(Integer.parseInt(idInquilino), Float.parseFloat(spesa), proprietario.getCf());
-        }catch (NumberFormatException e) {
-            System.out.println("Valore in denaro non valido");
-        }
-    }
-
-    public void visualizzaResoconto() {
-        proprietarioDao.visualizzaResoconto(proprietario.getCf());
-    }
-
-    public void inviaSollecito() {
-        Inquilino[] inquilini = inquilinoDao.getInquiliniSollecito(proprietario.getCf());
-        JavaMailUtil mailService = new JavaMailUtil(proprietario.getEmail());
-        for(int i=0; i < inquilini.length; i++) {
-            Object[] argomenti = {inquilini[i].getNome(), inquilini[i].getCognome(), inquilini[i].getTotaleDovuto(),
-                                    proprietario.getNome(), proprietario.getCognome()};
-            mailService.send(inquilini[i].getEmail(), "Sollecito di pagamento", MessageFormat.format(testoSollecito, argomenti));
-        }
-    }
 }

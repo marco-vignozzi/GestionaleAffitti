@@ -46,9 +46,8 @@ public class InquilinoDAO extends DatabaseDAO {
             "contratti ON cf = cf_inquilino WHERE cf_proprietario = ?";
     private static final String SELECT_INQUILINO_BY_ID = "SELECT * FROM inquilini JOIN contratti ON cf_proprietario = ? " +
             "WHERE inquilini.id = ?";
-    private static final String SELECT_INQUILINI_SOLLECITO = "SELECT inquilini.*, (totale_dovuto-totale_pagato) AS debito, " +
-            "COUNT(*) as n_righe FROM inquilini JOIN contratti ON cf = cf_inquilino WHERE (totale_dovuto-totale_pagato) > 0 " +
-            "AND cf_proprietario = ?";
+    private static final String SELECT_INQUILINI_SOLLECITO = "SELECT inquilini.* FROM inquilini JOIN contratti ON " +
+            "cf = cf_inquilino WHERE (totale_dovuto-totale_pagato) > 0 AND cf_proprietario = ?";
     // attributo che tiene un riferimento alla vista della tabella
     public TabellaGUI tabella = null;
 
@@ -157,14 +156,16 @@ public class InquilinoDAO extends DatabaseDAO {
             statement.setString(1, cfProprietario);
             statement.setInt(2, idInquilino);
             ResultSet rs = statement.executeQuery();
+            InquilinoBuilder builder = new InquilinoBuilder();
             Inquilino inquilino = null;
             if(rs.next()){
-               inquilino = new Inquilino(rs.getString("cf"), rs.getString("nome"),
-                       rs.getString("cognome"), rs.getString("data_di_nascita"), rs.getString("città_di_nascita"),
-                       rs.getString("residenza"), rs.getString("telefono"), rs.getString("email"));
-               inquilino.setTotaleDovuto(rs.getFloat("totale_dovuto"));
-               inquilino.setTotalePagato(rs.getFloat("totale_pagato"));
-               inquilino.setDevePagare(rs.getBoolean("deve_pagare"));
+                inquilino = builder.cf(rs.getString("cf")).nome(rs.getString("nome"))
+                        .cognome(rs.getString("cognome")).dataNascita(rs.getString("data_di_nascita"))
+                        .cittàNascita(rs.getString("città_di_nascita")).residenza(rs.getString("residenza"))
+                        .telefono(rs.getString("telefono")).email(rs.getString("email"))
+                        .totaleDovuto(rs.getFloat("totale_dovuto")).totalePagato(rs.getFloat("totale_pagato"))
+                        .devePagare(rs.getBoolean("deve_pagare")).id(rs.getInt("id"))
+                        .build();
             }
             return inquilino;
         } catch (SQLException e) {
@@ -231,8 +232,10 @@ public class InquilinoDAO extends DatabaseDAO {
 
             while(rs.next()) {
                 InquilinoBuilder builder = new InquilinoBuilder();
-                inquilini.add(builder.nome(rs.getString("nome")).cognome(rs.getString("cognome")).
-                        email(rs.getString("email")).totaleDovuto(rs.getFloat("debito")).build());
+                inquilini.add(builder.nome(rs.getString("nome")).cognome(rs.getString("cognome"))
+                        .email(rs.getString("email")).totaleDovuto(rs.getFloat("totale_dovuto"))
+                        .totalePagato(rs.getFloat("totale_pagato")).id(rs.getInt("id"))
+                        .build());
             }
 
             return inquilini.toArray(new Inquilino[0]);

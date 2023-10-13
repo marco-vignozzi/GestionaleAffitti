@@ -1,6 +1,7 @@
 package model;
 
 public class InquilinoBuilder {
+    protected int id;
     protected String nome;
     protected String cognome;
     protected String cf;
@@ -12,6 +13,11 @@ public class InquilinoBuilder {
     protected float totaleDovuto = 0;
     protected float totalePagato = 0;
     protected boolean devePagare = false;
+
+    public InquilinoBuilder id(int id) {
+        this.id = id;
+        return this;
+    }
 
     public InquilinoBuilder nome(String nome) {
         this.nome = nome;

@@ -4,6 +4,7 @@ package model;
 // TODO: modifica e aggiungi builder
 
 public class Inquilino {
+    private int id;
     private String nome;
     private String cognome;
     private String cf;
@@ -30,6 +31,7 @@ public class Inquilino {
     }
 
     protected Inquilino(InquilinoBuilder inquilinoBuilder) {
+        this.id = inquilinoBuilder.id;
         this.nome = inquilinoBuilder.nome;
         this.cognome = inquilinoBuilder.cognome;
         this.cf = inquilinoBuilder.cf;
@@ -41,6 +43,14 @@ public class Inquilino {
         this.totaleDovuto = inquilinoBuilder.totaleDovuto;
         this.totalePagato = inquilinoBuilder.totalePagato;
         this.devePagare = inquilinoBuilder.devePagare;
+    }
+
+    public int getID() {
+        return id;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 
     public String getNome() {

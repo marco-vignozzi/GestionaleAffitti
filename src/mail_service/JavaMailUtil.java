@@ -17,11 +17,11 @@ public class JavaMailUtil {
         Properties properties = new Properties();
 
         properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enalble", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
 
-        String password = "mv07071996";
+        String password = "vacr gbnh ghon swsj";
 
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override

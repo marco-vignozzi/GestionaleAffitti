@@ -1,5 +1,4 @@
 package model;
-import model.Immobile;
 
 public class ImmobileBuilder {
     protected String comune;
@@ -75,6 +74,7 @@ public class ImmobileBuilder {
         this.nCivico = nCivico;
         return this;
     }
+
     public ImmobileBuilder affittato(boolean affittato) {
         this.affittato = affittato;
         return this;

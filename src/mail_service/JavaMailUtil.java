@@ -3,14 +3,33 @@ package mail_service;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.BufferedReader;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JavaMailUtil {
     private static String account;
+    private static String password;
     public JavaMailUtil(String email) {
         this.account = email;
+        this.password = ReadPassword();
+    }
+
+    private String ReadPassword(){
+        try(BufferedReader br = new BufferedReader(new java.io.FileReader("password.txt"))){
+            String line;
+            while((line = br.readLine()) != null){
+                String[] parts = line.split(":");
+                if(parts[0].equals(account)){
+                    return parts[1];
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     public static void send(String destinatario, String oggetto, String testo) {
@@ -20,8 +39,6 @@ public class JavaMailUtil {
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
-
-        String password = "vacr gbnh ghon swsj";
 
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override

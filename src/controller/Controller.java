@@ -210,7 +210,7 @@ public class Controller {
             inquilinoDao.aggiornaFinanze(proprietario.getCf());
         }catch (DateTimeParseException | NumberFormatException e) {
             System.out.println(e);
-            System.out.println("ATTENZIONE! nel database sono presenti date in un formato non riconosciuto");
+            System.out.println("ATTENZIONE! nel database sono presenti date in un formato non riconosciuto (formato valido: YYYY-MM-DD)");
             System.out.println("Se non si effettuano le dovute modifiche alla tabella contratti il programma " +
                     "potrebbe non funzionare correttamente");
             System.out.println("(è possibile modificare le date dei contratti dal menu gestione contratti)");

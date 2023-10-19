@@ -13,10 +13,10 @@ public class JavaMailUtil {
     private static String password;
     public JavaMailUtil(String email) {
         this.account = email;
-        this.password = ReadPassword();
+        this.password = readPassword();
     }
 
-    private String ReadPassword(){
+    private String readPassword(){
         try(BufferedReader br = new BufferedReader(new java.io.FileReader("password.txt"))){
             String line;
             while((line = br.readLine()) != null){

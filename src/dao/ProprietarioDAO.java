@@ -7,11 +7,7 @@ import java.sql.*;
 
 public class ProprietarioDAO extends DatabaseDAO {
 
-    // CRUD APIs
-    private static final String INSERT_USER = "INSERT INTO utenti" +
-            " (cf, nome, cognome, email, password) VALUES " + " (?, ?, ?, ?, ?);";
-    private static final String SELECT_ALL_USERS_WITH_MAIL = "SELECT * FROM utenti WHERE email = ?";
-    private static final String SELECT_USER = "SELECT * FROM utenti WHERE email = ? and password = ?";
+    // CREATE CRUD API
     private static final String CREATE_UTENTI = "CREATE TABLE utenti (" +
             "cf VARCHAR(255) NOT NULL PRIMARY KEY," +
             "nome VARCHAR(255) NOT NULL," +
@@ -19,6 +15,15 @@ public class ProprietarioDAO extends DatabaseDAO {
             "email VARCHAR(255) NOT NULL UNIQUE," + // UNIQUE per non avere due utenti con la stessa mail (serve il metodo?)
             "password VARCHAR(255) NOT NULL" +
             ")";
+    // INSERT CRUD API
+    private static final String INSERT_USER = "INSERT INTO utenti" +
+            " (cf, nome, cognome, email, password) VALUES " + " (?, ?, ?, ?, ?);";
+    // DELETE CRUD API
+    // UPDATE CRUD API
+    // SELECT CRUD APIs
+    private static final String SELECT_ALL_USERS_WITH_MAIL = "SELECT * FROM utenti WHERE email = ?";
+    private static final String SELECT_USER = "SELECT * FROM utenti WHERE email = ? and password = ?";
+
     public TabellaGUI tabella;
 
     public ProprietarioDAO() {

@@ -12,9 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class ContrattoDAO extends DatabaseDAO {
     public TabellaGUI tabella= null;
 
-    // CRUD API's
-    private static final String INSERT_CONTRATTO = "INSERT INTO contratti (cf_proprietario, cf_inquilino, id_immobile, " +
-            "data_inizio, data_fine, prossimo_pagamento, canone, sfratto, proroga) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // CREATE CRUD API's
     private static final String CREATE_CONTRATTO = "CREATE TABLE contratti (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
             "cf_proprietario VARCHAR(255) NOT NULL," +
@@ -36,12 +34,18 @@ public class ContrattoDAO extends DatabaseDAO {
             "BEGIN " +
             "    DELETE FROM inquilini WHERE inquilini.cf = OLD.cf_inquilino; " +
             "END;";
+    // INSERT CRUD API
+    private static final String INSERT_CONTRATTO = "INSERT INTO contratti (cf_proprietario, cf_inquilino, id_immobile, " +
+            "data_inizio, data_fine, prossimo_pagamento, canone, sfratto, proroga) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // DELETE CRUD API
+    private static final String DELETE_CONTRATTO = "DELETE FROM contratti WHERE cf_proprietario = ? AND id = ?";
+    // UPDATE CRUD APIs
+    private static final String UPDATE_PAGAMENTO = "UPDATE contratti SET prossimo_pagamento = ? WHERE id = ?";
+    // SELECT CRUD APIs
     private static final String SELECT_ALL_CONTRATTI = "SELECT * FROM contratti WHERE cf_proprietario = ?";
     private static final String SELECT_CONTRATTO_BY_ID = "SELECT * FROM contratti WHERE cf_proprietario = ? AND id = ?";
     private static final String SELECT_CONTRATTO_BY_INQUILINO = "SELECT data_inizio, data_fine, prossimo_pagamento FROM " +
             "contratti JOIN inquilini ON cf_proprietario = ? WHERE inquilini.id = ?";
-    private static final String DELETE_CONTRATTO = "DELETE FROM contratti WHERE cf_proprietario = ? AND id = ?";
-    private static final String UPDATE_PAGAMENTO = "UPDATE contratti SET prossimo_pagamento = ? WHERE id = ?";
 
     public ContrattoDAO() {
         connect();

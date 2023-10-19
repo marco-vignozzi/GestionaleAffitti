@@ -231,4 +231,11 @@ public class Controller {
         this.proprietario = null;
     }
 
+    public void modificaContratto(String idContratto, Contratto contratto) {
+            contrattoDao.modificaContratto(Integer.parseInt(idContratto), contratto, proprietario.getCf());
+    }
+
+    public void modificaImmobile(String idImmobile,Immobile immobile) {
+        immobileDao.modificaImmobile(Integer.parseInt(idImmobile),immobile,proprietario.getCf());
+    }
 }

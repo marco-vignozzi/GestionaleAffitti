@@ -1,6 +1,8 @@
 package model;
 
 
+import java.lang.reflect.Field;
+
 public class Contratto {
     public Contratto(int idImmobile, String cfInquilino, String cfProprietario, String dataInizio, String dataFine,
                      String prossimoPagamento, float canone, boolean proroga)
@@ -26,6 +28,7 @@ public class Contratto {
         this.sfratto = contrattoBuilder.sfratto;
         this.proroga = contrattoBuilder.proroga;
     }
+
 
 
     public int getIdImmobile() {

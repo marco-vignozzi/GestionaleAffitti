@@ -36,7 +36,7 @@ public class ContrattoBuilder {
         return this;
     }
 
-    public ContrattoBuilder dataPagamento(String dataPagamento) {
+    public ContrattoBuilder prossimoPagamento(String dataPagamento) {
         this.prossimoPagamento = dataPagamento;
         return this;
     }

@@ -23,7 +23,7 @@ public class ImmobileDAO extends DatabaseDAO {
             "n_civico VARCHAR(255) NOT NULL," +
             "affittato BOOLEAN NOT NULL," +
             "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf) ON DELETE CASCADE" +
-            ")";
+        ")";
     private static final String CREATE_TRIGGER = "CREATE TRIGGER elimina_contratto_trigger " +
             "BEFORE DELETE ON immobili " +
             "FOR EACH ROW " +
@@ -199,5 +199,10 @@ public class ImmobileDAO extends DatabaseDAO {
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void modificaImmobile(int i, Immobile immobile, String cf) {
+
+
     }
 }

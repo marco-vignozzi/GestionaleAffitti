@@ -2,8 +2,11 @@ package dao;
 
 import model.Contratto;
 import model.ContrattoBuilder;
+import model.Inquilino;
+import model.InquilinoBuilder;
 import view.TabellaGUI;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 public class ContrattoDAO extends DatabaseDAO {
     public TabellaGUI tabella= null;
 
-    // CREATE CRUD API's
+    // CREATE CRUD APIs
     private static final String CREATE_CONTRATTO = "CREATE TABLE contratti (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
             "cf_proprietario VARCHAR(255) NOT NULL," +
@@ -41,6 +44,12 @@ public class ContrattoDAO extends DatabaseDAO {
     private static final String DELETE_CONTRATTO = "DELETE FROM contratti WHERE cf_proprietario = ? AND id = ?";
     // UPDATE CRUD APIs
     private static final String UPDATE_PAGAMENTO = "UPDATE contratti SET prossimo_pagamento = ? WHERE id = ?";
+    private static final String UPDATE_DATA_INIZIO = "UPDATE contratti SET data_inizio = ? WHERE id = ?";
+    private static final String UPDATE_DATA_FINE = "UPDATE contratti SET data_fine = ? WHERE id = ?";
+    private static final String UPDATE_PROSSIMO_PAGAMENTO = "UPDATE contratti SET prossimo_pagamento = ? WHERE id = ?";
+    private static final String UPDATE_CANONE = "UPDATE contratti SET canone = ? WHERE id = ?";
+    private static final String UPDATE_SFRATTO = "UPDATE contratti SET sfratto = ? WHERE id = ?";
+    private static final String UPDATE_PROROGA = "UPDATE contratti SET proroga = ? WHERE id = ?";
     // SELECT CRUD APIs
     private static final String SELECT_ALL_CONTRATTI = "SELECT * FROM contratti WHERE cf_proprietario = ?";
     private static final String SELECT_CONTRATTO_BY_ID = "SELECT * FROM contratti WHERE cf_proprietario = ? AND id = ?";
@@ -87,6 +96,35 @@ public class ContrattoDAO extends DatabaseDAO {
             if( statement.executeUpdate()>0){
                 tabella.aggiornaTabella(getAllContratti(c.getCfProprietario()));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Contratto getContratto(int idContratto, String cfProprietario) {
+        if (connection == null) {
+            connect();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_CONTRATTO_BY_ID);
+            statement.setString(1, cfProprietario);
+            statement.setInt(2, idContratto);
+            ResultSet rs = statement.executeQuery();
+            ContrattoBuilder builder = new ContrattoBuilder();
+            Contratto contratto = null;
+            if(rs.next()){
+                contratto = builder.cfProprietario(rs.getString("cf_proprietario"))
+                        .cfInquilino(rs.getString("cf_inquilino"))
+                        .idImmobile(rs.getInt("id_immobile"))
+                        .dataInizio(rs.getString("data_inizio"))
+                        .dataFine(rs.getString("data_fine"))
+                        .prossimoPagamento(rs.getString("prossimo_pagamento"))
+                        .canone(rs.getFloat("canone"))
+                        .sfratto(rs.getBoolean("sfratto"))
+                        .proroga(rs.getBoolean("proroga"))
+                        .build();
+            }
+            return contratto;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -171,6 +209,52 @@ public class ContrattoDAO extends DatabaseDAO {
             tabella.aggiornaTabella(getAllContratti(cfProprietario));
         }catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void modificaContratto(int idContratto, Contratto contratto, String cfProprietario) {
+        try {
+                if(contratto.getDataInizio() != null) {
+                    PreparedStatement stmt = connection.prepareStatement(UPDATE_DATA_INIZIO);
+                    stmt.setString(1, contratto.getDataInizio());
+                    stmt.setInt(2, idContratto);
+                    stmt.executeUpdate();
+                }
+                if(contratto.getDataFine() != null) {
+                    PreparedStatement stmt = connection.prepareStatement(UPDATE_DATA_FINE);
+                    stmt.setString(1, contratto.getDataFine());
+                    stmt.setInt(2, idContratto);
+                    stmt.executeUpdate();
+                }
+                if(contratto.getProssimoPagamento() != null) {
+                    PreparedStatement stmt = connection.prepareStatement(UPDATE_PROSSIMO_PAGAMENTO);
+                    stmt.setString(1, contratto.getProssimoPagamento());
+                    stmt.setInt(2, idContratto);
+                    stmt.executeUpdate();
+                }
+                if(contratto.getCanone() != 0) {
+                    PreparedStatement stmt = connection.prepareStatement(UPDATE_CANONE);
+                    stmt.setFloat(1, contratto.getCanone());
+                    stmt.setInt(2, idContratto);
+                    stmt.executeUpdate();
+                }
+                if(contratto.isSfratto() != getContratto(idContratto, cfProprietario).isSfratto()) {
+                    PreparedStatement stmt = connection.prepareStatement(UPDATE_SFRATTO);
+                    stmt.setBoolean(1, contratto.isSfratto());
+                    stmt.setInt(2, idContratto);
+                    stmt.executeUpdate();
+                }
+                if(contratto.isProroga() != getContratto(idContratto, cfProprietario).isProroga()) {
+                    PreparedStatement stmt = connection.prepareStatement(UPDATE_PROROGA);
+                    stmt.setBoolean(1, contratto.isProroga());
+                    stmt.setInt(2, idContratto);
+                    stmt.executeUpdate();
+                }
+
+
+
+        }catch(SQLException e) {
+                throw new RuntimeException(e);
         }
     }
 }

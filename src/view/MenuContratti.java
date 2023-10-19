@@ -2,12 +2,19 @@ package view;
 
 import controller.Controller;
 import model.Contratto;
+import model.ContrattoBuilder;
 import model.Immobile;
 import model.Inquilino;
 
-import java.time.LocalDate;
-
 public class MenuContratti extends Menu {
+
+    private static String listaOpzioniModifica = " 1 - Data inizio (formato: YYYY-MM-DD)\n" +
+            " 2 - Data fine (formato: YYYY-MM-DD)\n" +
+            " 3 - Prossimo pagamento (formato: YYYY-MM-DD)\n" +
+            " 4 - Canone\n" +
+            " 5 - Sfratto\n" +
+            " 6 - Proroga\n" +
+            " x - Termina";
 
     public MenuContratti(Controller controller) {
         super(controller);
@@ -129,6 +136,84 @@ public class MenuContratti extends Menu {
     }
 
     private void displayModificaContratto() {
+        String idContratto;
+        String confermaInput;
+
+        System.out.println("Inserire l'ID del contratto che si desidera rimuovere (come indicato in tabella)");
+        System.out.print("ID: ");
+        idContratto = scanner.next();
+
+        if(controller.isContratto(idContratto)) {
+            boolean termina=false;
+            String input;
+            ContrattoBuilder builder = new ContrattoBuilder();
+
+            while(!termina) {
+                System.out.println("Scegliere l'attributo che si desidera modificare:");
+                System.out.println(listaOpzioniModifica);
+                input = scanner.next();
+                try {
+                    switch (input) {
+                        case "1":
+                            System.out.print("Inserire la nuova data di inizio contratto: ");
+                            input = scanner.next();
+                            builder.dataInizio(input);
+                            continue;
+                        case "2":
+                            System.out.print("Inserire la nuova data di fine contratto: ");
+                            input = scanner.next();
+                            builder.dataFine(input);
+                            continue;
+                        case "3":
+                            System.out.print("Inserire la nuova data di pagamento: ");
+                            input = scanner.next();
+                            builder.prossimoPagamento(input);
+                            continue;
+                        case "4":
+                            System.out.print("Inserire nuovo canone mensile: ");
+                            input = scanner.next();
+                            builder.canone(Integer.parseInt(input));
+                            continue;
+                        case "5":
+                            System.out.print("Inserire possibilità di sfratto (S/n): ");
+                            input = scanner.next();
+                            if (input.equals("s") || input.equals("S")) {
+                                builder.sfratto(true);
+                            } else {
+                                builder.sfratto(false);
+                            }
+                            continue;
+                        case "6":
+                            System.out.print("Inserire possibilità di proroga (S/n): ");
+                            input = scanner.next();
+                            if (input.equals("s") || input.equals("S")) {
+                                builder.proroga(true);
+                            } else {
+                                builder.proroga(false);
+                            }
+                            continue;
+                        case "x":
+                            termina = true;
+                            continue;
+                        default:
+                            System.out.println("Valore non valido");
+                    }
+                } catch(NumberFormatException e) {
+                    System.out.println("Valore inserito non valido");
+                }
+            }
+
+            System.out.println("Applicare le modifiche al contratto con ID " + idContratto + "?");
+            confermaInput = scanner.next();
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                Contratto contratto = builder.build();
+                controller.modificaContratto(idContratto, contratto);
+                System.out.println("Contratto modificato");
+            }
+        }
+        else {
+            System.out.println("Non esiste nessun contratto con l'ID selezionato.");
+        }
 
     }
 

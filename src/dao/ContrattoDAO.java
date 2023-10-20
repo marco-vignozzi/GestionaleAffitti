@@ -28,7 +28,7 @@ public class ContrattoDAO extends DatabaseDAO {
             "sfratto BOOLEAN NOT NULL, " +
             "proroga BOOLEAN NOT NULL," +
             "FOREIGN KEY (cf_proprietario) REFERENCES utenti(cf) ON DELETE CASCADE," +
-            "FOREIGN KEY (cf_inquilino) REFERENCES inquilini(cf) ON DELETE CASCADE," +
+            "FOREIGN KEY (cf_inquilino) REFERENCES inquilini(cf) ON DELETE CASCADE ON UPDATE CASCADE," +
             "FOREIGN KEY (id_immobile) REFERENCES immobili(id) ON DELETE CASCADE" +
             ")";
     private static final String CREATE_TRIGGER = "CREATE TRIGGER elimina_inquilino_trigger " +

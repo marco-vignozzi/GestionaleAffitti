@@ -126,7 +126,6 @@ public class MenuInquilini extends Menu {
                 input = scanner.next();
                 switch (input){
                     case "1":
-                        //TODO gestire in caso di modifica del codice fiscale la modifica anche del contratto associato
                         System.out.print("Inserire il nuovo codice fiscale: ");
                         input = scanner.next();
                         builder.cf(input);

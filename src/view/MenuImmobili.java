@@ -144,74 +144,76 @@ public class MenuImmobili extends Menu {
                 System.out.println("Scegliere l'attributo che si desidera modificare:");
                 System.out.println(listaOpzioniModifica);
                 input = scanner.next();
-                switch (input){
-                    case "1":
-                        System.out.print("Inserire il nuovo comune: ");
-                        input = scanner.next();
-                        builder.comune(input);
-                        continue;
-                    case "2":
-                        System.out.print("Inserire il nuovo indirizzo: ");
-                        input = scanner.next();
-                        builder.indirizzo(input);
-                        continue;
-                    case "3":
-                        System.out.print("Inserire il nuovo numero civico: ");
-                        input = scanner.next();
-                        builder.nCivico(input);
-                        continue;
-                    case "4":
-                        System.out.print("Inserire il nuovo foglio: ");
-                        input = scanner.next();
-                        builder.foglio(Integer.parseInt(input));
-                        continue;
-                    case "5":
-                        System.out.print("Inserire la nuova particella: ");
-                        input = scanner.next();
-                        builder.particella(Integer.parseInt(input));
-                        continue;
-                    case "6":
-                        System.out.print("Inserire la nuova categoria: ");
-                        input = scanner.next();
-                        builder.categoria(input);
-                        continue;
-                    case "7":
-                        System.out.print("Inserire la nuova classe: ");
-                        input = scanner.next();
-                        builder.classe(input);
-                        continue;
-                    case "8":
-                        System.out.print("Inserire la nuova superficie: ");
-                        input = scanner.next();
-                        builder.superficie(Float.parseFloat(input));
-                        continue;
-                    case "9":
-                        System.out.print("Inserire la nuova rendita: ");
-                        input= scanner.next();
-                        builder.rendita(Float.parseFloat(input));
-                        continue;
-                    case "10":
-                        System.out.print("Inserire il nuovo subalterno: ");
-                        input = scanner.next();
-                        builder.subalterno(Integer.parseInt(input));
-                        continue;
-                    case "x":
-                        termina = true;
-                        continue;
-                    default:
-                        System.out.println("Valore non valido");
-                }
-                System.out.println("Applicare le modifiche all'immobile con ID " + idImmobile + "?");
-                confermaInput=scanner.next();
-                if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                    Immobile immobile= builder.build();
-                    controller.modificaImmobile(idImmobile, immobile);
-                    System.out.println("Immobile modificato modificato");
-                }
-
+                try {
+                    switch (input) {
+                        case "1":
+                            System.out.print("Inserire il nuovo comune: ");
+                            input = scanner.next();
+                            builder.comune(input);
+                            continue;
+                        case "2":
+                            System.out.print("Inserire il nuovo indirizzo: ");
+                            input = scanner.next();
+                            builder.indirizzo(input);
+                            continue;
+                        case "3":
+                            System.out.print("Inserire il nuovo numero civico: ");
+                            input = scanner.next();
+                            builder.nCivico(input);
+                            continue;
+                        case "4":
+                            System.out.print("Inserire il nuovo foglio: ");
+                            input = scanner.next();
+                            builder.foglio(Integer.parseInt(input));
+                            continue;
+                        case "5":
+                            System.out.print("Inserire la nuova particella: ");
+                            input = scanner.next();
+                            builder.particella(Integer.parseInt(input));
+                            continue;
+                        case "6":
+                            System.out.print("Inserire la nuova categoria: ");
+                            input = scanner.next();
+                            builder.categoria(input);
+                            continue;
+                        case "7":
+                            System.out.print("Inserire la nuova classe: ");
+                            input = scanner.next();
+                            builder.classe(input);
+                            continue;
+                        case "8":
+                            System.out.print("Inserire la nuova superficie (in metri quadri): ");
+                            input = scanner.next();
+                            builder.superficie(Float.parseFloat(input));
+                            continue;
+                        case "9":
+                            System.out.print("Inserire la nuova rendita: ");
+                            input = scanner.next();
+                            builder.rendita(Float.parseFloat(input));
+                            continue;
+                        case "10":
+                            System.out.print("Inserire il nuovo subalterno: ");
+                            input = scanner.next();
+                            builder.subalterno(Integer.parseInt(input));
+                            continue;
+                        case "x":
+                            termina = true;
+                            continue;
+                        default:
+                            System.out.println("Valore non valido");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Valore inserito non valido");
 
             }
 
+            System.out.println("Applicare le modifiche all'immobile con ID " + idImmobile + "?");
+            confermaInput=scanner.next();
+            if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                Immobile immobile= builder.build();
+                controller.modificaImmobile(idImmobile, immobile);
+                System.out.println("Immobile modificato modificato");
+            }
         }
         else {
             System.out.println("Non esiste nessun immobile con l'ID selezionato.");

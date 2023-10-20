@@ -1,10 +1,21 @@
 package view;
 
 import controller.Controller;
-import model.Contratto;
-import model.Inquilino;
+import model.*;
 
 public class MenuInquilini extends Menu {
+
+    private static String listaOpzioniModifica = " 1 - Codice fiscale\n" +
+            " 2 - Nome\n" +
+            " 3 - Cognome\n" +
+            " 4 - Data di nascita\n" +
+            " 5 - Città di nascita\n" +
+            " 6 - Residenza\n" +
+            " 7 - Telefono\n" +
+            " 8 - Email\n" +
+            " 9 - Totale dovuto\n" +
+            " 10 - Totale pagato\n" +
+            " x - Applica modifiche";
 
     public MenuInquilini(Controller controller) {
         super(controller);
@@ -32,7 +43,7 @@ public class MenuInquilini extends Menu {
                     controller.visualizzaInquilini();
                     continue;
                 case "3":
-                    displayModificaInquilino();         // TODO: implementare
+                    displayModificaInquilino();
                     continue;
                 case "4":
                     displayRimuoviInquilino();
@@ -96,7 +107,92 @@ public class MenuInquilini extends Menu {
     }
 
     public void displayModificaInquilino() {
+        controller.visualizzaInquilini();
+        String idInquilino;
+        String confermaInput;
 
+        System.out.println("Inserire l'ID dell'inquilino che si desidera modificare (come indicato in tabella)");
+        System.out.print("ID: ");
+        idInquilino = scanner.next();
+
+        if(controller.isInquilino(idInquilino)) {
+            boolean termina=false;
+            String input;
+            InquilinoBuilder builder = new InquilinoBuilder();
+
+            while(!termina){
+                System.out.println("Scegliere l'attributo che si desidera modificare:");
+                System.out.println(listaOpzioniModifica);
+                input = scanner.next();
+                switch (input){
+                    case "1":
+                        System.out.print("Inserire il nuovo codice fiscale: ");
+                        input = scanner.next();
+                        builder.cf(input);
+                        continue;
+                    case "2":
+                        System.out.print("Inserire il nuovo nome: ");
+                        input = scanner.next();
+                        builder.nome(input);
+                        continue;
+                    case "3":
+                        System.out.print("Inserire il nuovo cognome: ");
+                        input = scanner.next();
+                        builder.cognome(input);
+                        continue;
+                    case "4":
+                        System.out.print("Inserire la nuova data di nascita: ");
+                        input = scanner.next();
+                        builder.dataNascita(input);
+                        continue;
+                    case "5":
+                        System.out.print("Inserire la nuova città di nascita: ");
+                        input = scanner.next();
+                        builder.cittàNascita(input);
+                        continue;
+                    case "6":
+                        System.out.print("Inserire la nuova residenza: ");
+                        input = scanner.next();
+                        builder.residenza(input);
+                        continue;
+                    case "7":
+                        System.out.print("Inserire il nuovo telefono: ");
+                        input = scanner.next();
+                        builder.telefono(input);
+                        continue;
+                    case "8":
+                        System.out.print("Inserire la nuova email: ");
+                        input = scanner.next();
+                        builder.email(input);
+                        continue;
+                    case "9":
+                        System.out.print("Inserire il nuovo totale dovuto: ");
+                        input= scanner.next();
+                        builder.totaleDovuto(Float.parseFloat(input));
+                        continue;
+                    case "10":
+                        System.out.print("Inserire il nuovo totale pagato: ");
+                        input = scanner.next();
+                        builder.totalePagato(Float.parseFloat(input));
+                        continue;
+                    case "x":
+                        termina = true;
+                        continue;
+                    default:
+                        System.out.println("Valore non valido");
+                }
+                System.out.println("Applicare le modifiche all'inquilino con ID " + idInquilino + "?");
+                confermaInput=scanner.next();
+                if (confermaInput.equals("s") || confermaInput.equals("S")) {
+                    Inquilino inquilino = builder.build();
+                    controller.modificaInquilino(idInquilino, inquilino);
+                    System.out.println("Inquilino modificato");
+                }
+            }
+        }
+        else {
+            System.out.println("Non esiste nessun inquilino con l'ID selezionato.");
+        }
     }
 
     public void displayRimuoviInquilino() {

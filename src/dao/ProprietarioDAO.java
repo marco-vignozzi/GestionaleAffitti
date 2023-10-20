@@ -95,7 +95,7 @@ public class ProprietarioDAO extends DatabaseDAO {
         return false;
     }
 
-    public Proprietario getUtente(String email, String password) {          // FIXME: non funziona perchè boh
+    public Proprietario getUtente(String email, String password) {
         try{
             PreparedStatement statement = connection.prepareStatement(SELECT_USER);
             statement.setString(1, email);

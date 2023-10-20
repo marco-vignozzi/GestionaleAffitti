@@ -1,8 +1,6 @@
 package model;
 
 
-// TODO: modifica e aggiungi builder
-
 public class Inquilino {
     private int id;
     private String nome;

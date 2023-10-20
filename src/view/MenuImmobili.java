@@ -17,7 +17,8 @@ public class MenuImmobili extends Menu {
             " 7 - Classe\n" +
             " 8 - Superficie\n" +
             " 9 - Rendita\n" +
-            " 10 - Subalterno\n";
+            " 10 - Subalterno\n" +
+            " x - Applica modifiche";
 
 
     public MenuImmobili(Controller controller) {

@@ -131,6 +131,7 @@ public class MenuImmobili extends Menu {
     }
 
     private void displayModificaImmobile() {
+        controller.visualizzaImmobili();
         String idImmobile;
         String confermaInput;
 
@@ -205,6 +206,7 @@ public class MenuImmobili extends Menu {
                     }
                 } catch (NumberFormatException e) {
                     System.out.println("Valore inserito non valido");
+                }
 
             }
 
@@ -215,8 +217,7 @@ public class MenuImmobili extends Menu {
                 controller.modificaImmobile(idImmobile, immobile);
                 System.out.println("Immobile modificato modificato");
             }
-        }
-        else {
+        }else {
             System.out.println("Non esiste nessun immobile con l'ID selezionato.");
         }
     }
@@ -243,3 +244,4 @@ public class MenuImmobili extends Menu {
     }
 
 }
+

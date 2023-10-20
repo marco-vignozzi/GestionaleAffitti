@@ -38,6 +38,18 @@ public class ImmobileDAO extends DatabaseDAO {
     private static final String DELETE_IMMOBILE = "DELETE FROM immobili WHERE id = ?";
     // UPDATE CRUD API's
     private static final String UPDATE_AFFITTATO = "UPDATE immobili SET affittato = ? WHERE id = ?";
+    private static final String UPDATE_COMUNE = "UPDATE immobili SET comune = ? WHERE id = ?";
+    private static final String UPDATE_FOGLIO = "UPDATE immobili SET foglio = ? WHERE id = ?";
+    private static final String UPDATE_PARTICELLA = "UPDATE immobili SET particella = ? WHERE id = ?";
+    private static final String UPDATE_SUBALTERNO = "UPDATE immobili SET subalterno = ? WHERE id = ?";
+    private static final String UPDATE_CATEGORIA = "UPDATE immobili SET categoria = ? WHERE id = ?";
+    private static final String UPDATE_CLASSE = "UPDATE immobili SET classe = ? WHERE id = ?";
+    private static final String UPDATE_SUPERFICIE = "UPDATE immobili SET superficie_mq = ? WHERE id = ?";
+    private static final String UPDATE_RENDITA = "UPDATE immobili SET rendita = ? WHERE id = ?";
+    private static final String UPDATE_INDIRIZZO = "UPDATE immobili SET indirizzo = ? WHERE id = ?";
+    private static final String UPDATE_N_CIVICO = "UPDATE immobili SET n_civico = ? WHERE id = ?";
+
+
     // SELECT CRUD API's
     private static final String SELECT_IMMOBILE_AND_CONTRATTO_BY_ID = "SELECT * FROM immobili LEFT JOIN contratti ON immobili.id = id_immobile " +
             "WHERE immobili.id = ? AND immobili.cf_proprietario = ?";
@@ -197,8 +209,72 @@ public class ImmobileDAO extends DatabaseDAO {
         }
     }
 
-    public void modificaImmobile(int i, Immobile immobile, String cf) {
-        // TODO: implementare
+    public void modificaImmobile(int i, Immobile immobile) {
+        try{
+            if(immobile.getComune() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_COMUNE);
+                stmt.setString(1, immobile.getComune());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getFoglio() != 0) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_FOGLIO);
+                stmt.setInt(1, immobile.getFoglio());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getParticella() != 0) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_PARTICELLA);
+                stmt.setInt(1, immobile.getParticella());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getSubalterno() != 0) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_SUBALTERNO);
+                stmt.setInt(1, immobile.getSubalterno());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getCategoria() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_CATEGORIA);
+                stmt.setString(1, immobile.getCategoria());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getClasse() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_CLASSE);
+                stmt.setString(1, immobile.getClasse());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getSuperficie() != 0) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_SUPERFICIE);
+                stmt.setFloat(1, immobile.getSuperficie());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getRendita() != 0){
+                PreparedStatement stmt= connection.prepareStatement(UPDATE_RENDITA);
+                stmt.setFloat(1, immobile.getRendita());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getIndirizzo() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_INDIRIZZO);
+                stmt.setString(1, immobile.getIndirizzo());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+            if(immobile.getnCivico() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_N_CIVICO);
+                stmt.setString(1, immobile.getnCivico());
+                stmt.setInt(2, i);
+                stmt.executeUpdate();
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean getAffittato(int idImmobile, String cfProprietario) {

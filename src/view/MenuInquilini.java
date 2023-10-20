@@ -126,6 +126,7 @@ public class MenuInquilini extends Menu {
                 input = scanner.next();
                 switch (input){
                     case "1":
+                        //TODO gestire in caso di modifica del codice fiscale la modifica anche del contratto associato
                         System.out.print("Inserire il nuovo codice fiscale: ");
                         input = scanner.next();
                         builder.cf(input);
@@ -181,6 +182,7 @@ public class MenuInquilini extends Menu {
                     default:
                         System.out.println("Valore non valido");
                 }
+            }
                 System.out.println("Applicare le modifiche all'inquilino con ID " + idInquilino + "?");
                 confermaInput=scanner.next();
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
@@ -188,7 +190,7 @@ public class MenuInquilini extends Menu {
                     controller.modificaInquilino(idInquilino, inquilino);
                     System.out.println("Inquilino modificato");
                 }
-            }
+
         }
         else {
             System.out.println("Non esiste nessun inquilino con l'ID selezionato.");

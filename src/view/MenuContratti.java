@@ -157,7 +157,7 @@ public class MenuContratti extends Menu {
         String idContratto;
         String confermaInput;
 
-        System.out.println("Inserire l'ID del contratto che si desidera rimuovere (come indicato in tabella)");
+        System.out.println("Inserire l'ID del contratto che si desidera modificare (come indicato in tabella)");
         System.out.print("ID: ");
         idContratto = scanner.next();
 

@@ -208,12 +208,12 @@ public class Controller {
     }
 
     public void modificaImmobile(String idImmobile, Immobile immobile) {
-        immobileDao.modificaImmobile(Integer.parseInt(idImmobile), immobile, proprietario.getCf());
+        immobileDao.modificaImmobile(Integer.parseInt(idImmobile), immobile);
         aggiorna();
     }
 
     public void modificaInquilino(String idInquilino, Inquilino inquilino) {
-        inquilinoDao.modificaInquilino(Integer.parseInt(idInquilino), inquilino, proprietario.getCf());
+        inquilinoDao.modificaInquilino(Integer.parseInt(idInquilino), inquilino);
         aggiorna();
     }
 

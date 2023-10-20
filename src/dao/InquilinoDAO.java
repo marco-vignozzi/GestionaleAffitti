@@ -35,10 +35,22 @@ public class InquilinoDAO extends DatabaseDAO {
             "totale_pagato, deve_pagare) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     // DELETE CRUD API
     private static final String DELETE_INQUILINO = "DELETE FROM inquilini WHERE id = ?";
+
     // UPDATE CRUD APIs
     private static final String UPDATE_PAGATO = "UPDATE inquilini SET totale_pagato = ? WHERE id = ?";
     private static final String UPDATE_DOVUTO_AND_PAGATO = "UPDATE inquilini SET totale_dovuto = ?, deve_pagare = false WHERE id = ?";
     private static final String UPDATE_DOVUTO = "UPDATE inquilini SET totale_dovuto = ? WHERE id = ?";
+    private static final String UPDATE_NOME = "UPDATE inquilini SET nome = ? WHERE id = ?";
+    private static final String UPDATE_COGNOME = "UPDATE inquilini SET cognome = ? WHERE id = ?";
+    private static final String UPDATE_CF = "UPDATE inquilini SET cf = ? WHERE id = ?";
+    private static final String UPDATE_DATA_NASCITA = "UPDATE inquilini SET data_di_nascita = ?";
+    private static final String UPDATE_CITTA_NASCITA = "UPDATE inquilini SET città_di_nascita = ?";
+    private static final String UPDATE_RESIDENZA = "UPDATE inquilini SET residenza = ? WHERE id = ?";
+    private static final String UPDATE_TELEFONO = "UPDATE inquilini SET telefono = ? WHERE id = ?";
+    private static final String UPDATE_EMAIL = "UPDATE inquilini SET email = ? WHERE id = ?";
+    private static final String UPDATE_TOTALE_DOVUTO = "UPDATE inquilini SET totale_dovuto = ? WHERE id = ?";
+    private static final String UPDATE_TOTALE_PAGATO = "UPDATE inquilini SET totale_pagato = ? WHERE id = ?";
+
     // SELECT CRUD APIs
     private static final String SELECT_ALL_INQUILINI = "SELECT inquilini.id, inquilini.cf, inquilini.nome, inquilini.cognome, " +
             "inquilini.data_di_nascita, inquilini.città_di_nascita, inquilini.residenza, inquilini.telefono, inquilini.email, " +
@@ -244,8 +256,71 @@ public class InquilinoDAO extends DatabaseDAO {
         }
     }
 
-    public void modificaInquilino(int idInquilino, Inquilino inquilino, String cfProprietario) {
-       // TODO: implementare
+    public void modificaInquilino(int idInquilino, Inquilino inquilino) {
+        try {
+            if (inquilino.getNome() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_NOME);
+                stmt.setString(1, inquilino.getNome());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getCognome() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_COGNOME);
+                stmt.setString(1, inquilino.getCognome());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getCf() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_CF);
+                stmt.setString(1, inquilino.getCf());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getDataNascita() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_DATA_NASCITA);
+                stmt.setString(1, inquilino.getDataNascita());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getCittàNascita() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_CITTA_NASCITA);
+                stmt.setString(1, inquilino.getCittàNascita());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getResidenza() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_RESIDENZA);
+                stmt.setString(1, inquilino.getResidenza());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getTelefono() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_TELEFONO);
+                stmt.setString(1, inquilino.getTelefono());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getEmail() != null) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_EMAIL);
+                stmt.setString(1, inquilino.getEmail());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getTotaleDovuto() != -1) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_TOTALE_DOVUTO);
+                stmt.setFloat(1, inquilino.getTotaleDovuto());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+            if(inquilino.getTotalePagato() != -1) {
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_TOTALE_PAGATO);
+                stmt.setFloat(1, inquilino.getTotalePagato());
+                stmt.setInt(2, idInquilino);
+                stmt.executeUpdate();
+            }
+        }catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

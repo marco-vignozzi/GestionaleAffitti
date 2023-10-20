@@ -55,10 +55,9 @@ public class MenuLogin extends Menu {
             String password = scanner.next();
 
             if (controller.isUtente(email, password)) {
-
                 controller.setProprietario(email, password);
-                termina = true;         // TODO: magari si toglie termina
                 return true;
+
             } else {
                 System.out.println("Email o password errate.");
                 System.out.println("Riprovare? (S/n)");

@@ -243,4 +243,9 @@ public class InquilinoDAO extends DatabaseDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public void modificaInquilino(int idInquilino, Inquilino inquilino, String cfProprietario) {
+       // TODO: implementare
+    }
+
 }

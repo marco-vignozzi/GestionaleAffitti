@@ -14,7 +14,7 @@ public class MenuContratti extends Menu {
             " 4 - Canone\n" +
             " 5 - Sfratto\n" +
             " 6 - Proroga\n" +
-            " x - Termina";
+            " x - Applica modifiche";
 
     public MenuContratti(Controller controller) {
         super(controller);
@@ -42,7 +42,7 @@ public class MenuContratti extends Menu {
                     controller.visualizzaContratti();
                     continue;
                 case "3":
-                    displayModificaContratto();         // TODO: implementare
+                    displayModificaContratto();
                     continue;
                 case "4":
                     displayRimuoviContratto();
@@ -65,15 +65,17 @@ public class MenuContratti extends Menu {
     public Contratto displayAggiungiContratto(Inquilino inquilino) {
         boolean termina = false;
         String cfInquilino = inquilino.getCf();
+        String confermaInput;
+        System.out.println("Inserisci i dati del contratto");
 
         while (!termina) {
             controller.visualizzaImmobili();
-            System.out.println("Inserisci i dati del contratto");
             System.out.print("ID dell'immobile come indicato nella tabella: ");
             String idImmobile = scanner.next();
+
             if(!controller.isImmobile(idImmobile)) {
                 System.out.println("L'immobile selezionato non è presente nel database. Si desidera crearlo adesso? (S/n)");
-                String confermaInput = scanner.next();
+                confermaInput = scanner.next();
 
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
                     MenuImmobili menuImmobili = new MenuImmobili(this.controller);
@@ -91,11 +93,26 @@ public class MenuContratti extends Menu {
 
                     if (confermaInput.equals("s")) {
                         termina = true;
+                        continue;
+                    }
+                    else {
+                        continue;
                     }
                 }
-            }else {
-                // TODO: aggiungere verifica che non sia già affittato
+            }else if (controller.isAffittato(idImmobile)){
+                System.out.println("L'immobile selezionato è già affittato.");
+                System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
+                confermaInput = scanner.next();
+
+                if (confermaInput.equals("s")) {
+                    termina = true;
+                    continue;
+                }
+                else {
+                    continue;
+                }
             }
+
             System.out.print("Data di inizio contratto (formato: YYYY-MM-DD): ");
             String dataInizio = scanner.next();
             System.out.print("Data di fine contratto (formato: YYYY-MM-DD): ");
@@ -105,7 +122,7 @@ public class MenuContratti extends Menu {
             System.out.print("Canone mensile: ");
             String canone = scanner.next();
             System.out.print("Aggiungere possibilità di proroga? (S/n) ");
-            String confermaInput = scanner.next();
+            confermaInput = scanner.next();
             boolean proroga;
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
                 proroga = true;
@@ -115,7 +132,7 @@ public class MenuContratti extends Menu {
 
             System.out.println("Confermi i dati inseriti? (S/n) ");
             confermaInput = scanner.next();
-            try {                   // TODO: si prova a creare, se ci sono valori non validi lancia eccezione
+            try {
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
                     Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(),
                             dataInizio, dataFine, dataPagamento, Float.parseFloat(canone), proroga);
@@ -136,6 +153,7 @@ public class MenuContratti extends Menu {
     }
 
     private void displayModificaContratto() {
+        controller.visualizzaContratti();
         String idContratto;
         String confermaInput;
 

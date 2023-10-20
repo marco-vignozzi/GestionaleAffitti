@@ -100,7 +100,7 @@ public class Controller {
             inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");
         }
     }
 
@@ -114,7 +114,7 @@ public class Controller {
         try {
             return inquilinoDao.verificaInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");
         }
         return false;
     }
@@ -123,7 +123,7 @@ public class Controller {
         try {
             return immobileDao.verificaImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");
         }
         return false;
     }
@@ -133,7 +133,7 @@ public class Controller {
             immobileDao.rimuoviImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");
         }
     }
 
@@ -141,7 +141,7 @@ public class Controller {
         try {
             return inquilinoDao.getInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");
         }
         return null;
     }
@@ -151,7 +151,7 @@ public class Controller {
             contrattoDao.rimuoviContratto(Integer.parseInt(idContratto), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");
         }
     }
 
@@ -159,7 +159,7 @@ public class Controller {
         try {
             return contrattoDao.verificaContratto(Integer.parseInt(idContratto), proprietario.getCf());
         } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("L'ID inserito non è un valore valido");
         }
         return false;
     }
@@ -170,7 +170,7 @@ public class Controller {
             aggiorna();
             System.out.println("Pagamento salvato");
         } catch (NumberFormatException e) {
-            System.out.println("Valore in denaro non valido");            // TODO: aggiunta eccezione, vediamo se serve da altre parti
+            System.out.println("Valore in denaro non valido");
         }
     }
 
@@ -202,6 +202,30 @@ public class Controller {
         return inquilinoDao.getInquiliniSollecito(proprietario.getCf());
     }
 
+    public void modificaContratto(String idContratto, Contratto contratto) {
+        contrattoDao.modificaContratto(Integer.parseInt(idContratto), contratto, proprietario.getCf());
+        aggiorna();
+    }
+
+    public void modificaImmobile(String idImmobile, Immobile immobile) {
+        immobileDao.modificaImmobile(Integer.parseInt(idImmobile), immobile, proprietario.getCf());
+        aggiorna();
+    }
+
+    public void modificaInquilino(String idInquilino, Inquilino inquilino) {
+        inquilinoDao.modificaInquilino(Integer.parseInt(idInquilino), inquilino, proprietario.getCf());
+        aggiorna();
+    }
+
+    public boolean isAffittato(String idImmobile) {
+        try {
+            return immobileDao.getAffittato(Integer.parseInt(idImmobile), proprietario.getCf());
+        } catch (NumberFormatException e) {
+            System.out.println("L'ID immobile non è valido");
+        }
+        return false;
+    }
+
     // serve ad aggiornare la logica dei pagamenti
     public void aggiorna() {
         try {
@@ -231,11 +255,4 @@ public class Controller {
         this.proprietario = null;
     }
 
-    public void modificaContratto(String idContratto, Contratto contratto) {
-            contrattoDao.modificaContratto(Integer.parseInt(idContratto), contratto, proprietario.getCf());
-    }
-
-    public void modificaImmobile(String idImmobile,Immobile immobile) {
-        immobileDao.modificaImmobile(Integer.parseInt(idImmobile),immobile,proprietario.getCf());
-    }
 }

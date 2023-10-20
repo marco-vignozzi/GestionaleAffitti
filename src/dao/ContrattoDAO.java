@@ -43,7 +43,6 @@ public class ContrattoDAO extends DatabaseDAO {
     // DELETE CRUD API
     private static final String DELETE_CONTRATTO = "DELETE FROM contratti WHERE cf_proprietario = ? AND id = ?";
     // UPDATE CRUD APIs
-    private static final String UPDATE_PAGAMENTO = "UPDATE contratti SET prossimo_pagamento = ? WHERE id = ?";
     private static final String UPDATE_DATA_INIZIO = "UPDATE contratti SET data_inizio = ? WHERE id = ?";
     private static final String UPDATE_DATA_FINE = "UPDATE contratti SET data_fine = ? WHERE id = ?";
     private static final String UPDATE_PROSSIMO_PAGAMENTO = "UPDATE contratti SET prossimo_pagamento = ? WHERE id = ?";
@@ -196,7 +195,7 @@ public class ContrattoDAO extends DatabaseDAO {
                     LocalDate prossimoPagamento = LocalDate.parse(rs.getString("prossimo_pagamento"), formatter);
                     if (!oggi.isAfter(LocalDate.parse(rs.getString("data_fine"), formatter)) && oggi.isAfter(prossimoPagamento)) {
                         prossimoPagamento = prossimoPagamento.plusMonths(1);
-                        statement = connection.prepareStatement(UPDATE_PAGAMENTO);
+                        statement = connection.prepareStatement(UPDATE_PROSSIMO_PAGAMENTO);
                         statement.setString(1, prossimoPagamento.toString());
                         statement.setInt(2, rs.getInt("contratti.id"));
                         statement.executeUpdate();
@@ -250,10 +249,7 @@ public class ContrattoDAO extends DatabaseDAO {
                     stmt.setInt(2, idContratto);
                     stmt.executeUpdate();
                 }
-
-
-
-        }catch(SQLException e) {
+        } catch(SQLException e) {
                 throw new RuntimeException(e);
         }
     }

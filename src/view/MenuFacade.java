@@ -22,7 +22,7 @@ public class MenuFacade extends Menu {
 
         while(!termina){
             System.out.println("Scegliere quale menu visualizzare: ");
-            System.out.println(" 1 - Menu operazioni utente");          // TODO: scegliere nome più appropriato
+            System.out.println(" 1 - Menu operazioni utente");
             System.out.println(" 2 - Menu gestione inquilini");
             System.out.println(" 3 - Menu gestione immobili");
             System.out.println(" 4 - Menu gestione contratti");

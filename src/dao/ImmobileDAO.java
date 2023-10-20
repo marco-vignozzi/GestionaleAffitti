@@ -43,10 +43,6 @@ public class ImmobileDAO extends DatabaseDAO {
             "WHERE immobili.id = ? AND immobili.cf_proprietario = ?";
     private static final String SELECT_IMMOBILE = "SELECT id FROM immobili WHERE comune = ? AND indirizzo = ? AND n_civico = ? " +
             "AND subalterno = ? AND cf_proprietario = ?";
-    // TODO: vedere se usare una query che ti seleziona tutti i dati degli immobili e mettere questa come query di "resoconto"
-//    private static final String SELECT_ALL_IMMOBILI = "SELECT immobili.id, comune, indirizzo, n_civico, subalterno, affittato, " +
-//            "cf_inquilino, inquilini.nome, inquilini.cognome, canone, (totale_dovuto-totale_pagato) as debito FROM contratti JOIN inquilini ON " +
-//            "inquilini.cf = contratti.cf_inquilino RIGHT JOIN immobili ON id_immobile = immobili.id WHERE immobili.cf_proprietario = ?";
     private static final String SELECT_ALL_IMMOBILI = "SELECT id, comune, indirizzo, n_civico, subalterno, affittato, " +
             "foglio, particella, categoria, classe, superficie_mq, rendita FROM immobili WHERE cf_proprietario = ?";
 
@@ -202,7 +198,22 @@ public class ImmobileDAO extends DatabaseDAO {
     }
 
     public void modificaImmobile(int i, Immobile immobile, String cf) {
-
-
+        // TODO: implementare
     }
+
+    public boolean getAffittato(int idImmobile, String cfProprietario) {
+        try{
+            PreparedStatement stmt = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
+            stmt.setInt(1, idImmobile);
+            stmt.setString(2, cfProprietario);
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+
+            return rs.getBoolean("affittato");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

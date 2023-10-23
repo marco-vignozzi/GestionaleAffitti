@@ -2,19 +2,15 @@ package dao;
 
 import model.Contratto;
 import model.ContrattoBuilder;
-import model.Inquilino;
-import model.InquilinoBuilder;
-import view.TabellaGUI;
 
-import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ContrattoDAO extends DatabaseDAO {
-    public TabellaGUI tabella= null;
-
     // CREATE CRUD APIs
     private static final String CREATE_CONTRATTO = "CREATE TABLE contratti (" +
             "id INT AUTO_INCREMENT PRIMARY KEY," +
@@ -58,7 +54,6 @@ public class ContrattoDAO extends DatabaseDAO {
     public ContrattoDAO() {
         connect();
         creaTabella();
-        tabella = new TabellaGUI("Contratti");
     }
 
     public void creaTabella() {
@@ -92,9 +87,7 @@ public class ContrattoDAO extends DatabaseDAO {
             statement.setFloat(7, c.getCanone());
             statement.setBoolean(8, c.isSfratto());
             statement.setBoolean(9, c.isProroga());
-            if( statement.executeUpdate()>0){
-                tabella.aggiornaTabella(getAllContratti(c.getCfProprietario()));
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -121,6 +114,7 @@ public class ContrattoDAO extends DatabaseDAO {
                         .canone(rs.getFloat("canone"))
                         .sfratto(rs.getBoolean("sfratto"))
                         .proroga(rs.getBoolean("proroga"))
+                        .id(rs.getInt("id"))
                         .build();
             }
             return contratto;
@@ -129,25 +123,23 @@ public class ContrattoDAO extends DatabaseDAO {
         }
     }
 
-    public ResultSet getAllContratti(String cfProprietario) {
+    public List<Contratto> getAllContratti(String cfProprietario) {
         if (connection == null) {
             connect();
         }
         try {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_CONTRATTI);
             statement.setString(1, cfProprietario);
-            return statement.executeQuery();
+            ResultSet rs = statement.executeQuery();
+            List<Contratto> contratti = new ArrayList<>();
+
+            while (rs.next()) {
+                contratti.add(getContratto(rs.getInt("id"), cfProprietario));
+            }
+            return contratti;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void visualizzaContratti(String cfProprietario) {
-       try{
-           tabella.mostraTabella(getAllContratti(cfProprietario));
-       }catch (Exception e){
-           throw new RuntimeException(e);
-       }
     }
 
     public void rimuoviContratto(int idContratto, String cfProprietario) {
@@ -158,60 +150,57 @@ public class ContrattoDAO extends DatabaseDAO {
             PreparedStatement statement = connection.prepareStatement(DELETE_CONTRATTO);
             statement.setString(1, cfProprietario);
             statement.setInt(2, idContratto);
-            if(statement.executeUpdate()>0) {
-                tabella.aggiornaTabella(getAllContratti(cfProprietario));
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+//
+//    public boolean verificaContratto(int idContratto, String cfProprietario) {
+//        if (connection == null) {
+//            connect();
+//        }
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(SELECT_CONTRATTO_BY_ID);
+//            statement.setString(1, cfProprietario);
+//            statement.setInt(2, idContratto);
+//            ResultSet rs = statement.executeQuery();
+//            return rs.next();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    public boolean verificaContratto(int idContratto, String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
-        try {
-            PreparedStatement statement = connection.prepareStatement(SELECT_CONTRATTO_BY_ID);
-            statement.setString(1, cfProprietario);
-            statement.setInt(2, idContratto);
-            ResultSet rs = statement.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void aggiornaDatePagamento(String cfProprietario) {
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINI_AND_CONTRATTI);
+//            statement.setString(1, cfProprietario);
+//            ResultSet rs = statement.executeQuery();
+//
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            LocalDate oggi = LocalDate.now();
+//
+//            while(rs.next()) {
+//                if (!rs.getString("prossimo_pagamento").isEmpty()) {
+//                    LocalDate prossimoPagamento = LocalDate.parse(rs.getString("prossimo_pagamento"), formatter);
+//                    if (!oggi.isAfter(LocalDate.parse(rs.getString("data_fine"), formatter)) && oggi.isAfter(prossimoPagamento)) {
+//                        prossimoPagamento = prossimoPagamento.plusMonths(1);
+//                        statement = connection.prepareStatement(UPDATE_PROSSIMO_PAGAMENTO);
+//                        statement.setString(1, prossimoPagamento.toString());
+//                        statement.setInt(2, rs.getInt("contratti.id"));
+//                        statement.executeUpdate();
+//                        statement = connection.prepareStatement(UPDATE_DEVE_PAGARE);
+//                        statement.setInt(1, rs.getInt("inquilini.id"));
+//                        statement.executeUpdate();
+//                    }
+//                }
+//            }
+//        }catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    public void aggiornaDatePagamento(String cfProprietario) {
-        try {
-            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINI_AND_CONTRATTI);
-            statement.setString(1, cfProprietario);
-            ResultSet rs = statement.executeQuery();
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate oggi = LocalDate.now();
-
-            while(rs.next()) {
-                if (!rs.getString("prossimo_pagamento").isEmpty()) {
-                    LocalDate prossimoPagamento = LocalDate.parse(rs.getString("prossimo_pagamento"), formatter);
-                    if (!oggi.isAfter(LocalDate.parse(rs.getString("data_fine"), formatter)) && oggi.isAfter(prossimoPagamento)) {
-                        prossimoPagamento = prossimoPagamento.plusMonths(1);
-                        statement = connection.prepareStatement(UPDATE_PROSSIMO_PAGAMENTO);
-                        statement.setString(1, prossimoPagamento.toString());
-                        statement.setInt(2, rs.getInt("contratti.id"));
-                        statement.executeUpdate();
-                        statement = connection.prepareStatement(UPDATE_DEVE_PAGARE);
-                        statement.setInt(1, rs.getInt("inquilini.id"));
-                        statement.executeUpdate();
-                    }
-                }
-            }
-            tabella.aggiornaTabella(getAllContratti(cfProprietario));
-        }catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void modificaContratto(int idContratto, Contratto contratto, String cfProprietario) {
+    public void updateContratto(int idContratto, Contratto contratto, String cfProprietario) {
         try {
                 if(contratto.getDataInizio() != null) {
                     PreparedStatement stmt = connection.prepareStatement(UPDATE_DATA_INIZIO);

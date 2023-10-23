@@ -1,9 +1,11 @@
 package dao;
 
 import model.Proprietario;
-import view.TabellaGUI;
+import model.Resoconto;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProprietarioDAO extends DatabaseDAO {
 
@@ -21,15 +23,12 @@ public class ProprietarioDAO extends DatabaseDAO {
     // DELETE CRUD API
     // UPDATE CRUD API
     // SELECT CRUD APIs
-    private static final String SELECT_ALL_USERS_WITH_MAIL = "SELECT * FROM utenti WHERE email = ?";
+    private static final String SELECT_ALL_USERS = "SELECT * FROM utenti";
     private static final String SELECT_USER = "SELECT * FROM utenti WHERE email = ? and password = ?";
-
-    public TabellaGUI tabella;
 
     public ProprietarioDAO() {
         super.connect();
         creaTabella();
-        tabella = new TabellaGUI("Resoconto");
     }
 
     public void creaTabella(){
@@ -61,38 +60,53 @@ public class ProprietarioDAO extends DatabaseDAO {
             throw new RuntimeException(e);
         }
     }
-
-    public boolean emailDisponibile(String email){
-        if(connection == null){
-            connect();
-        }
+//
+//    public boolean emailDisponibile(String email){
+//        if(connection == null){
+//            connect();
+//        }
+//        try{
+//            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_USERS);
+//            statement.setString(1, email);
+//            ResultSet rs = statement.executeQuery();
+//
+//            return !rs.next();  // ritorna true se non ci sono elementi nella tabella
+//
+//        } catch(SQLException e) {
+//            System.out.println("Errore di connessione al database: " + e.getMessage());     //e.printStackTrace();
+//        }
+//        return false;
+//    }
+//
+//    public boolean verificaUtente(String email, String password) {
+//        try{
+//            PreparedStatement statement = connection.prepareStatement(SELECT_USER);
+//            statement.setString(1, email);
+//            statement.setString(2, password);
+//            ResultSet rs = statement.executeQuery();
+//
+//            return rs.next();  // ritorna true se ci sono elementi nella tabella
+//
+//        } catch(SQLException e) {
+//            System.out.println("Errore di connessione al database: " + e.getMessage());     //e.printStackTrace();
+//        }
+//        return false;
+//    }
+//
+    public List<Proprietario> getAllUtenti() {
         try{
-            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_USERS_WITH_MAIL);
-            statement.setString(1, email);
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_USERS);
             ResultSet rs = statement.executeQuery();
+            List<Proprietario> proprietari = new ArrayList<>();
 
-            return !rs.next();  // ritorna true se non ci sono elementi nella tabella
-
+            while (rs.next()){
+                proprietari.add(getUtente(rs.getString("email"), rs.getString("password")));
+            }
+            return proprietari;
         } catch(SQLException e) {
             System.out.println("Errore di connessione al database: " + e.getMessage());     //e.printStackTrace();
         }
-        return false;
-    }
-
-
-    public boolean verificaUtente(String email, String password) {
-        try{
-            PreparedStatement statement = connection.prepareStatement(SELECT_USER);
-            statement.setString(1, email);
-            statement.setString(2, password);
-            ResultSet rs = statement.executeQuery();
-
-            return rs.next();  // ritorna true se ci sono elementi nella tabella
-
-        } catch(SQLException e) {
-            System.out.println("Errore di connessione al database: " + e.getMessage());     //e.printStackTrace();
-        }
-        return false;
+        return null;
     }
 
     public Proprietario getUtente(String email, String password) {
@@ -116,7 +130,7 @@ public class ProprietarioDAO extends DatabaseDAO {
 
     }
 
-    public void visualizzaResoconto(String cfProprietario) {
+    public List<Resoconto> getResoconti(String cfProprietario) {
         if (connection == null) {
             connect();
         }
@@ -124,7 +138,17 @@ public class ProprietarioDAO extends DatabaseDAO {
             PreparedStatement statement = connection.prepareStatement(SELECT_RESOCONTO);
             statement.setString(1, cfProprietario);
             ResultSet rs = statement.executeQuery();
-            tabella.mostraTabella(rs);
+            List<Resoconto> resoconti = new ArrayList<>();
+            while(rs.next()) {
+                Resoconto resoconto = new Resoconto(rs.getInt("id_immobile"), rs.getString("comune"),
+                        rs.getString("indirizzo"), rs.getString("n_civico"), rs.getInt("subalterno"),
+                        rs.getBoolean("affittato"), rs.getString("nome"), rs.getString("cognome"),
+                        rs.getString("email"), rs.getFloat("debito"), rs.getString("data_fine"),
+                        rs.getString("prossomo_pagamento"), rs.getFloat("canone"), rs.getBoolean("sfratto"),
+                        rs.getBoolean("proroga"));
+                resoconti.add(resoconto);
+            }
+            return resoconti;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

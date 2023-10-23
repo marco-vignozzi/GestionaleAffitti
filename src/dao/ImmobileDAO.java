@@ -1,9 +1,11 @@
 package dao;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Immobile;
-import view.TabellaGUI;
+import model.ImmobileBuilder;
 
 
 public class ImmobileDAO extends DatabaseDAO {
@@ -58,12 +60,9 @@ public class ImmobileDAO extends DatabaseDAO {
     private static final String SELECT_ALL_IMMOBILI = "SELECT id, comune, indirizzo, n_civico, subalterno, affittato, " +
             "foglio, particella, categoria, classe, superficie_mq, rendita FROM immobili WHERE cf_proprietario = ?";
 
-    public TabellaGUI tabella;
-
     public ImmobileDAO() {
         connect();
         creaTabella();
-        tabella = new TabellaGUI("Immobili");
     }
 
     public void creaTabella() {
@@ -82,7 +81,7 @@ public class ImmobileDAO extends DatabaseDAO {
         }
     }
 
-    public void aggiungiImmobile(Immobile i) {
+    public void aggiungiImmobile(Immobile i, String cfProprietario) {
         if (connection == null) {
             connect();
         }
@@ -96,20 +95,17 @@ public class ImmobileDAO extends DatabaseDAO {
             statement.setString(6, i.getClasse());
             statement.setFloat(7, i.getSuperficie());
             statement.setFloat(8, i.getRendita());
-            statement.setString(9, i.getIdProprietario());
+            statement.setString(9, cfProprietario);
             statement.setString(10, i.getIndirizzo());
             statement.setString(11, i.getnCivico());
             statement.setBoolean(12, i.isAffittato());
-            if(statement.executeUpdate()>0){
-                tabella.aggiornaTabella(getAllImmobili(i.getIdProprietario()));
-                i.setId(getImmobileID(i));
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ResultSet getAllImmobili(String cfProprietario) {
+    public List<Immobile> getAllImmobili(String cfProprietario) {
         if (connection == null) {
             connect();
         }
@@ -117,40 +113,17 @@ public class ImmobileDAO extends DatabaseDAO {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_IMMOBILI);
             statement.setString(1, cfProprietario);
             ResultSet rs = statement.executeQuery();
-            return rs;
-            } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void visualizzaImmobili(String cfProprietario) {
-        try {
-            tabella.mostraTabella(getAllImmobili(cfProprietario));
+            List<Immobile> immobili = new ArrayList<>();
+            while (rs.next()) {
+                immobili.add(getImmobile(rs.getInt("id"), cfProprietario));
+            }
+            return immobili;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public int getImmobileID(Immobile i) {
-        if (connection == null) {
-            connect();
-        }
-        try{
-            PreparedStatement statement = connection.prepareStatement(SELECT_IMMOBILE);
-            statement.setString(1, i.getComune());
-            statement.setString(2, i.getIndirizzo());
-            statement.setString(3, i.getnCivico());
-            statement.setInt(4, i.getSubalterno());
-            statement.setString(5, i.getIdProprietario());
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            return rs.getInt("id");
-        }catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean verificaImmobile(int idImmobile, String cfProprietario) {
+    public Immobile getImmobile(int idImmobile, String cfProprietario) {
         if (connection == null) {
             connect();
         }
@@ -159,12 +132,63 @@ public class ImmobileDAO extends DatabaseDAO {
             statement.setInt(1, idImmobile);
             statement.setString(2, cfProprietario);
             ResultSet rs = statement.executeQuery();
-            return rs.next();
+            ImmobileBuilder builder = new ImmobileBuilder();
+            if(rs.next()) {
+                return builder.comune(rs.getString("comune"))
+                        .foglio(rs.getInt("foglio"))
+                        .particella(rs.getInt("particella"))
+                        .subalterno(rs.getInt("subalterno"))
+                        .categoria(rs.getString("categoria"))
+                        .classe(rs.getString("classe"))
+                        .superficie(rs.getFloat("superficie_mq"))
+                        .rendita(rs.getFloat("rendita"))
+                        .idProprietario(rs.getString("cf_proprietario"))
+                        .indirizzo(rs.getString("indirizzo"))
+                        .nCivico(rs.getString("n_civico"))
+                        .affittato(rs.getBoolean("affittato"))
+                        .id(rs.getInt("immobili.id"))
+                        .build();
+            }
+            return null;
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
+//
+//    public Immobile getImmobileByData(Immobile i, String cfProprietario) {
+//        if (connection == null) {
+//            connect();
+//        }
+//        try{
+//            PreparedStatement statement = connection.prepareStatement(SELECT_IMMOBILE);
+//            statement.setString(1, i.getComune());
+//            statement.setString(2, i.getIndirizzo());
+//            statement.setString(3, i.getnCivico());
+//            statement.setInt(4, i.getSubalterno());
+//            statement.setString(5, i.getIdProprietario());
+//            ResultSet rs = statement.executeQuery();
+//            rs.next();
+//            return getImmobileByID(rs.getInt("id"), cfProprietario);
+//        }catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+//    public boolean verificaImmobile(int idImmobile, String cfProprietario) {
+//        if (connection == null) {
+//            connect();
+//        }
+//        try{
+//            PreparedStatement statement = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
+//            statement.setInt(1, idImmobile);
+//            statement.setString(2, cfProprietario);
+//            ResultSet rs = statement.executeQuery();
+//            return rs.next();
+//        }catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
 
     public void rimuoviImmobile(int idImmobile, String cfProprietario) {
         if (connection == null) {
@@ -173,123 +197,124 @@ public class ImmobileDAO extends DatabaseDAO {
         try {
             PreparedStatement statement = connection.prepareStatement(DELETE_IMMOBILE);
             statement.setInt(1, idImmobile);
-            if(statement.executeUpdate()>0) {
-                tabella.aggiornaTabella(getAllImmobili(cfProprietario));
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void aggiornaAffittato(String cfProprietario) {
-        try{
-            PreparedStatement statement;
-            ResultSet allImmobili = getAllImmobili(cfProprietario);
-            while(allImmobili.next()) {
-                statement = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
-                statement.setInt(1, allImmobili.getInt("id"));
-                statement.setString(2, cfProprietario);
-                ResultSet rs = statement.executeQuery();
-                rs.next();
+//    public void aggiornaAffittato(String cfProprietario) {
+//        try{
+//            PreparedStatement statement;
+//            ResultSet allImmobili = getAllImmobili(cfProprietario);
+//            while(allImmobili.next()) {
+//                statement = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
+//                statement.setInt(1, allImmobili.getInt("id"));
+//                statement.setString(2, cfProprietario);
+//                ResultSet rs = statement.executeQuery();
+//                rs.next();
+//
+//                statement = connection.prepareStatement(UPDATE_AFFITTATO);
+//                statement.setInt(2, allImmobili.getInt("id"));
+//
+//                if (allImmobili.getBoolean("affittato") && rs.getInt("contratti.id") == 0) {
+//                    statement.setBoolean(1, false);
+//                    statement.executeUpdate();
+//                } else if (!allImmobili.getBoolean("affittato") && rs.getInt("contratti.id") > 0) {
+//                    statement.setBoolean(1, true);
+//                    statement.executeUpdate();
+//                }
+//            }
+//        }catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-                statement = connection.prepareStatement(UPDATE_AFFITTATO);
-                statement.setInt(2, allImmobili.getInt("id"));
-
-                if (allImmobili.getBoolean("affittato") && rs.getInt("contratti.id") == 0) {
-                    statement.setBoolean(1, false);
-                    statement.executeUpdate();
-                } else if (!allImmobili.getBoolean("affittato") && rs.getInt("contratti.id") > 0) {
-                    statement.setBoolean(1, true);
-                    statement.executeUpdate();
-                }
-                tabella.aggiornaTabella(getAllImmobili(cfProprietario));
-            }
-        }catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void modificaImmobile(int i, Immobile immobile) {
+    public void updateImmobile(int idImmobile, Immobile immobile) {
         try{
             if(immobile.getComune() != null) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_COMUNE);
                 stmt.setString(1, immobile.getComune());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getFoglio() != 0) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_FOGLIO);
                 stmt.setInt(1, immobile.getFoglio());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getParticella() != 0) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_PARTICELLA);
                 stmt.setInt(1, immobile.getParticella());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getSubalterno() != 0) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_SUBALTERNO);
                 stmt.setInt(1, immobile.getSubalterno());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getCategoria() != null) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_CATEGORIA);
                 stmt.setString(1, immobile.getCategoria());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getClasse() != null) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_CLASSE);
                 stmt.setString(1, immobile.getClasse());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getSuperficie() != 0) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_SUPERFICIE);
                 stmt.setFloat(1, immobile.getSuperficie());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getRendita() != 0){
                 PreparedStatement stmt= connection.prepareStatement(UPDATE_RENDITA);
                 stmt.setFloat(1, immobile.getRendita());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getIndirizzo() != null) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_INDIRIZZO);
                 stmt.setString(1, immobile.getIndirizzo());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
             if(immobile.getnCivico() != null) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_N_CIVICO);
                 stmt.setString(1, immobile.getnCivico());
-                stmt.setInt(2, i);
+                stmt.setInt(2, idImmobile);
                 stmt.executeUpdate();
             }
+            PreparedStatement stmt = connection.prepareStatement(UPDATE_AFFITTATO);
+            stmt.setBoolean(1, immobile.isAffittato());
+            stmt.setInt(2, idImmobile);
+            stmt.executeUpdate();
 
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
 
-    public boolean getAffittato(int idImmobile, String cfProprietario) {
-        try{
-            PreparedStatement stmt = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
-            stmt.setInt(1, idImmobile);
-            stmt.setString(2, cfProprietario);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-
-            return rs.getBoolean("affittato");
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+//    public boolean getAffittato(int idImmobile, String cfProprietario) {
+//        try{
+//            PreparedStatement stmt = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
+//            stmt.setInt(1, idImmobile);
+//            stmt.setString(2, cfProprietario);
+//            ResultSet rs = stmt.executeQuery();
+//            rs.next();
+//
+//            return rs.getBoolean("affittato");
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
 }

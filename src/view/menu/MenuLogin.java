@@ -1,4 +1,4 @@
-package view;
+package view.menu;
 
 import controller.Controller;
 import model.Proprietario;

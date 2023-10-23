@@ -1,6 +1,7 @@
 package model;
 
 public class ContrattoBuilder {
+    protected int ID;
     protected int idImmobile;
     protected String cfInquilino;
     protected String cfProprietario;
@@ -10,6 +11,11 @@ public class ContrattoBuilder {
     protected float canone;   // prezzo affitto
     protected boolean sfratto = false;
     protected boolean proroga;
+
+    public ContrattoBuilder id(int id) {
+        this.ID = id;
+        return this;
+    }
 
     public ContrattoBuilder idImmobile(int idImmobile) {
         this.idImmobile = idImmobile;

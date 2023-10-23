@@ -4,6 +4,7 @@ package model;
 import java.lang.reflect.Field;
 
 public class Contratto {
+
     public Contratto(int idImmobile, String cfInquilino, String cfProprietario, String dataInizio, String dataFine,
                      String prossimoPagamento, float canone, boolean proroga)
     {
@@ -18,6 +19,7 @@ public class Contratto {
     }
 
     protected Contratto(ContrattoBuilder contrattoBuilder) {
+        this.ID = contrattoBuilder.ID;
         this.idImmobile = contrattoBuilder.idImmobile;
         this.cfInquilino = contrattoBuilder.cfInquilino;
         this.cfProprietario = contrattoBuilder.cfProprietario;
@@ -103,6 +105,15 @@ public class Contratto {
         this.proroga = proroga;
     }
 
+    public int getID() {
+        return this.ID;
+    }
+
+    public void setID(int id) {
+        this.ID = id;
+    }
+
+    private int ID;
     private int idImmobile;
     private String cfInquilino;
     private String cfProprietario;

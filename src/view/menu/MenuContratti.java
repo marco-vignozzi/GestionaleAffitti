@@ -1,12 +1,14 @@
-package view;
+package view.menu;
 
 import controller.Controller;
 import model.Contratto;
 import model.ContrattoBuilder;
 import model.Immobile;
 import model.Inquilino;
+import view.tabella.TabellaContratti;
 
 public class MenuContratti extends Menu {
+    TabellaContratti tabellaContratti;
 
     private static String listaOpzioniModifica = " 1 - Data inizio (formato: YYYY-MM-DD)\n" +
             " 2 - Data fine (formato: YYYY-MM-DD)\n" +
@@ -18,6 +20,7 @@ public class MenuContratti extends Menu {
 
     public MenuContratti(Controller controller) {
         super(controller);
+        tabellaContratti = new TabellaContratti();
     }
 
     public void display() {
@@ -37,17 +40,21 @@ public class MenuContratti extends Menu {
             switch (input) {
                 case "1":
                     displayAggiungiContratto();
+                    tabellaContratti.aggiornaTabella(controller.getAllContratti());
                     continue;
                 case "2":
-                    controller.visualizzaContratti();
+                    tabellaContratti.mostraTabella(controller.getAllContratti());
                     continue;
                 case "3":
                     displayModificaContratto();
+                    tabellaContratti.aggiornaTabella(controller.getAllContratti());
                     continue;
                 case "4":
                     displayRimuoviContratto();
+                    tabellaContratti.aggiornaTabella(controller.getAllContratti());
                     continue;
                 case "x":
+                    tabellaContratti.dispose();
                     termina = true;
                     continue;
                 default:
@@ -69,7 +76,8 @@ public class MenuContratti extends Menu {
         System.out.println("Inserisci i dati del contratto");
 
         while (!termina) {
-            controller.visualizzaImmobili();
+//            controller.getAllImmobili();        // TODO: capire come fare se si vuole far vedere gli immobili
+//             OPZIONE aggiungere tabella immobili anche a contratti, però così si genereano più tabelle
             System.out.print("ID dell'immobile come indicato nella tabella: ");
             String idImmobile = scanner.next();
 
@@ -153,7 +161,7 @@ public class MenuContratti extends Menu {
     }
 
     private void displayModificaContratto() {
-        controller.visualizzaContratti();
+        tabellaContratti.mostraTabella(controller.getAllContratti());
         String idContratto;
         String confermaInput;
 

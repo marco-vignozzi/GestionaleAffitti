@@ -1,12 +1,14 @@
-package view;
+package view.menu;
 
 import controller.Controller;
-import model.Contratto;
 import model.Immobile;
 import model.ImmobileBuilder;
+import view.tabella.TabellaImmobili;
+import view.tabella.TabellaInquilini;
 
 
 public class MenuImmobili extends Menu {
+    TabellaImmobili tabellaImmobili;
 
     private static String listaOpzioniModifica = " 1 - Comune\n" +
             " 2 - Indirizzo\n" +
@@ -23,6 +25,7 @@ public class MenuImmobili extends Menu {
 
     public MenuImmobili(Controller controller) {
         super(controller);
+        tabellaImmobili = new TabellaImmobili();
     }
 
     public void display() {
@@ -42,15 +45,18 @@ public class MenuImmobili extends Menu {
             switch (input) {
                 case "1":
                     displayAggiungiImmobile();
+                    tabellaImmobili.aggiornaTabella(controller.getAllImmobili());
                     continue;
                 case "2":
-                    controller.visualizzaImmobili();
+                    tabellaImmobili.mostraTabella(controller.getAllImmobili());
                     continue;
                 case "3":
-                    displayModificaImmobile();         // TODO: implementare
+                    displayModificaImmobile();
+                    tabellaImmobili.aggiornaTabella(controller.getAllImmobili());
                     continue;
                 case "4":
                     displayRimuoviImmobile();
+                    tabellaImmobili.aggiornaTabella(controller.getAllImmobili());
                     continue;
                 case "x":
                     termina = true;
@@ -131,7 +137,7 @@ public class MenuImmobili extends Menu {
     }
 
     private void displayModificaImmobile() {
-        controller.visualizzaImmobili();
+        tabellaImmobili.mostraTabella(controller.getAllImmobili());
         String idImmobile;
         String confermaInput;
 

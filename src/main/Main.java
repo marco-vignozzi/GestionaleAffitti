@@ -1,6 +1,6 @@
 package main;
 
-import view.MenuFacade;
+import view.menu.MenuFacade;
 
 
 public class Main {

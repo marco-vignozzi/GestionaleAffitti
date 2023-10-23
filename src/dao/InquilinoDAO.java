@@ -2,7 +2,6 @@ package dao;
 
 import model.Inquilino;
 import model.InquilinoBuilder;
-import view.TabellaGUI;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -43,8 +42,8 @@ public class InquilinoDAO extends DatabaseDAO {
     private static final String UPDATE_NOME = "UPDATE inquilini SET nome = ? WHERE id = ?";
     private static final String UPDATE_COGNOME = "UPDATE inquilini SET cognome = ? WHERE id = ?";
     private static final String UPDATE_CF = "UPDATE inquilini SET cf = ? WHERE id = ?";
-    private static final String UPDATE_DATA_NASCITA = "UPDATE inquilini SET data_di_nascita = ?";
-    private static final String UPDATE_CITTA_NASCITA = "UPDATE inquilini SET città_di_nascita = ?";
+    private static final String UPDATE_DATA_NASCITA = "UPDATE inquilini SET data_di_nascita = ? WHERE id = ?";
+    private static final String UPDATE_CITTA_NASCITA = "UPDATE inquilini SET città_di_nascita = ? WHERE id = ?";
     private static final String UPDATE_RESIDENZA = "UPDATE inquilini SET residenza = ? WHERE id = ?";
     private static final String UPDATE_TELEFONO = "UPDATE inquilini SET telefono = ? WHERE id = ?";
     private static final String UPDATE_EMAIL = "UPDATE inquilini SET email = ? WHERE id = ?";
@@ -61,12 +60,10 @@ public class InquilinoDAO extends DatabaseDAO {
     private static final String SELECT_INQUILINI_SOLLECITO = "SELECT inquilini.* FROM inquilini JOIN contratti ON " +
             "cf = cf_inquilino WHERE (totale_dovuto-totale_pagato) > 0 AND cf_proprietario = ?";
     // attributo che tiene un riferimento alla vista della tabella
-    public TabellaGUI tabella = null;
 
     public InquilinoDAO() {
         super.connect();
         creaTabella();
-        tabella = new TabellaGUI("Inquilini");
     }
 
     public void creaTabella() {
@@ -99,15 +96,13 @@ public class InquilinoDAO extends DatabaseDAO {
             statement.setFloat(9, i.getTotaleDovuto());
             statement.setFloat(10, i.getTotalePagato());
             statement.setBoolean(11, i.isDevePagare());
-            if(statement.executeUpdate()>0) {
-                tabella.aggiornaTabella(getAllInquilini(cfProprietario));
-            }
+            statement.executeUpdate();
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ResultSet getAllInquilini(String cfProprietario) {
+    public List<Inquilino> getAllInquilini(String cfProprietario) {
         if (connection == null) {
             connect();
         }
@@ -115,15 +110,11 @@ public class InquilinoDAO extends DatabaseDAO {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_INQUILINI);
             statement.setString(1, cfProprietario);
             ResultSet rs = statement.executeQuery();
-            return rs;
-        }catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void visualizzaInquilini(String cfProprietario) {
-        try {
-            tabella.mostraTabella(getAllInquilini(cfProprietario));
+            List<Inquilino> inquilini = new ArrayList<>();
+            while (rs.next()) {
+                inquilini.add(getInquilino(rs.getInt("id"), cfProprietario));
+            }
+            return inquilini;
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -136,28 +127,26 @@ public class InquilinoDAO extends DatabaseDAO {
         try {
             PreparedStatement statement = connection.prepareStatement(DELETE_INQUILINO);
             statement.setInt(1, idInquilino);
-            if(statement.executeUpdate()>0) {
-                tabella.aggiornaTabella(getAllInquilini(cfProprietario));
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
-    public boolean verificaInquilino(int idInquilino, String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
-        try {
-            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINO_BY_ID);
-            statement.setString(1, cfProprietario);
-            statement.setInt(2, idInquilino);
-            ResultSet rs = statement.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//
+//    public boolean verificaInquilino(int idInquilino, String cfProprietario) {
+//        if (connection == null) {
+//            connect();
+//        }
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINO_BY_ID);
+//            statement.setString(1, cfProprietario);
+//            statement.setInt(2, idInquilino);
+//            ResultSet rs = statement.executeQuery();
+//            return rs.next();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public Inquilino getInquilino(int idInquilino, String cfProprietario) {
         if (connection == null) {
@@ -184,79 +173,74 @@ public class InquilinoDAO extends DatabaseDAO {
             throw new RuntimeException(e);
         }
     }
+//
+//    // questo metodo ritorna true se l'inquilino deve pagare il mese
+//    // allora il controller provvederà ad aggiornare il totale_dovuto
+//    public void aggiungiPagamento(int idInquilino, float pagamento, String cfProprietario) {
+//        Inquilino inquilino = getInquilino(idInquilino, cfProprietario);
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(UPDATE_PAGATO);
+//            statement.setFloat(1, inquilino.getTotalePagato() + pagamento);
+//            statement.setInt(2, idInquilino);
+//            statement.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    // questo metodo ritorna true se l'inquilino deve pagare il mese
-    // allora il controller provvederà ad aggiornare il totale_dovuto
-    public void aggiungiPagamento(int idInquilino, float pagamento, String cfProprietario) {
-        Inquilino inquilino = getInquilino(idInquilino, cfProprietario);
-        try {
-            PreparedStatement statement = connection.prepareStatement(UPDATE_PAGATO);
-            statement.setFloat(1, inquilino.getTotalePagato() + pagamento);
-            statement.setInt(2, idInquilino);
-            if(statement.executeUpdate()>0) {
-                tabella.aggiornaTabella(getAllInquilini(cfProprietario));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void aggiornaFinanze(String cfProprietario) {
+//        try{
+//            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINI_AND_CONTRATTI);
+//            statement.setString(1, cfProprietario);
+//            ResultSet rs = statement.executeQuery();
+//            while (rs.next()) {
+//                if(rs.getBoolean("deve_pagare")) {
+//                    statement = connection.prepareStatement(UPDATE_DOVUTO_AND_PAGATO);
+//                    statement.setFloat(1, rs.getFloat("totale_dovuto") + rs.getFloat("canone"));
+//                    statement.setInt(2, rs.getInt("inquilini.id"));
+//                    statement.executeUpdate();
+//                }
+//            }
+//        }catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    public void aggiungiSpesa(int idInquilino, float spesa, String cfProprietario) {
+//        Inquilino inquilino = getInquilino(idInquilino, cfProprietario);
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(UPDATE_DOVUTO);
+//            statement.setFloat(1, inquilino.getTotaleDovuto() + spesa);
+//            statement.setInt(2, idInquilino);
+//            statement.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    public Inquilino[] getInquiliniSollecito(String cfProprietario) {
+//        try{
+//            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINI_SOLLECITO);
+//            statement.setString(1, cfProprietario);
+//            ResultSet rs = statement.executeQuery();
+//
+//            List<Inquilino> inquilini = new ArrayList<>();
+//
+//            while(rs.next()) {
+//                InquilinoBuilder builder = new InquilinoBuilder();
+//                inquilini.add(builder.nome(rs.getString("nome")).cognome(rs.getString("cognome"))
+//                        .email(rs.getString("email")).totaleDovuto(rs.getFloat("totale_dovuto"))
+//                        .totalePagato(rs.getFloat("totale_pagato")).id(rs.getInt("id"))
+//                        .build());
+//            }
+//
+//            return inquilini.toArray(new Inquilino[0]);
+//        }catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    public void aggiornaFinanze(String cfProprietario) {
-        try{
-            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINI_AND_CONTRATTI);
-            statement.setString(1, cfProprietario);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                if(rs.getBoolean("deve_pagare")) {
-                    statement = connection.prepareStatement(UPDATE_DOVUTO_AND_PAGATO);
-                    statement.setFloat(1, rs.getFloat("totale_dovuto") + rs.getFloat("canone"));
-                    statement.setInt(2, rs.getInt("inquilini.id"));
-                    statement.executeUpdate();
-                }
-            }
-            tabella.aggiornaTabella(getAllInquilini(cfProprietario));
-        }catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void aggiungiSpesa(int idInquilino, float spesa, String cfProprietario) {
-        Inquilino inquilino = getInquilino(idInquilino, cfProprietario);
-        try {
-            PreparedStatement statement = connection.prepareStatement(UPDATE_DOVUTO);
-            statement.setFloat(1, inquilino.getTotaleDovuto() + spesa);
-            statement.setInt(2, idInquilino);
-            if(statement.executeUpdate()>0) {
-                tabella.aggiornaTabella(getAllInquilini(cfProprietario));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Inquilino[] getInquiliniSollecito(String cfProprietario) {
-        try{
-            PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINI_SOLLECITO);
-            statement.setString(1, cfProprietario);
-            ResultSet rs = statement.executeQuery();
-
-            List<Inquilino> inquilini = new ArrayList<>();
-
-            while(rs.next()) {
-                InquilinoBuilder builder = new InquilinoBuilder();
-                inquilini.add(builder.nome(rs.getString("nome")).cognome(rs.getString("cognome"))
-                        .email(rs.getString("email")).totaleDovuto(rs.getFloat("totale_dovuto"))
-                        .totalePagato(rs.getFloat("totale_pagato")).id(rs.getInt("id"))
-                        .build());
-            }
-
-            return inquilini.toArray(new Inquilino[0]);
-        }catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void modificaInquilino(int idInquilino, Inquilino inquilino) {
+    public void updateInquilino(int idInquilino, Inquilino inquilino) {
         try {
             if (inquilino.getNome() != null) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_NOME);

@@ -1,10 +1,11 @@
-package view;
+package view.menu;
 
 import controller.Controller;
 import model.*;
+import view.tabella.TabellaInquilini;
 
 public class MenuInquilini extends Menu {
-
+    TabellaInquilini tabellaInquilini;
     private static String listaOpzioniModifica = " 1 - Codice fiscale\n" +
             " 2 - Nome\n" +
             " 3 - Cognome\n" +
@@ -19,6 +20,7 @@ public class MenuInquilini extends Menu {
 
     public MenuInquilini(Controller controller) {
         super(controller);
+        tabellaInquilini = new TabellaInquilini();
     }
 
     public void display() {
@@ -38,17 +40,21 @@ public class MenuInquilini extends Menu {
             switch (input) {
                 case "1":
                     displayAggiungiInquilino();
+                    tabellaInquilini.aggiornaTabella(controller.getAllInquilini());
                     continue;
                 case "2":
-                    controller.visualizzaInquilini();
+                    tabellaInquilini.mostraTabella(controller.getAllInquilini());
                     continue;
                 case "3":
                     displayModificaInquilino();
+                    tabellaInquilini.aggiornaTabella(controller.getAllInquilini());
                     continue;
                 case "4":
                     displayRimuoviInquilino();
+                    tabellaInquilini.aggiornaTabella(controller.getAllInquilini());
                     continue;
                 case "x":
+                    tabellaInquilini.dispose();
                     termina = true;
                     continue;
                 default:
@@ -107,7 +113,7 @@ public class MenuInquilini extends Menu {
     }
 
     public void displayModificaInquilino() {
-        controller.visualizzaInquilini();
+        controller.getAllInquilini();
         String idInquilino;
         String confermaInput;
 

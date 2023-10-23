@@ -1,14 +1,19 @@
-package view;
+package view.menu;
 
 import controller.Controller;
 import model.Inquilino;
+import view.tabella.TabellaResoconto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MenuUtente extends Menu {
-
+    TabellaResoconto tabellaResoconto;
 
     public MenuUtente(Controller controller) {
         super(controller);
+        tabellaResoconto = new TabellaResoconto();
     }
 
     public void display() {
@@ -40,7 +45,7 @@ public class MenuUtente extends Menu {
                     displaySpesa();
                     continue;
                 case "5":
-                    controller.visualizzaResoconto();
+                    tabellaResoconto.mostraTabella(controller.getResoconti());
                     continue;
                 case "x":
                     termina = true;
@@ -52,14 +57,14 @@ public class MenuUtente extends Menu {
     }
 
     private void displaySollecitoMultiplo() {
-        controller.visualizzaInquilini();
+//        controller.getAllInquilini();   // TODO: capire come fare
         System.out.println("Verrà inviato un sollecito di pagamento agli inquilini con ID: ");
-        Inquilino[] inquilini = controller.getInquiliniSollecito();
-        for(int i=0; i< inquilini.length; i++) {
-            if(i+1 == inquilini.length) {
-                System.out.println(inquilini[i].getID());
+        List<Inquilino> inquilini = controller.getInquiliniSollecito();
+        for(int i=0; i< inquilini.size(); i++) {
+            if(i+1 == inquilini.size()) {
+                System.out.println(inquilini.get(i).getID());
             }else {
-                System.out.print(inquilini[i].getID() + " ,");
+                System.out.print(inquilini.get(i).getID() + " ,");
             }
         }
         System.out.print("Continuare? (S/n) ");
@@ -69,21 +74,21 @@ public class MenuUtente extends Menu {
         }
     }
 
-    private void displaySollecitoSingolo() {
-        controller.visualizzaInquilini();
+    private void displaySollecitoSingolo() {        // TODO: aggiungere possibilità di selezionare più inquilini
+//        controller.getAllInquilini();               // TODO: capire come fare
         System.out.print("Selezionare l'ID dell'inquilino a cui si desidera inviare un sollecito di pagamento: ");
         String idInquilino = scanner.next();
         if(controller.isInquilino(idInquilino)) {
-            Inquilino[] inquilino = new Inquilino[1];
-            inquilino[0] = controller.getInquilino(idInquilino);
-            controller.inviaSollecito(inquilino);
+            List<Inquilino> inquilini = new ArrayList<>();
+            inquilini.add(controller.getInquilino(idInquilino));
+            controller.inviaSollecito(inquilini);
         }else {
             System.out.println("L'ID inserito non è associato a nessun inquilino.");
         }
     }
 
     private void displaySpesa() {
-        controller.visualizzaInquilini();
+//        controller.getAllInquilini();           // TODO: capire come fare
         System.out.print("Inserire l'ID dell'inquilino al quale addebitare la spesa (come indicato in tabella): ");
         String idInquilino = scanner.next();
         if(controller.isInquilino(idInquilino)) {
@@ -102,7 +107,7 @@ public class MenuUtente extends Menu {
     }
 
     private void displayPagamento() {
-        controller.visualizzaInquilini();
+//        controller.getAllInquilini();       // TODO: capire come fare
         System.out.print("Inserire l'ID dell'inquilino del quale si vuole aggiungere il pagamento (come indicato in tabella): ");
         String idInquilino = scanner.next();
         if(controller.isInquilino(idInquilino)) {

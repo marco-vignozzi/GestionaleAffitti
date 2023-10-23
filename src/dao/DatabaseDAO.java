@@ -1,13 +1,6 @@
 package dao;
 
-import view.TabellaGUI;
-
 import java.sql.*;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 
 public abstract class DatabaseDAO {

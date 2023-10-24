@@ -29,6 +29,6 @@ public abstract class DatabaseDAO {
         }
     }
 
-    protected abstract void creaTabella();
+    protected abstract void createTabella();
 
 }

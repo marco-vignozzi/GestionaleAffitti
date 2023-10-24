@@ -62,10 +62,10 @@ public class ImmobileDAO extends DatabaseDAO {
 
     public ImmobileDAO() {
         connect();
-        creaTabella();
+        createTabella();
     }
 
-    public void creaTabella() {
+    public void createTabella() {
         try {
             DatabaseMetaData metadata = connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "immobili", null);

@@ -25,20 +25,16 @@ public class InquilinoDAO extends DatabaseDAO {
             "telefono VARCHAR(255) NOT NULL," +
             "email VARCHAR(255) NOT NULL UNIQUE," +
             "totale_dovuto FLOAT NOT NULL," +
-            "totale_pagato FLOAT NOT NULL," +
-            "deve_pagare BOOLEAN NOT NULL" +
+            "totale_pagato FLOAT NOT NULL" +
             ")";
     // INSERT CRUD API
     private static final String INSERT_INQUILINO = "INSERT INTO inquilini" +
             " (cf, nome, cognome, data_di_nascita, città_di_nascita, residenza, telefono, email, totale_dovuto, " +
-            "totale_pagato, deve_pagare) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            "totale_pagato) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     // DELETE CRUD API
     private static final String DELETE_INQUILINO = "DELETE FROM inquilini WHERE id = ?";
 
     // UPDATE CRUD APIs
-    private static final String UPDATE_PAGATO = "UPDATE inquilini SET totale_pagato = ? WHERE id = ?";
-    private static final String UPDATE_DOVUTO_AND_PAGATO = "UPDATE inquilini SET totale_dovuto = ?, deve_pagare = false WHERE id = ?";
-    private static final String UPDATE_DOVUTO = "UPDATE inquilini SET totale_dovuto = ? WHERE id = ?";
     private static final String UPDATE_NOME = "UPDATE inquilini SET nome = ? WHERE id = ?";
     private static final String UPDATE_COGNOME = "UPDATE inquilini SET cognome = ? WHERE id = ?";
     private static final String UPDATE_CF = "UPDATE inquilini SET cf = ? WHERE id = ?";
@@ -57,16 +53,13 @@ public class InquilinoDAO extends DatabaseDAO {
             "contratti ON cf = cf_inquilino WHERE cf_proprietario = ?";
     private static final String SELECT_INQUILINO_BY_ID = "SELECT * FROM inquilini JOIN contratti ON cf_proprietario = ? " +
             "WHERE inquilini.id = ?";
-    private static final String SELECT_INQUILINI_SOLLECITO = "SELECT inquilini.* FROM inquilini JOIN contratti ON " +
-            "cf = cf_inquilino WHERE (totale_dovuto-totale_pagato) > 0 AND cf_proprietario = ?";
-    // attributo che tiene un riferimento alla vista della tabella
 
     public InquilinoDAO() {
         super.connect();
-        creaTabella();
+        createTabella();
     }
 
-    public void creaTabella() {
+    public void createTabella() {
         try{
             DatabaseMetaData metadata= connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "inquilini", null);
@@ -95,7 +88,6 @@ public class InquilinoDAO extends DatabaseDAO {
             statement.setString(8, i.getEmail());
             statement.setFloat(9, i.getTotaleDovuto());
             statement.setFloat(10, i.getTotalePagato());
-            statement.setBoolean(11, i.isDevePagare());
             statement.executeUpdate();
         }catch (SQLException e) {
             throw new RuntimeException(e);
@@ -165,7 +157,7 @@ public class InquilinoDAO extends DatabaseDAO {
                         .cittàNascita(rs.getString("città_di_nascita")).residenza(rs.getString("residenza"))
                         .telefono(rs.getString("telefono")).email(rs.getString("email"))
                         .totaleDovuto(rs.getFloat("totale_dovuto")).totalePagato(rs.getFloat("totale_pagato"))
-                        .devePagare(rs.getBoolean("deve_pagare")).id(rs.getInt("id"))
+                        .id(rs.getInt("id"))
                         .build();
             }
             return inquilino;

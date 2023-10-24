@@ -32,7 +32,7 @@ public class Controller {
     }
 
     public void aggiungiUtente(Proprietario proprietario) {
-        proprietarioDao.aggiungiUtente(proprietario);
+        proprietarioDao.insertUtente(proprietario);
     }
 
     public void aggiungiContratto(Contratto contratto) {
@@ -67,8 +67,8 @@ public class Controller {
         immobileDao.aggiungiImmobile(immobile, proprietario.getCf());
         List<Immobile> immobili = immobileDao.getAllImmobili(proprietario.getCf());
         for(Immobile i: immobili) {
-            if(i.getComune() == immobile.getComune() && i.getIndirizzo() == immobile.getIndirizzo() &&
-                    i.getnCivico() == immobile.getnCivico() && i.getSubalterno() == immobile.getSubalterno()) {
+            if(Objects.equals(i.getComune(), immobile.getComune()) && Objects.equals(i.getIndirizzo(), immobile.getIndirizzo()) &&
+                    Objects.equals(i.getnCivico(), immobile.getnCivico()) && i.getSubalterno() == immobile.getSubalterno()) {
                 immobile.setId(i.getId());
             }
         }
@@ -113,11 +113,11 @@ public class Controller {
 
     public List<Resoconto> getResoconti() {
         aggiorna();
-        return proprietarioDao.getResoconti(proprietario.getCf());
+        return proprietarioDao.selectResoconti(proprietario.getCf());
     }
 
     public boolean isUtente(String email, String password) {
-        List<Proprietario> proprietari = proprietarioDao.getAllUtenti();
+        List<Proprietario> proprietari = proprietarioDao.selectAllUtenti();
         for(Proprietario p: proprietari) {
             if(Objects.equals(p.getEmail(), email) && Objects.equals(p.getPassword(), password)) {
                 return true;
@@ -241,7 +241,7 @@ public class Controller {
     }
 
     public boolean emailDisponibile(String email) {
-        List<Proprietario> proprietari = proprietarioDao.getAllUtenti();
+        List<Proprietario> proprietari = proprietarioDao.selectAllUtenti();
         for(Proprietario p: proprietari) {
             if(Objects.equals(p.getEmail(), email)) {
                 return false;
@@ -251,7 +251,7 @@ public class Controller {
     }
 
     public void setProprietario(String email, String password) {
-        proprietario = proprietarioDao.getUtente(email, password);
+        proprietario = proprietarioDao.selectUtente(email, password);
     }
 
     public Proprietario getProprietario() {

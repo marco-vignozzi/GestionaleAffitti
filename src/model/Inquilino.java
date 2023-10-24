@@ -13,7 +13,6 @@ public class Inquilino {
     private String email;
     private float totaleDovuto = 0;
     private float totalePagato = 0;
-    private boolean devePagare = false;
 
     public Inquilino(String cf, String nome, String cognome, String dataNascita,
                      String cittàNascita, String residenza, String tel, String email)
@@ -40,7 +39,6 @@ public class Inquilino {
         this.email = inquilinoBuilder.email;
         this.totaleDovuto = inquilinoBuilder.totaleDovuto;
         this.totalePagato = inquilinoBuilder.totalePagato;
-        this.devePagare = inquilinoBuilder.devePagare;
     }
 
     public int getID() {
@@ -129,14 +127,6 @@ public class Inquilino {
 
     public void setTotalePagato(float totalePagato) {
         this.totalePagato = totalePagato;
-    }
-
-    public boolean isDevePagare() {
-        return devePagare;
-    }
-
-    public void setDevePagare(boolean devePagare) {
-        this.devePagare = devePagare;
     }
 
 }

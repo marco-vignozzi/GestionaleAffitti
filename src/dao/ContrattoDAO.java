@@ -4,8 +4,6 @@ import model.Contratto;
 import model.ContrattoBuilder;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,10 +51,10 @@ public class ContrattoDAO extends DatabaseDAO {
 
     public ContrattoDAO() {
         connect();
-        creaTabella();
+        createTabella();
     }
 
-    public void creaTabella() {
+    public void createTabella() {
         try {
             DatabaseMetaData metadata = connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "contratti", null);

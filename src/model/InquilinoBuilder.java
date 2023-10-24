@@ -12,7 +12,6 @@ public class InquilinoBuilder {
     protected String email;
     protected float totaleDovuto = 0;
     protected float totalePagato = 0;
-    protected boolean devePagare = false;
 
     public InquilinoBuilder id(int id) {
         this.id = id;
@@ -66,11 +65,6 @@ public class InquilinoBuilder {
 
     public InquilinoBuilder totalePagato(float totalePagato) {
         this.totalePagato = totalePagato;
-        return this;
-    }
-
-    public InquilinoBuilder devePagare(boolean devePagare) {
-        this.devePagare = devePagare;
         return this;
     }
 

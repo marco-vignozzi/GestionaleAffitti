@@ -28,10 +28,10 @@ public class ProprietarioDAO extends DatabaseDAO {
 
     public ProprietarioDAO() {
         super.connect();
-        creaTabella();
+        createTabella();
     }
 
-    public void creaTabella(){
+    public void createTabella(){
         try{
             DatabaseMetaData metadata= connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "utenti", null);
@@ -44,7 +44,7 @@ public class ProprietarioDAO extends DatabaseDAO {
         }
     }
 
-    public void aggiungiUtente(Proprietario p) {
+    public void insertUtente(Proprietario p) {
         if (connection == null) {
             connect();
         }
@@ -93,14 +93,14 @@ public class ProprietarioDAO extends DatabaseDAO {
 //        return false;
 //    }
 //
-    public List<Proprietario> getAllUtenti() {
+    public List<Proprietario> selectAllUtenti() {
         try{
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_USERS);
             ResultSet rs = statement.executeQuery();
             List<Proprietario> proprietari = new ArrayList<>();
 
             while (rs.next()){
-                proprietari.add(getUtente(rs.getString("email"), rs.getString("password")));
+                proprietari.add(selectUtente(rs.getString("email"), rs.getString("password")));
             }
             return proprietari;
         } catch(SQLException e) {
@@ -109,7 +109,7 @@ public class ProprietarioDAO extends DatabaseDAO {
         return null;
     }
 
-    public Proprietario getUtente(String email, String password) {
+    public Proprietario selectUtente(String email, String password) {
         try{
             PreparedStatement statement = connection.prepareStatement(SELECT_USER);
             statement.setString(1, email);
@@ -130,7 +130,7 @@ public class ProprietarioDAO extends DatabaseDAO {
 
     }
 
-    public List<Resoconto> getResoconti(String cfProprietario) {
+    public List<Resoconto> selectResoconti(String cfProprietario) {
         if (connection == null) {
             connect();
         }

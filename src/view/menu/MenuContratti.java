@@ -88,12 +88,10 @@ public class MenuContratti extends Menu {
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
                     MenuImmobili menuImmobili = new MenuImmobili(this.controller);
                     Immobile immobile = menuImmobili.displayAggiungiImmobile();
-                    if(immobile != null) {
-                        idImmobile = Integer.toString(immobile.getId());
-                    }
-                    else {
+                    if(immobile == null) {
                         return null;
                     }
+                    idImmobile = Integer.toString(immobile.getId());
                 }
                 else {
                     System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");

@@ -40,21 +40,17 @@ public class MenuInquilini extends Menu {
             switch (input) {
                 case "1":
                     displayAggiungiInquilino();
-                    tabellaInquilini.aggiornaTabella(controller.getAllInquilini());
                     continue;
                 case "2":
-                    tabellaInquilini.mostraTabella(controller.getAllInquilini());
+                    controller.mostraInquilini();
                     continue;
                 case "3":
                     displayModificaInquilino();
-                    tabellaInquilini.aggiornaTabella(controller.getAllInquilini());
                     continue;
                 case "4":
                     displayRimuoviInquilino();
-                    tabellaInquilini.aggiornaTabella(controller.getAllInquilini());
                     continue;
                 case "x":
-                    tabellaInquilini.dispose();
                     termina = true;
                     continue;
                 default:
@@ -113,7 +109,7 @@ public class MenuInquilini extends Menu {
     }
 
     public void displayModificaInquilino() {
-        controller.getAllInquilini();
+        controller.mostraInquilini();
         String idInquilino;
         String confermaInput;
 

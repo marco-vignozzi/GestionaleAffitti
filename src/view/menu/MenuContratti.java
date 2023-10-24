@@ -40,21 +40,17 @@ public class MenuContratti extends Menu {
             switch (input) {
                 case "1":
                     displayAggiungiContratto();
-                    tabellaContratti.aggiornaTabella(controller.getAllContratti());
                     continue;
                 case "2":
-                    tabellaContratti.mostraTabella(controller.getAllContratti());
+                    controller.mostraContratti();
                     continue;
                 case "3":
                     displayModificaContratto();
-                    tabellaContratti.aggiornaTabella(controller.getAllContratti());
                     continue;
                 case "4":
                     displayRimuoviContratto();
-                    tabellaContratti.aggiornaTabella(controller.getAllContratti());
                     continue;
                 case "x":
-                    tabellaContratti.dispose();
                     termina = true;
                     continue;
                 default:
@@ -76,7 +72,7 @@ public class MenuContratti extends Menu {
         System.out.println("Inserisci i dati del contratto");
 
         while (!termina) {
-//            controller.getAllImmobili();        // TODO: capire come fare se si vuole far vedere gli immobili
+            controller.mostraImmobili();
 //             OPZIONE aggiungere tabella immobili anche a contratti, però così si genereano più tabelle
             System.out.print("ID dell'immobile come indicato nella tabella: ");
             String idImmobile = scanner.next();
@@ -110,7 +106,7 @@ public class MenuContratti extends Menu {
                 System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
                 confermaInput = scanner.next();
 
-                if (confermaInput.equals("s")) {
+                if (confermaInput.equals("s") || confermaInput.equals("S")) {
                     termina = true;
                     continue;
                 }
@@ -159,7 +155,7 @@ public class MenuContratti extends Menu {
     }
 
     private void displayModificaContratto() {
-        tabellaContratti.mostraTabella(controller.getAllContratti());
+        controller.mostraContratti();
         String idContratto;
         String confermaInput;
 

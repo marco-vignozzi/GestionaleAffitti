@@ -45,7 +45,7 @@ public class MenuUtente extends Menu {
                     displaySpesa();
                     continue;
                 case "5":
-                    tabellaResoconto.mostraTabella(controller.getResoconti());
+                    controller.mostraResoconto();
                     continue;
                 case "x":
                     termina = true;
@@ -57,7 +57,7 @@ public class MenuUtente extends Menu {
     }
 
     private void displaySollecitoMultiplo() {
-//        controller.getAllInquilini();   // TODO: capire come fare
+        controller.mostraInquilini();
         System.out.println("Verrà inviato un sollecito di pagamento agli inquilini con ID: ");
         List<Inquilino> inquilini = controller.getInquiliniSollecito();
         for(int i=0; i< inquilini.size(); i++) {
@@ -75,7 +75,7 @@ public class MenuUtente extends Menu {
     }
 
     private void displaySollecitoSingolo() {        // TODO: aggiungere possibilità di selezionare più inquilini
-//        controller.getAllInquilini();               // TODO: capire come fare
+        controller.mostraInquilini();
         System.out.print("Selezionare l'ID dell'inquilino a cui si desidera inviare un sollecito di pagamento: ");
         String idInquilino = scanner.next();
         if(controller.isInquilino(idInquilino)) {
@@ -88,7 +88,7 @@ public class MenuUtente extends Menu {
     }
 
     private void displaySpesa() {
-//        controller.getAllInquilini();           // TODO: capire come fare
+        controller.mostraInquilini();
         System.out.print("Inserire l'ID dell'inquilino al quale addebitare la spesa (come indicato in tabella): ");
         String idInquilino = scanner.next();
         if(controller.isInquilino(idInquilino)) {
@@ -107,7 +107,7 @@ public class MenuUtente extends Menu {
     }
 
     private void displayPagamento() {
-//        controller.getAllInquilini();       // TODO: capire come fare
+        controller.mostraInquilini();
         System.out.print("Inserire l'ID dell'inquilino del quale si vuole aggiungere il pagamento (come indicato in tabella): ");
         String idInquilino = scanner.next();
         if(controller.isInquilino(idInquilino)) {

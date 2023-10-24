@@ -144,7 +144,7 @@ public class ProprietarioDAO extends DatabaseDAO {
                         rs.getString("indirizzo"), rs.getString("n_civico"), rs.getInt("subalterno"),
                         rs.getBoolean("affittato"), rs.getString("nome"), rs.getString("cognome"),
                         rs.getString("email"), rs.getFloat("debito"), rs.getString("data_fine"),
-                        rs.getString("prossomo_pagamento"), rs.getFloat("canone"), rs.getBoolean("sfratto"),
+                        rs.getString("prossimo_pagamento"), rs.getFloat("canone"), rs.getBoolean("sfratto"),
                         rs.getBoolean("proroga"));
                 resoconti.add(resoconto);
             }

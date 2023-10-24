@@ -45,18 +45,15 @@ public class MenuImmobili extends Menu {
             switch (input) {
                 case "1":
                     displayAggiungiImmobile();
-                    tabellaImmobili.aggiornaTabella(controller.getAllImmobili());
                     continue;
                 case "2":
-                    tabellaImmobili.mostraTabella(controller.getAllImmobili());
+                    controller.mostraImmobili();
                     continue;
                 case "3":
                     displayModificaImmobile();
-                    tabellaImmobili.aggiornaTabella(controller.getAllImmobili());
                     continue;
                 case "4":
                     displayRimuoviImmobile();
-                    tabellaImmobili.aggiornaTabella(controller.getAllImmobili());
                     continue;
                 case "x":
                     termina = true;
@@ -137,7 +134,7 @@ public class MenuImmobili extends Menu {
     }
 
     private void displayModificaImmobile() {
-        tabellaImmobili.mostraTabella(controller.getAllImmobili());
+        controller.mostraImmobili();
         String idImmobile;
         String confermaInput;
 

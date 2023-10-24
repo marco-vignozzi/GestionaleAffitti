@@ -4,6 +4,10 @@ package controller;
 import dao.*;
 import mail_service.JavaMailUtil;
 import model.*;
+import view.tabella.TabellaContratti;
+import view.tabella.TabellaImmobili;
+import view.tabella.TabellaInquilini;
+import view.tabella.TabellaResoconto;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -15,27 +19,22 @@ import java.util.Objects;
 
 
 public class Controller {
-    private ContrattoDAO contrattoDao;
-    private ProprietarioDAO proprietarioDao;
-    private InquilinoDAO inquilinoDao;
-    private ImmobileDAO immobileDao;
+    private TabellaInquilini tabellaInquilini = new TabellaInquilini();
+    private TabellaResoconto tabellaResoconto = new TabellaResoconto();
+    private TabellaImmobili tabellaImmobili = new TabellaImmobili();
+    private TabellaContratti tabellaContratti = new TabellaContratti();
     private Proprietario proprietario = null;
     private String testoSollecito = "Salve {0} {1},\nla presente lettera è per ricordarle gentilmente che il pagamento " +
             "del suo debito è ancora in sospeso. L''importo totale del debito, che la prego di estinguere al più presto, " +
             "è di {2, number, currency}.\nCordiali saluti,\n{3} {4}";
 
-    public Controller() {
-        proprietarioDao = new ProprietarioDAO();
-        inquilinoDao = new InquilinoDAO();
-        immobileDao = new ImmobileDAO();
-        contrattoDao = new ContrattoDAO();
-    }
-
     public void aggiungiUtente(Proprietario proprietario) {
+        ProprietarioDAO proprietarioDao = new ProprietarioDAO();
         proprietarioDao.insertUtente(proprietario);
     }
 
     public void aggiungiContratto(Contratto contratto) {
+        ContrattoDAO contrattoDao = new ContrattoDAO();
         try {
             LocalDate oggi = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -59,11 +58,13 @@ public class Controller {
     }
 
     public void aggiungiInquilino(Inquilino inquilino) {
+        InquilinoDAO inquilinoDao = new InquilinoDAO();
         inquilinoDao.aggiungiInquilino(inquilino, proprietario.getCf());
         aggiorna();
     }
 
     public void aggiungiImmobile(Immobile immobile) {
+        ImmobileDAO immobileDao = new ImmobileDAO();
         immobileDao.aggiungiImmobile(immobile, proprietario.getCf());
         List<Immobile> immobili = immobileDao.getAllImmobili(proprietario.getCf());
         for(Immobile i: immobili) {
@@ -76,12 +77,12 @@ public class Controller {
     }
 
     public List<Immobile> getAllImmobili() {
-        aggiorna();
+        ImmobileDAO immobileDao = new ImmobileDAO();
         return immobileDao.getAllImmobili(proprietario.getCf());
     }
 
     public List<Inquilino> getAllInquilini() {
-        aggiorna();
+        InquilinoDAO inquilinoDao = new InquilinoDAO();
         return inquilinoDao.getAllInquilini(proprietario.getCf());
     }
 
@@ -99,6 +100,7 @@ public class Controller {
 
     public Inquilino getInquilino(String idInquilino) {
         try {
+            InquilinoDAO inquilinoDao = new InquilinoDAO();
             return inquilinoDao.getInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
@@ -107,16 +109,17 @@ public class Controller {
     }
 
     public List<Contratto> getAllContratti() {
-        aggiorna();
+        ContrattoDAO contrattoDao = new ContrattoDAO();
         return contrattoDao.getAllContratti(proprietario.getCf());
     }
 
     public List<Resoconto> getResoconti() {
-        aggiorna();
+        ProprietarioDAO proprietarioDao = new ProprietarioDAO();
         return proprietarioDao.selectResoconti(proprietario.getCf());
     }
 
     public boolean isUtente(String email, String password) {
+        ProprietarioDAO proprietarioDao = new ProprietarioDAO();
         List<Proprietario> proprietari = proprietarioDao.selectAllUtenti();
         for(Proprietario p: proprietari) {
             if(Objects.equals(p.getEmail(), email) && Objects.equals(p.getPassword(), password)) {
@@ -128,6 +131,7 @@ public class Controller {
 
     public boolean isInquilino(String idInquilino) {
         try {
+            InquilinoDAO inquilinoDao = new InquilinoDAO();
             return inquilinoDao.getInquilino(Integer.parseInt(idInquilino), proprietario.getCf()) != null;
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
@@ -137,6 +141,7 @@ public class Controller {
 
     public boolean isImmobile(String idImmobile) {
         try {
+            ImmobileDAO immobileDao = new ImmobileDAO();
             return immobileDao.getImmobile(Integer.parseInt(idImmobile), proprietario.getCf()) != null;
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
@@ -146,6 +151,7 @@ public class Controller {
 
     public boolean isAffittato(String idImmobile) {
         try {
+            ImmobileDAO immobileDao = new ImmobileDAO();
             return immobileDao.getImmobile(Integer.parseInt(idImmobile), proprietario.getCf()).isAffittato();
         } catch (NumberFormatException e) {
             System.out.println("L'ID immobile non è valido");
@@ -155,6 +161,7 @@ public class Controller {
 
     public boolean isContratto(String idContratto) {
         try {
+            ContrattoDAO contrattoDao = new ContrattoDAO();
             return contrattoDao.getContratto(Integer.parseInt(idContratto), proprietario.getCf()) != null;
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
@@ -164,6 +171,7 @@ public class Controller {
 
     public void rimuoviInquilino(String idInquilino) {
         try {
+            InquilinoDAO inquilinoDao = new InquilinoDAO();
             inquilinoDao.rimuoviInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
@@ -173,6 +181,7 @@ public class Controller {
 
     public void rimuoviImmobile(String idImmobile) {
         try {
+            ImmobileDAO immobileDao = new ImmobileDAO();
             immobileDao.rimuoviImmobile(Integer.parseInt(idImmobile), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
@@ -182,6 +191,7 @@ public class Controller {
 
     public void rimuoviContratto(String idContratto) {
         try {
+            ContrattoDAO contrattoDao = new ContrattoDAO();
             contrattoDao.rimuoviContratto(Integer.parseInt(idContratto), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
@@ -190,27 +200,32 @@ public class Controller {
     }
 
     public void modificaContratto(String idContratto, Contratto contratto) {
+        ContrattoDAO contrattoDao = new ContrattoDAO();
         contrattoDao.updateContratto(Integer.parseInt(idContratto), contratto, proprietario.getCf());
         aggiorna();
     }
 
     public void modificaImmobile(String idImmobile, Immobile immobile) {
+        ImmobileDAO immobileDao = new ImmobileDAO();
         immobileDao.updateImmobile(Integer.parseInt(idImmobile), immobile);
         aggiorna();
     }
 
     public void modificaInquilino(String idInquilino, Inquilino inquilino) {
+        InquilinoDAO inquilinoDao = new InquilinoDAO();
         inquilinoDao.updateInquilino(Integer.parseInt(idInquilino), inquilino);
         aggiorna();
     }
 
     public void aggiungiPagamento(String idInquilino, String pagamento) {
         try {
+            InquilinoDAO inquilinoDao = new InquilinoDAO();
             Inquilino inquilino = inquilinoDao.getInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
             inquilino.setTotalePagato(inquilino.getTotalePagato() + Float.parseFloat(pagamento));
             inquilinoDao.updateInquilino(Integer.parseInt(idInquilino), inquilino);
 
             System.out.println("Pagamento salvato");
+            aggiorna();
         } catch (NumberFormatException e) {
             System.out.println("Valore in denaro non valido");
         }
@@ -218,11 +233,13 @@ public class Controller {
 
     public void aggiungiSpesa(String idInquilino, String spesa) {
         try {
+            InquilinoDAO inquilinoDao = new InquilinoDAO();
             Inquilino inquilino = inquilinoDao.getInquilino(Integer.parseInt(idInquilino), proprietario.getCf());
             inquilino.setTotaleDovuto(inquilino.getTotaleDovuto() + Float.parseFloat(spesa));
             inquilinoDao.updateInquilino(Integer.parseInt(idInquilino), inquilino);
 
             System.out.println("Spesa salvata");
+            aggiorna();
         }catch (NumberFormatException e) {
             System.out.println("Valore in denaro non valido");
         }
@@ -241,6 +258,7 @@ public class Controller {
     }
 
     public boolean emailDisponibile(String email) {
+        ProprietarioDAO proprietarioDao = new ProprietarioDAO();
         List<Proprietario> proprietari = proprietarioDao.selectAllUtenti();
         for(Proprietario p: proprietari) {
             if(Objects.equals(p.getEmail(), email)) {
@@ -251,6 +269,7 @@ public class Controller {
     }
 
     public void setProprietario(String email, String password) {
+        ProprietarioDAO proprietarioDao = new ProprietarioDAO();
         proprietario = proprietarioDao.selectUtente(email, password);
     }
 
@@ -266,11 +285,13 @@ public class Controller {
     // serve ad aggiornare la logica dei pagamenti
     public void aggiorna() {
         try {
-//            contrattoDao.aggiornaDatePagamento(proprietario.getCf());
-//            immobileDao.aggiornaAffittato(proprietario.getCf());
-            List<Immobile> immobili = immobileDao.getAllImmobili(proprietario.getCf());
-            List<Contratto> contratti = contrattoDao.getAllContratti(proprietario.getCf());
-            List<Inquilino> inquilini = inquilinoDao.getAllInquilini(proprietario.getCf());
+            ImmobileDAO immobileDao = new ImmobileDAO();
+            InquilinoDAO inquilinoDao = new InquilinoDAO();
+            ContrattoDAO contrattoDao = new ContrattoDAO();
+
+            List<Immobile> immobili = getAllImmobili();
+            List<Contratto> contratti = getAllContratti();
+            List<Inquilino> inquilini = getAllInquilini();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate adesso = LocalDate.now();
@@ -310,7 +331,11 @@ public class Controller {
             }
 
 
-//            inquilinoDao.aggiornaFinanze(proprietario.getCf());
+            tabellaContratti.aggiornaTabella(contratti);
+            tabellaImmobili.aggiornaTabella(immobili);
+            tabellaInquilini.aggiornaTabella(inquilini);
+            tabellaResoconto.aggiornaTabella(getResoconti());
+
         }catch (DateTimeParseException | NumberFormatException e) {
             System.out.println(e);
             System.out.println("ATTENZIONE! nel database sono presenti date in un formato non riconosciuto (formato valido: YYYY-MM-DD)");
@@ -320,14 +345,32 @@ public class Controller {
         }
     }
 
-    // serve per resettare il controller quando si esce dal menu facade
-    public void reset() {
+    public void mostraResoconto() {
+        aggiorna();
+        tabellaResoconto.mostraTabella(getResoconti());
+    }
 
-        this.immobileDao = new ImmobileDAO();
-        this.inquilinoDao = new InquilinoDAO();
-        this.contrattoDao = new ContrattoDAO();
-        this.proprietarioDao = new ProprietarioDAO();
-        this.proprietario = null;
+    public void mostraContratti() {
+        aggiorna();
+        tabellaContratti.mostraTabella(getAllContratti());
+    }
+
+    public void mostraImmobili() {
+        aggiorna();
+        tabellaImmobili.mostraTabella(getAllImmobili());
+    }
+
+    public void mostraInquilini() {
+        aggiorna();
+        tabellaInquilini.mostraTabella(getAllInquilini());
+    }
+
+    public void reset() {
+        tabellaInquilini.dispose();
+        tabellaContratti.dispose();
+        tabellaImmobili.dispose();
+        tabellaResoconto.dispose();
+        proprietario = null;
     }
 
 }

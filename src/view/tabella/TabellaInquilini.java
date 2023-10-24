@@ -29,7 +29,7 @@ public class TabellaInquilini extends TabellaGUI<Inquilino> {
         modelloTabella.setRowCount(0);
 
         for(Inquilino i: lista) {
-            Object[] riga = {i.getID(), i.getNome(), i.getCognome(), i.getDataNascita(), i.getCittàNascita(),
+            Object[] riga = {i.getID(), i.getCf(), i.getNome(), i.getCognome(), i.getDataNascita(), i.getCittàNascita(),
                     i.getResidenza(), i.getTelefono(), i.getEmail(), i.getTotaleDovuto(), i.getTotalePagato(),
                     i.getTotaleDovuto()-i.getTotalePagato()};
             modelloTabella.addRow(riga);

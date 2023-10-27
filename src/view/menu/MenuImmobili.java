@@ -3,13 +3,9 @@ package view.menu;
 import controller.Controller;
 import model.Immobile;
 import model.ImmobileBuilder;
-import view.tabella.TabellaImmobili;
-import view.tabella.TabellaInquilini;
 
 
 public class MenuImmobili extends Menu {
-    TabellaImmobili tabellaImmobili;
-
     private static String listaOpzioniModifica = " 1 - Comune\n" +
             " 2 - Indirizzo\n" +
             " 3 - Numero civico\n" +
@@ -22,10 +18,8 @@ public class MenuImmobili extends Menu {
             " 10 - Subalterno\n" +
             " x - Applica modifiche";
 
-
     public MenuImmobili(Controller controller) {
         super(controller);
-        tabellaImmobili = new TabellaImmobili();
     }
 
     public void display() {
@@ -59,7 +53,7 @@ public class MenuImmobili extends Menu {
                     termina = true;
                     continue;
                 default:
-                    System.out.println("Valore inserito invalido come te e tua madre");
+                    System.out.println("Valore inserito invalido come te e tua madre"); // TODO: cambiare frase ...
             }
         }
     }
@@ -70,6 +64,7 @@ public class MenuImmobili extends Menu {
 
         while (!termina) {
             System.out.println("Inserire i dati dell'immobile");
+            scanner.nextLine();
             System.out.print("Comune: ");
             String comune = scanner.nextLine();
             System.out.print("Indirizzo: ");
@@ -81,7 +76,7 @@ public class MenuImmobili extends Menu {
 
             String confermaInput;
 
-            try {       // TODO: se vengono inseriti valori non validi si lancia eccezione
+            try {
                 builder.comune(comune).indirizzo(indirizzo).nCivico(nCivico).subalterno(Integer.parseInt(subalterno));
 
                 System.out.println("Vuoi aggiungere i dati catastali? (altrimenti sarà possibile aggiungerli più tardi " +
@@ -118,7 +113,7 @@ public class MenuImmobili extends Menu {
                 } else {
                     System.out.println("Riprovare? (S/n) ");
                     confermaInput = scanner.next();
-                    if (!confermaInput.equals("s") || !confermaInput.equals("S")) {
+                    if (!confermaInput.equals("s") && !confermaInput.equals("S")) {
                         termina = true;
                     }
                 }
@@ -226,6 +221,7 @@ public class MenuImmobili extends Menu {
     }
 
     private void displayRimuoviImmobile() {
+        controller.mostraImmobili();
         String idImmobile;
         String confermaInput;
 

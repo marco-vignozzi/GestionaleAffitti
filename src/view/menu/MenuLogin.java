@@ -95,9 +95,9 @@ public class MenuLogin extends Menu {
             }
         }
 
-        System.out.print("Password: ");
-        String pwd = scanner.next();
         scanner.nextLine();
+        System.out.print("Password: ");
+        String pwd = scanner.nextLine();
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
         System.out.print("Cognome: ");
@@ -105,10 +105,15 @@ public class MenuLogin extends Menu {
         System.out.print("Codice fiscale: ");
         String cf = scanner.next();
 
-        Proprietario p = new Proprietario(email, pwd, nome, cognome, cf);
-        controller.aggiungiUtente(p);
+        System.out.print("Confermi i dati inseriti? (S/n) ");
+        String confermaInput = scanner.next();
 
-        System.out.println("Registrazione avvenuta con successo");
+        if(confermaInput.equals("S") || confermaInput.equals("s")) {
+            Proprietario p = new Proprietario(email, pwd, nome, cognome, cf);
+            controller.aggiungiUtente(p);
+
+            System.out.println("Registrazione avvenuta con successo");
+        }
     }
 
 }

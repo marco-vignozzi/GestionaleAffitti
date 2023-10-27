@@ -1,4 +1,4 @@
-package view.tabella;
+package view.table;
 
 
 import javax.swing.*;

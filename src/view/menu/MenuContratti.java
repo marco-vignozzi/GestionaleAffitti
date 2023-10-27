@@ -5,11 +5,8 @@ import model.Contratto;
 import model.ContrattoBuilder;
 import model.Immobile;
 import model.Inquilino;
-import view.tabella.TabellaContratti;
 
 public class MenuContratti extends Menu {
-    TabellaContratti tabellaContratti;
-
     private static String listaOpzioniModifica = " 1 - Data inizio (formato: YYYY-MM-DD)\n" +
             " 2 - Data fine (formato: YYYY-MM-DD)\n" +
             " 3 - Prossimo pagamento (formato: YYYY-MM-DD)\n" +
@@ -20,7 +17,6 @@ public class MenuContratti extends Menu {
 
     public MenuContratti(Controller controller) {
         super(controller);
-        tabellaContratti = new TabellaContratti();
     }
 
     public void display() {
@@ -73,7 +69,6 @@ public class MenuContratti extends Menu {
 
         while (!termina) {
             controller.mostraImmobili();
-//             OPZIONE aggiungere tabella immobili anche a contratti, però così si genereano più tabelle
             System.out.print("ID dell'immobile come indicato nella tabella: ");
             String idImmobile = scanner.next();
 
@@ -238,6 +233,7 @@ public class MenuContratti extends Menu {
     }
 
     private void displayRimuoviContratto() {
+        controller.mostraContratti();
         String idContratto;
         String confermaInput;
 

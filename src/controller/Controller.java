@@ -4,10 +4,10 @@ package controller;
 import dao.*;
 import mail_service.JavaMailUtil;
 import model.*;
-import view.tabella.TabellaContratti;
-import view.tabella.TabellaImmobili;
-import view.tabella.TabellaInquilini;
-import view.tabella.TabellaResoconto;
+import view.table.TabellaContratti;
+import view.table.TabellaImmobili;
+import view.table.TabellaInquilini;
+import view.table.TabellaResoconto;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;

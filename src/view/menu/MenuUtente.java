@@ -2,7 +2,7 @@ package view.menu;
 
 import controller.Controller;
 import model.Inquilino;
-import view.tabella.TabellaResoconto;
+import view.table.TabellaResoconto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,10 @@ public class MenuUtente extends Menu {
 
             switch (input) {
                 case "1":
-                    displaySollecitoMultiplo();
+                    displaySollecitoAuto();
                     continue;
                 case "2":
-                    displaySollecitoSingolo();
+                    displaySollecitoManuale();
                     continue;
                 case "3":
                     displayPagamento();
@@ -56,7 +56,7 @@ public class MenuUtente extends Menu {
         }
     }
 
-    private void displaySollecitoMultiplo() {
+    private void displaySollecitoAuto() {
         controller.mostraInquilini();
         System.out.println("Verrà inviato un sollecito di pagamento agli inquilini con ID: ");
         List<Inquilino> inquilini = controller.getInquiliniSollecito();
@@ -64,7 +64,7 @@ public class MenuUtente extends Menu {
             if(i+1 == inquilini.size()) {
                 System.out.println(inquilini.get(i).getID());
             }else {
-                System.out.print(inquilini.get(i).getID() + " ,");
+                System.out.print(inquilini.get(i).getID() + ", ");
             }
         }
         System.out.print("Continuare? (S/n) ");
@@ -74,16 +74,37 @@ public class MenuUtente extends Menu {
         }
     }
 
-    private void displaySollecitoSingolo() {        // TODO: aggiungere possibilità di selezionare più inquilini
+    private void displaySollecitoManuale() {
         controller.mostraInquilini();
-        System.out.print("Selezionare l'ID dell'inquilino a cui si desidera inviare un sollecito di pagamento: ");
-        String idInquilino = scanner.next();
-        if(controller.isInquilino(idInquilino)) {
-            List<Inquilino> inquilini = new ArrayList<>();
-            inquilini.add(controller.getInquilino(idInquilino));
-            controller.inviaSollecito(inquilini);
-        }else {
-            System.out.println("L'ID inserito non è associato a nessun inquilino.");
+        List<Inquilino> inquilini = new ArrayList<>();
+        boolean termina = false;
+
+        while(!termina) {
+            System.out.print("Selezionare l'ID dell'inquilino a cui si desidera inviare un sollecito di pagamento: ");
+            String idInquilino = scanner.next();
+            if (controller.isInquilino(idInquilino)) {
+                inquilini.add(controller.getInquilino(idInquilino));
+            } else {
+                System.out.println("L'ID inserito non è associato a nessun inquilino.");
+            }
+            System.out.print("Selezionare altri inquilini? (S/n) ");
+            String confermaInput = scanner.next();
+            if(!confermaInput.equals("S") && !confermaInput.equals("s")) {
+                termina = true;
+                System.out.print("Verrà inviata una email di sollecito agli inquilini con ID ");
+                for(int i=0; i< inquilini.size(); i++) {
+                    if(i+1 == inquilini.size()) {
+                        System.out.println(inquilini.get(i).getID());
+                    }else {
+                        System.out.print(inquilini.get(i).getID() + ", ");
+                    }
+                }
+                System.out.print("Continuare ? (S/n) ");
+                confermaInput = scanner.next();
+                if(confermaInput.equals("S") || confermaInput.equals("s")) {
+                    controller.inviaSollecito(inquilini);
+                }
+            }
         }
     }
 

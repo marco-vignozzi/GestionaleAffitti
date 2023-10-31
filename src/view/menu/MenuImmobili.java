@@ -58,7 +58,8 @@ public class MenuImmobili extends Menu {
         }
     }
 
-    public Immobile displayAggiungiImmobile() {
+    public Immobile
+    displayAggiungiImmobile() {
         boolean termina = false;
         ImmobileBuilder builder = new ImmobileBuilder();
 

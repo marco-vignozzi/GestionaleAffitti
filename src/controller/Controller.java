@@ -70,7 +70,7 @@ public class Controller {
         for(Immobile i: immobili) {
             if(Objects.equals(i.getComune(), immobile.getComune()) && Objects.equals(i.getIndirizzo(), immobile.getIndirizzo()) &&
                     Objects.equals(i.getnCivico(), immobile.getnCivico()) && i.getSubalterno() == immobile.getSubalterno()) {
-                immobile.setId(i.getId());
+                immobile.setID(i.getID());
             }
         }
         aggiorna();
@@ -322,12 +322,12 @@ public class Controller {
             for(Immobile i : immobili) {
                 boolean affittato = false;
                 for(Contratto c : contratti) {
-                    if(i.getId() == c.getIdImmobile() && !adesso.isAfter(LocalDate.parse(c.getDataFine(), formatter))) {
+                    if(i.getID() == c.getIdImmobile() && !adesso.isAfter(LocalDate.parse(c.getDataFine(), formatter))) {
                         affittato = true;
                     }
                 }
                 i.setAffittato(affittato);
-                immobileDao.updateImmobile(i.getId(), i);
+                immobileDao.updateImmobile(i.getID(), i);
             }
 
 

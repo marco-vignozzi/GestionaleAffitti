@@ -14,7 +14,7 @@ public class Immobile {
     private String idProprietario;
     private String indirizzo;
     private String nCivico;
-    private int id;
+    private int ID;
 
 
     protected Immobile(ImmobileBuilder builder) {
@@ -30,7 +30,7 @@ public class Immobile {
         this.indirizzo = builder.indirizzo;
         this.nCivico = builder.nCivico;
         this.affittato = builder.affittato;
-        this.id = builder.id;
+        this.ID = builder.id;
     }
 
     public boolean isAffittato() {
@@ -129,12 +129,12 @@ public class Immobile {
         this.nCivico = nCivico;
     }
 
-    public int getId() {
-        return id;
+    public int getID() {
+        return ID;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
 }

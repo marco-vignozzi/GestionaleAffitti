@@ -29,7 +29,6 @@ public class JavaMailUtil {
             e.printStackTrace();
         }
         return null;
-
     }
 
     public static void send(String destinatario, String oggetto, String testo) {

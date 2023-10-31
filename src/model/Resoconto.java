@@ -11,14 +11,14 @@ public class Resoconto {
     private  String cognome;
     private  String email;
     private  float debito;
-    private  String data_fine;
-    private  String prossimo_pagamento;
+    private  String dataFine;
+    private  String prossimoPagamento;
     private  float canone;
     private  boolean proroga;
     private  boolean sfratto;
 
     public Resoconto(int id, String comune, String indirizzo, String nCivico, int subalterno, boolean affittato,
-                     String nome, String cognome, String email, float debito, String data_fine, String prossimo_pagamento,
+                     String nome, String cognome, String email, float debito, String dataFine, String prossimoPagamento,
                      float canone, boolean sfratto, boolean proroga) {
         this.ID = id;
         this.comune = comune;
@@ -30,8 +30,8 @@ public class Resoconto {
         this.cognome = cognome;
         this.email = email;
         this.debito = debito;
-        this.data_fine = data_fine;
-        this.prossimo_pagamento = prossimo_pagamento;
+        this.dataFine = dataFine;
+        this.prossimoPagamento = prossimoPagamento;
         this.canone = canone;
         this.sfratto = sfratto;
         this.proroga = proroga;
@@ -78,11 +78,11 @@ public class Resoconto {
     }
 
     public String getDataFine() {
-        return data_fine;
+        return dataFine;
     }
 
     public String getProssimoPagamento() {
-        return prossimo_pagamento;
+        return prossimoPagamento;
     }
 
     public float getCanone() {

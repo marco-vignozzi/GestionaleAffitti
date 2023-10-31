@@ -2,7 +2,7 @@ package model;
 
 
 public class Inquilino {
-    private int id;
+    private int ID;
     private String nome;
     private String cognome;
     private String cf;
@@ -28,7 +28,7 @@ public class Inquilino {
     }
 
     protected Inquilino(InquilinoBuilder inquilinoBuilder) {
-        this.id = inquilinoBuilder.id;
+        this.ID = inquilinoBuilder.id;
         this.nome = inquilinoBuilder.nome;
         this.cognome = inquilinoBuilder.cognome;
         this.cf = inquilinoBuilder.cf;
@@ -42,11 +42,11 @@ public class Inquilino {
     }
 
     public int getID() {
-        return id;
+        return ID;
     }
 
     public void setID(int id) {
-        this.id = id;
+        this.ID = id;
     }
 
     public String getNome() {

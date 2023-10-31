@@ -28,7 +28,7 @@ public class TabellaImmobili extends TabellaGUI<Immobile> {
         modelloTabella.setRowCount(0);
 
         for(Immobile i: lista) {
-            Object[] riga = {i.getId(), i.getComune(), i.getIndirizzo(), i.getnCivico(), i.getSubalterno(),
+            Object[] riga = {i.getID(), i.getComune(), i.getIndirizzo(), i.getnCivico(), i.getSubalterno(),
                     i.isAffittato()?"sì":"no", i.getFoglio(), i.getParticella(), i.getCategoria(), i.getClasse(),
                     i.getSuperficie(), i.getRendita()};
             modelloTabella.addRow(riga);

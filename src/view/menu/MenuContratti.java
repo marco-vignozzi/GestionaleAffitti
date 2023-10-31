@@ -82,7 +82,7 @@ public class MenuContratti extends Menu {
                     if(immobile == null) {
                         return null;
                     }
-                    idImmobile = Integer.toString(immobile.getId());
+                    idImmobile = Integer.toString(immobile.getID());
                 }
                 else {
                     System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");

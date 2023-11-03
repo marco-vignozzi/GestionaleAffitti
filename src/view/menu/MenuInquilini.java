@@ -51,7 +51,7 @@ public class MenuInquilini extends Menu {
                     termina = true;
                     continue;
                 default:
-                    System.out.println("Valore inserito invalido come te e tua madre");
+                    System.out.println("Valore inserito non valido");
             }
         }
     }

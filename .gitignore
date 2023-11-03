@@ -4,6 +4,7 @@ out/
 !**/src/test/**/out/
 .idea
 GestionaleAffitti.iml
+password.txt
 
 ### Eclipse ###
 .apt_generated

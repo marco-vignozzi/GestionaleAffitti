@@ -53,7 +53,7 @@ public class MenuImmobili extends Menu {
                     termina = true;
                     continue;
                 default:
-                    System.out.println("Valore inserito invalido come te e tua madre"); // TODO: cambiare frase ...
+                    System.out.println("Valore inserito non valido");
             }
         }
     }

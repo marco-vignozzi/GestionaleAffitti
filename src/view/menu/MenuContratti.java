@@ -131,8 +131,15 @@ public class MenuContratti extends Menu {
             confermaInput = scanner.next();
             try {
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                    Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(),
-                            dataInizio, dataFine, dataPagamento, Float.parseFloat(canone), proroga);
+                    ContrattoBuilder builder = new ContrattoBuilder();
+                    builder.idImmobile(Integer.parseInt(idImmobile))
+                            .cfInquilino(cfInquilino)
+                            .dataInizio(dataInizio)
+                            .dataFine(dataFine)
+                            .prossimoPagamento(dataPagamento)
+                            .canone(Float.parseFloat(canone))
+                            .proroga(proroga);
+                    Contratto contratto = builder.build();
                     return contratto;
                 }
             }catch (NumberFormatException e) {

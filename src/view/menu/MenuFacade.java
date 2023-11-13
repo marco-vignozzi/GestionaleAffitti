@@ -11,10 +11,8 @@ public class MenuFacade extends Menu {
 
     public void display() {
 
-        MenuLogin menuLogin = new MenuLogin(controller);
-        menuLogin.display();
-        if(controller.getProprietario() == null) {
-            return;  // se non setto il proprietario nel menuLogin vuol dire che voglio uscire
+        if(!displayLogin()) {
+            return;
         }
 
         boolean termina = false;
@@ -26,14 +24,18 @@ public class MenuFacade extends Menu {
             System.out.println(" 2 - Menu gestione inquilini");
             System.out.println(" 3 - Menu gestione immobili");
             System.out.println(" 4 - Menu gestione contratti");
-            System.out.println(" x - Chiudi programma");
+            System.out.println(" x - Logout");
 
             String input = scanner.next();
 
             switch (input) {
                 case "1":
                     MenuUtente menuUtente = new MenuUtente(controller);
-                    menuUtente.display();
+                    if(menuUtente.display(0)) {      // se ritorna true vuol dire che ho eliminato l'utente
+                        if(!displayLogin()) {
+                            return;
+                        }
+                    }
                     continue;
                 case "2":
                     MenuInquilini menuInquilini = new MenuInquilini(controller);
@@ -48,13 +50,25 @@ public class MenuFacade extends Menu {
                     menuContratti.display();
                     continue;
                 case "x":
-                    termina = true;
                     controller.reset();
+                    if(!displayLogin()) {
+                        return;
+                    }
                     continue;
                 default:
                     System.out.println("Valore inserito non valido");
             }
         }
+    }
+
+    public boolean displayLogin() {
+
+        MenuLogin menuLogin = new MenuLogin(controller);
+        menuLogin.display();
+        if(controller.getProprietario() == null) {
+            return false;  // se non setto il proprietario nel menuLogin vuol dire che voglio uscire
+        }
+        return true;
     }
 
 }

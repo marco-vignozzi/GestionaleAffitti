@@ -50,13 +50,15 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
             "contratti JOIN inquilini ON cf_proprietario = ? WHERE inquilini.id = ?";
 
     public ContrattoDAO() {
-        connect();
         createTabella();
     }
 
     @Override
     public void createTabella() {
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             DatabaseMetaData metadata = connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "contratti", null);
             if (!resultSet.next()) {
@@ -66,6 +68,7 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
                 PreparedStatement statement = connection.prepareStatement(CREATE_TRIGGER);
                 statement.executeUpdate();
             }
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -73,10 +76,10 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
 
     public boolean insert(Contratto c) {
         boolean result = false;
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(INSERT_CONTRATTO);
             statement.setString(1, c.getCfProprietario());
             statement.setString(2, c.getCfInquilino());
@@ -89,6 +92,7 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
             statement.setBoolean(9, c.isProroga());
             statement.executeUpdate();
             result = true;
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -96,10 +100,10 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
     }
 
     public Contratto select(int idContratto, String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(SELECT_CONTRATTO_BY_ID);
             statement.setString(1, cfProprietario);
             statement.setInt(2, idContratto);
@@ -119,6 +123,7 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
                         .id(rs.getInt("id"))
                         .build();
             }
+          // connection.close();
             return contratto;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -126,10 +131,10 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
     }
 
     public List<Contratto> selectAll(String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_CONTRATTI);
             statement.setString(1, cfProprietario);
             ResultSet rs = statement.executeQuery();
@@ -138,6 +143,7 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
             while (rs.next()) {
                 contratti.add(select(rs.getInt("id"), cfProprietario));
             }
+            connection.close();
             return contratti;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -146,14 +152,15 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
 
     public boolean delete(int idContratto, String cfProprietario) {
         boolean result=false;
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(DELETE_CONTRATTO);
             statement.setString(1, cfProprietario);
             statement.setInt(2, idContratto);
             result=statement.executeUpdate()>0;
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -163,6 +170,9 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
     public boolean update(int idContratto, Contratto contratto, String cfProprietario) {
         boolean result = false;
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
                 if(contratto.getDataInizio() != null) {
                     PreparedStatement stmt = connection.prepareStatement(UPDATE_DATA_INIZIO);
                     stmt.setString(1, contratto.getDataInizio());
@@ -199,6 +209,7 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
                     stmt.setInt(2, idContratto);
                     result=stmt.executeUpdate()>0;
                 }
+                connection.close();
         } catch(SQLException e) {
                 throw new RuntimeException(e);
         }

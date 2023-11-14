@@ -24,7 +24,7 @@ public abstract class BaseDAO<T> {
             connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost/gestionale_affitti", "root","");
 
         }catch(SQLException | ClassNotFoundException e){
-            System.out.println("Errore di connessione al database: " + e.getMessage()); //e.printStackTrace();
+            System.out.println("Errore di connessione al database --> " + e.getMessage()); //e.printStackTrace();
         }
     }
 
@@ -41,10 +41,10 @@ public abstract class BaseDAO<T> {
     public abstract boolean delete(int id, String cf);
 
     public List<Resoconto> selectResoconti(String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(SELECT_RESOCONTO);
             statement.setString(1, cfProprietario);
             ResultSet rs = statement.executeQuery();
@@ -58,6 +58,7 @@ public abstract class BaseDAO<T> {
                         rs.getBoolean("proroga"));
                 resoconti.add(resoconto);
             }
+            connection.close();
             return resoconti;
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -61,12 +61,14 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
             "foglio, particella, categoria, classe, superficie_mq, rendita FROM immobili WHERE cf_proprietario = ?";
 
     public ImmobileDAO() {
-        connect();
         createTabella();
     }
 
     public void createTabella() {
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             DatabaseMetaData metadata = connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "immobili", null);
             if (!resultSet.next()) {
@@ -76,6 +78,7 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
                 PreparedStatement statement = connection.prepareStatement(CREATE_TRIGGER);
                 statement.executeUpdate();
             }
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -83,10 +86,10 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
 
     public boolean insert(Immobile i) {
         boolean result=false;
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(INSERT_IMMOBILE);
             statement.setString(1, i.getComune());
             statement.setInt(2, i.getFoglio());
@@ -101,6 +104,7 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
             statement.setString(11, i.getnCivico());
             statement.setBoolean(12, i.isAffittato());
             result = statement.executeUpdate() > 0;
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -108,10 +112,10 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
     }
 
     public List<Immobile> selectAll(String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_IMMOBILI);
             statement.setString(1, cfProprietario);
             ResultSet rs = statement.executeQuery();
@@ -119,6 +123,7 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
             while (rs.next()) {
                 immobili.add(select(rs.getInt("id"), cfProprietario));
             }
+            connection.close();
             return immobili;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -126,14 +131,15 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
     }
 
     public Immobile select(int idImmobile, String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
         try{
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(SELECT_IMMOBILE_AND_CONTRATTO_BY_ID);
             statement.setInt(1, idImmobile);
             statement.setString(2, cfProprietario);
             ResultSet rs = statement.executeQuery();
+            //connection.close();
             ImmobileBuilder builder = new ImmobileBuilder();
             if(rs.next()) {
                 return builder.comune(rs.getString("comune"))
@@ -159,13 +165,14 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
 
     public boolean delete(int idImmobile, String cfProprietario) {
         boolean result = false;
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(DELETE_IMMOBILE);
             statement.setInt(1, idImmobile);
             result = statement.executeUpdate() > 0;
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -175,6 +182,9 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
     public boolean update(int idImmobile, Immobile immobile,String cf) {
         boolean result = false;
         try{
+            if(connection == null || connection.isClosed()) {
+                connect();
+            }
             if(immobile.getComune() != null) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_COMUNE);
                 stmt.setString(1, immobile.getComune());
@@ -248,6 +258,7 @@ public class ImmobileDAO extends BaseDAO<Immobile> {
             stmt.setBoolean(1, immobile.isAffittato());
             stmt.setInt(2, idImmobile);
             result = stmt.executeUpdate() > 0;
+            connection.close();
 
         }catch(SQLException e){
             throw new RuntimeException(e);

@@ -172,65 +172,76 @@ public class Controller {
         return false;
     }
 
-    public void rimuoviInquilino(String idInquilino) {
+    public boolean rimuoviInquilino(String idInquilino) {
+        boolean esito = false;
         try {
             InquilinoDAO inquilinoDao = new InquilinoDAO();
-            inquilinoDao.delete(Integer.parseInt(idInquilino), proprietario.getCf());
+            esito = inquilinoDao.delete(Integer.parseInt(idInquilino), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
+        return esito;
     }
 
-    public void rimuoviImmobile(String idImmobile) {
+    public boolean rimuoviImmobile(String idImmobile) {
+        boolean esito = false;
         try {
             ImmobileDAO immobileDao = new ImmobileDAO();
-            immobileDao.delete(Integer.parseInt(idImmobile), proprietario.getCf());
+            esito = immobileDao.delete(Integer.parseInt(idImmobile), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
+        return esito;
     }
 
-    public void rimuoviContratto(String idContratto) {
+    public boolean rimuoviContratto(String idContratto) {
+        boolean esito = false;
         try {
             ContrattoDAO contrattoDao = new ContrattoDAO();
-            contrattoDao.delete(Integer.parseInt(idContratto), proprietario.getCf());
+            esito = contrattoDao.delete(Integer.parseInt(idContratto), proprietario.getCf());
             aggiorna();
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
+        return esito;
     }
 
-    public void rimuoviProprietario() {
+    public boolean rimuoviProprietario() {
         ProprietarioDAO proprietarioDao = new ProprietarioDAO();
-        proprietarioDao.delete(0, proprietario.getCf());
+        boolean esito = proprietarioDao.delete(0, proprietario.getCf());
         aggiorna();
+        return esito;
     }
 
-    public void modificaContratto(String idContratto, Contratto contratto) {
+    public boolean modificaContratto(String idContratto, Contratto contratto) {
         ContrattoDAO contrattoDao = new ContrattoDAO();
-        contrattoDao.update(Integer.parseInt(idContratto), contratto, proprietario.getCf());
+        boolean esito = contrattoDao.update(Integer.parseInt(idContratto), contratto, proprietario.getCf());
         aggiorna();
+        return esito;
     }
 
-    public void modificaImmobile(String idImmobile, Immobile immobile) {
+    public boolean modificaImmobile(String idImmobile, Immobile immobile) {
         ImmobileDAO immobileDao = new ImmobileDAO();
-        immobileDao.update(Integer.parseInt(idImmobile), immobile,"");
+        boolean esito = immobileDao.update(Integer.parseInt(idImmobile), immobile,"");
         aggiorna();
+        return esito;
     }
 
-    public void modificaInquilino(String idInquilino, Inquilino inquilino) {
+    public boolean modificaInquilino(String idInquilino, Inquilino inquilino) {
         InquilinoDAO inquilinoDao = new InquilinoDAO();
-        inquilinoDao.update(Integer.parseInt(idInquilino), inquilino, proprietario.getCf());
+        boolean esito = inquilinoDao.update(Integer.parseInt(idInquilino), inquilino, proprietario.getCf());
         aggiorna();
+        return esito;
     }
 
-    public void modificaProprietario(Proprietario nuovoP) {
+    public boolean modificaProprietario(Proprietario nuovoP) {
         ProprietarioDAO proprietarioDao = new ProprietarioDAO();
-        proprietarioDao.update(0, nuovoP, proprietario.getCf());
+        boolean esito = proprietarioDao.update(0, nuovoP, proprietario.getCf());
         proprietario = nuovoP;
         aggiorna();
+        return esito;
     }
 
     public void aggiungiPagamento(String idInquilino, String pagamento) {

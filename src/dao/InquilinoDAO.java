@@ -51,18 +51,21 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
             "WHERE inquilini.id = ?";
 
     public InquilinoDAO() {
-        super.connect();
         createTabella();
     }
 
     public void createTabella() {
         try{
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             DatabaseMetaData metadata= connection.getMetaData();
             ResultSet resultSet = metadata.getTables(null, null, "inquilini", null);
             if (!resultSet.next()) {
                 PreparedStatement statementCreazione = connection.prepareStatement(CREATE_INQUILINI);
                 statementCreazione.executeUpdate();
             }
+            connection.close();
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
@@ -70,10 +73,10 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
 
     public boolean insert(Inquilino i) {
         boolean result = false;
-        if (connection == null) {
-            connect();
-        }
         try{
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(INSERT_INQUILINO);
             statement.setString(1, i.getCf());
             statement.setString(2, i.getNome());
@@ -86,6 +89,7 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
             statement.setFloat(9, i.getTotaleDovuto());
             statement.setFloat(10, i.getTotalePagato());
             result = statement.executeUpdate() > 0;
+            connection.close();
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -93,10 +97,10 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
     }
 
     public List<Inquilino> selectAll(String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
         try{
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_INQUILINI);
             statement.setString(1, cfProprietario);
             ResultSet rs = statement.executeQuery();
@@ -104,6 +108,7 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
             while (rs.next()) {
                 inquilini.add(select(rs.getInt("id"), cfProprietario));
             }
+            connection.close();
             return inquilini;
         }catch (SQLException e) {
             throw new RuntimeException(e);
@@ -112,13 +117,14 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
 
     public boolean delete(int idInquilino, String cfProprietario) {
         boolean result = false;
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(DELETE_INQUILINO);
             statement.setInt(1, idInquilino);
             result = statement.executeUpdate() > 0;
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -126,10 +132,10 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
     }
 
     public Inquilino select(int idInquilino, String cfProprietario) {
-        if (connection == null) {
-            connect();
-        }
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             PreparedStatement statement = connection.prepareStatement(SELECT_INQUILINO_BY_ID);
             statement.setString(1, cfProprietario);
             statement.setInt(2, idInquilino);
@@ -145,6 +151,7 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
                         .id(rs.getInt("id"))
                         .build();
             }
+            //connection.close();
             return inquilino;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -154,6 +161,9 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
     public boolean update(int idInquilino, Inquilino inquilino, String cf) {
         boolean result = false;
         try {
+            if (connection == null || connection.isClosed()) {
+                connect();
+            }
             if (inquilino.getNome() != null) {
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_NOME);
                 stmt.setString(1, inquilino.getNome());
@@ -214,6 +224,7 @@ public class InquilinoDAO extends BaseDAO<Inquilino> {
                 stmt.setInt(2, idInquilino);
                 result = stmt.executeUpdate() > 0;
             }
+            connection.close();
         }catch(SQLException e) {
             throw new RuntimeException(e);
         }

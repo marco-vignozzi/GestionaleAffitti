@@ -54,7 +54,7 @@ public class MenuLogin extends Menu {
             System.out.print("Password: ");
             String password = scanner.next();
 
-            if (controller.isUtente(email, password)) {
+            if (controller.isProprietario(email, password)) {
                 controller.setProprietario(email, password);
                 return true;
 
@@ -110,7 +110,7 @@ public class MenuLogin extends Menu {
 
         if(confermaInput.equals("S") || confermaInput.equals("s")) {
             Proprietario p = new Proprietario(email, pwd, nome, cognome, cf);
-            controller.aggiungiUtente(p);
+            controller.aggiungiProprietario(p);
 
             System.out.println("Registrazione avvenuta con successo");
         }

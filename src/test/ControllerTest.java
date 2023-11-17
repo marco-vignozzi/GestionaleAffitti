@@ -6,8 +6,6 @@ import dao.ImmobileDAO;
 import dao.InquilinoDAO;
 import dao.ProprietarioDAO;
 import model.*;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -42,7 +40,7 @@ public class ControllerTest {
         List<Proprietario> utenti = proprietarioDAO.selectAll("");
         for(Proprietario utente : utenti) {
             if(utente.getEmail().equals("example@gmail.com")) {
-                proprietarioDAO.delete(1, utente.getCf());
+            proprietarioDAO.delete(1, utente.getCf());
             }
         }
         InquilinoDAO inquilinoDAO = new InquilinoDAO();
@@ -61,7 +59,6 @@ public class ControllerTest {
             int id = immobile.getID();
             immobileDAO.delete(id, "");
         }
-
         ImmobileBuilder immobileBuilder = new ImmobileBuilder();
         immobileBuilder.comune("example")
                 .foglio(1)
@@ -75,7 +72,6 @@ public class ControllerTest {
                 .nCivico("example")
                 .affittato(false);
         this.immobile = immobileBuilder.build();
-
         InquilinoBuilder ibuilder = new InquilinoBuilder();
         ibuilder.cf("EXAMPLE")
                 .nome("example")
@@ -88,11 +84,10 @@ public class ControllerTest {
                 .totalePagato(0)
                 .telefono("example");
         this.inquilino = ibuilder.build();
-
     }
 
     @Test
-    void testAggiungiUtente() {         // va fatto per forza sul DAO visto che non c'è metodo getUtente() in Controller
+    void testAggiungiProprietario() {         // va fatto per forza sul DAO visto che non c'è metodo getUtente() in Controller
         ProprietarioDAO proprietarioDAO = new ProprietarioDAO();
         Proprietario p = new Proprietario("example@gmail.com","example","example","example","EXAMPLE");
         assertTrue(proprietarioDAO.insert(p));
@@ -107,10 +102,8 @@ public class ControllerTest {
     @Test
     void testAggiungi() {
         ImmobileDAO immobileDAO = new ImmobileDAO();
-
         //verifichiamo che l'immobile venga aggiunto
         assertTrue(this.controller.aggiungiImmobile(this.immobile));
-
         // verifichiamo che l'ID sia stato aggiunto correttamente all'oggetto immobile appena inserito
         List<Immobile> immobili = this.controller.getAllImmobili();
         for(Immobile i: immobili) {
@@ -120,14 +113,11 @@ public class ControllerTest {
                 assertEquals(this.immobile.getIdProprietario(), this.proprietario.getCf());
             }
         }
-
         // verifichiamo che affittato sia false automaticamente
         this.immobile = immobileDAO.select(immobile.getID(), this.proprietario.getCf());
         assertEquals(this.immobile.isAffittato(), false);
-
         // verifichiamo che l'inquilino sia aggiunto correttamente
         assertTrue(this.controller.aggiungiInquilino(inquilino));
-
         ContrattoBuilder cbuilder = new ContrattoBuilder();
         cbuilder.proroga(true)
                 .sfratto(true)
@@ -138,15 +128,12 @@ public class ControllerTest {
                 .cfInquilino("EXAMPLE")
                 .idImmobile(this.immobile.getID());
         Contratto contratto = cbuilder.build();
-
         // verifichiamo che il contratto sia aggiunto correttamente
         assertTrue(this.controller.aggiungiContratto(contratto));
         List<Contratto> contratti = this.controller.getAllContratti();
-
         // verifichiamo che la data del prossimo pagamento sia corretto in base alla data di oggi.
         LocalDate oggi = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
         for(Contratto c: contratti) {
             LocalDate dataFine = LocalDate.parse(c.getDataFine(), formatter);
             LocalDate prossimoPagamento = LocalDate.parse(c.getProssimoPagamento());
@@ -161,7 +148,6 @@ public class ControllerTest {
                 assertEquals(c.getProssimoPagamento(), "");
             }
         }
-
         // verifichiamo che dopo l'aggiunta del contratto l'immobile sia affittato
         immobili = this.controller.getAllImmobili();
         for(Immobile i: immobili) {
@@ -170,7 +156,6 @@ public class ControllerTest {
                 assertTrue(i.isAffittato());
             }
         }
-
     }
 
     @Test

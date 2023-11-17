@@ -2,6 +2,8 @@ package view.menu;
 
 import controller.Controller;
 import model.Inquilino;
+import model.InquilinoBuilder;
+import model.Proprietario;
 import view.table.TabellaResoconto;
 
 import java.util.ArrayList;
@@ -9,6 +11,12 @@ import java.util.List;
 
 
 public class MenuUtente extends Menu {
+    private static String listaOpzioniModifica = " 1 - Nome\n" +
+            " 2 - Cognome\n" +
+            " 3 - Email\n" +
+            " 4 - Password\n" +
+            " x - Applica modifiche";
+
     TabellaResoconto tabellaResoconto;
 
     public MenuUtente(Controller controller) {
@@ -17,6 +25,10 @@ public class MenuUtente extends Menu {
     }
 
     public void display() {
+        return;             // solo per avere una signature coerente con la superclasse
+    }
+
+    public boolean display(int n) {
 
         boolean termina = false;
 
@@ -27,6 +39,8 @@ public class MenuUtente extends Menu {
             System.out.println(" 3 - Aggiungi pagamento inquilino");
             System.out.println(" 4 - Aggiungi spesa inquilino");
             System.out.println(" 5 - Mostra tabella resoconto");
+            System.out.println(" 6 - Modifica dati utente");
+            System.out.println(" 7 - Elimina utente");
             System.out.println(" x - Indietro");
 
             String input = scanner.next();
@@ -47,12 +61,86 @@ public class MenuUtente extends Menu {
                 case "5":
                     controller.mostraResoconto();
                     continue;
+                case "6":
+                    displayModifica();
+                    continue;
+                case "7":
+                    if(displayRimuovi()) {
+                        controller.reset();
+                        return true;    // se ritorno true vuol dire che ho eliminato l'utente
+                    }
+                     continue;
                 case "x":
                     termina = true;
                     continue;
                 default:
                     System.out.println("Valore inserito non valido");
             }
+        }
+        return false;
+    }
+
+    private boolean displayRimuovi() {
+        System.out.println("Desideri rimuovere definitivamente l'utente con codice fiscale " +
+                controller.getProprietario().getCf() + " e tutti i dati ad esso associato?(S/n) ");
+        String confermaInput = scanner.next();
+
+        if (confermaInput.equals("s") || confermaInput.equals("S")) {
+            controller.rimuoviProprietario();
+            System.out.println("Utente rimosso dal sistema");
+            return true;
+        }
+        return false;
+    }
+
+    private void displayModifica() {
+        String confermaInput;
+        String input;
+        boolean termina = false;
+        Proprietario proprietario = controller.getProprietario();
+
+        while(!termina) {
+
+            System.out.println("Scegliere l'attributo che si desidera modificare:");
+            System.out.println(listaOpzioniModifica);
+            input = scanner.next();
+            switch (input) {
+                case "1":
+                    System.out.print("Inserire il nuovo nome: ");
+                    input = scanner.next();
+                    proprietario.setNome(input);
+                    continue;
+                case "2":
+                    System.out.print("Inserire il nuovo cognome: ");
+                    input = scanner.next();
+                    proprietario.setCognome(input);
+                    continue;
+                case "3":
+                    System.out.print("Inserire il nuovo indirizzo email: ");
+                    input = scanner.next();
+                    proprietario.setEmail(input);
+                    continue;
+                case "4":
+                    System.out.print("Inserire la nuova password: ");
+                    input = scanner.next();
+                    proprietario.setPassword(input);
+                    continue;
+                case "x":
+                    termina = true;
+                    continue;
+                default:
+                    System.out.println("Valore non valido");
+            }
+        }
+
+        System.out.println("Applicare le modifiche all'utente?");
+        confermaInput=scanner.next();
+        if (confermaInput.equals("s") || confermaInput.equals("S")) {
+            controller.modificaProprietario(proprietario);
+            System.out.println("Utente modificato");
+        }
+        else {
+            System.out.println("Operazione annullata");
         }
     }
 

@@ -44,6 +44,13 @@ public class Proprietario {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
 
     private String nome;

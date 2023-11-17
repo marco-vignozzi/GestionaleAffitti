@@ -120,20 +120,16 @@ public class MenuContratti extends Menu {
             String canone = scanner.next();
             System.out.print("Aggiungere possibilità di proroga? (S/n) ");
             confermaInput = scanner.next();
+
             boolean proroga;
-            if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                proroga = true;
-            }else {
-                proroga = false;
-            }
+            proroga = confermaInput.equals("s") || confermaInput.equals("S");
 
             System.out.println("Confermi i dati inseriti? (S/n) ");
             confermaInput = scanner.next();
             try {
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                    Contratto contratto = new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(),
+                    return new Contratto(Integer.parseInt(idImmobile), cfInquilino, controller.getCfProprietario(),
                             dataInizio, dataFine, dataPagamento, Float.parseFloat(canone), proroga);
-                    return contratto;
                 }
             }catch (NumberFormatException e) {
                 System.out.println("Sono stati inseriti dei valori non validi");
@@ -192,20 +188,12 @@ public class MenuContratti extends Menu {
                         case "5":
                             System.out.print("Inserire possibilità di sfratto (S/n): ");
                             input = scanner.next();
-                            if (input.equals("s") || input.equals("S")) {
-                                builder.sfratto(true);
-                            } else {
-                                builder.sfratto(false);
-                            }
+                            builder.sfratto(input.equals("s") || input.equals("S"));
                             continue;
                         case "6":
                             System.out.print("Inserire possibilità di proroga (S/n): ");
                             input = scanner.next();
-                            if (input.equals("s") || input.equals("S")) {
-                                builder.proroga(true);
-                            } else {
-                                builder.proroga(false);
-                            }
+                            builder.proroga(input.equals("s") || input.equals("S"));
                             continue;
                         case "x":
                             termina = true;

@@ -6,6 +6,7 @@ import dao.ImmobileDAO;
 import dao.InquilinoDAO;
 import dao.ProprietarioDAO;
 import model.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -36,29 +37,6 @@ public class ControllerTest {
 
     @BeforeEach
     void setUp() {
-        ProprietarioDAO proprietarioDAO = new ProprietarioDAO();
-        List<Proprietario> utenti = proprietarioDAO.selectAll("");
-        for(Proprietario utente : utenti) {
-            if(utente.getEmail().equals("example@gmail.com")) {
-            proprietarioDAO.delete(1, utente.getCf());
-            }
-        }
-        InquilinoDAO inquilinoDAO = new InquilinoDAO();
-        List<Inquilino> inquilini = inquilinoDAO.selectAll("A");
-        for(Inquilino i: inquilini) {
-            inquilinoDAO.delete(i.getID(), "A");
-        }
-        ContrattoDAO contrattoDAO = new ContrattoDAO();
-        List<Contratto> contratti = contrattoDAO.selectAll("A");
-        for(Contratto c: contratti) {
-            contrattoDAO.delete(c.getID(), "A");
-        }
-        ImmobileDAO immobileDAO = new ImmobileDAO();
-        List<Immobile> immobili = immobileDAO.selectAll("A");
-        for(Immobile immobile : immobili) {
-            int id = immobile.getID();
-            immobileDAO.delete(id, "");
-        }
         ImmobileBuilder immobileBuilder = new ImmobileBuilder();
         immobileBuilder.comune("example")
                 .foglio(1)
@@ -84,6 +62,33 @@ public class ControllerTest {
                 .totalePagato(0)
                 .telefono("example");
         this.inquilino = ibuilder.build();
+    }
+
+    @AfterEach
+    void tearDown(){
+        ProprietarioDAO proprietarioDAO = new ProprietarioDAO();
+        List<Proprietario> utenti = proprietarioDAO.selectAll("");
+        for(Proprietario utente : utenti) {
+            if(utente.getEmail().equals("example@gmail.com")) {
+                proprietarioDAO.delete(1, utente.getCf());
+            }
+        }
+        InquilinoDAO inquilinoDAO = new InquilinoDAO();
+        List<Inquilino> inquilini = inquilinoDAO.selectAll("A");
+        for(Inquilino i: inquilini) {
+            inquilinoDAO.delete(i.getID(), "A");
+        }
+        ContrattoDAO contrattoDAO = new ContrattoDAO();
+        List<Contratto> contratti = contrattoDAO.selectAll("A");
+        for(Contratto c: contratti) {
+            contrattoDAO.delete(c.getID(), "A");
+        }
+        ImmobileDAO immobileDAO = new ImmobileDAO();
+        List<Immobile> immobili = immobileDAO.selectAll("A");
+        for(Immobile immobile : immobili) {
+            int id = immobile.getID();
+            immobileDAO.delete(id, "");
+        }
     }
 
     @Test
@@ -139,10 +144,12 @@ public class ControllerTest {
             LocalDate prossimoPagamento = LocalDate.parse(c.getProssimoPagamento());
             if (!oggi.isAfter(dataFine) && !(oggi.getDayOfMonth() > prossimoPagamento.getDayOfMonth())) {
                 assertEquals(prossimoPagamento.toString(),
-                        oggi.getYear() + "-" + oggi.getMonthValue() + "-" + LocalDate.parse(contratto.getProssimoPagamento(), formatter).getDayOfMonth());
+                        oggi.getYear() + "-" + oggi.getMonthValue() + "-" +
+                                LocalDate.parse(contratto.getProssimoPagamento(), formatter).getDayOfMonth());
             } else if(oggi.getDayOfMonth() > prossimoPagamento.getDayOfMonth() && !oggi.isAfter(dataFine)) {
                 assertEquals(prossimoPagamento.toString(),
-                        oggi.getYear() + "-" + oggi.plusMonths(1).getMonthValue() + "-" + LocalDate.parse(contratto.getProssimoPagamento(), formatter).getDayOfMonth());
+                        oggi.getYear() + "-" + oggi.plusMonths(1).getMonthValue() + "-" +
+                                LocalDate.parse(contratto.getProssimoPagamento(), formatter).getDayOfMonth());
             }
             else {
                 assertEquals(c.getProssimoPagamento(), "");

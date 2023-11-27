@@ -327,7 +327,7 @@ public class Controller {
                 if(!c.getProssimoPagamento().isEmpty()) {
                     LocalDate prossimoPagamento = LocalDate.parse(c.getProssimoPagamento(), formatter);
                     if (!adesso.isAfter(LocalDate.parse(c.getDataFine(), formatter)) && adesso.isAfter(prossimoPagamento)) {
-                        prossimoPagamento = prossimoPagamento.plusMonths(1);
+                        prossimoPagamento = adesso.plusMonths(1).withDayOfMonth(prossimoPagamento.getDayOfMonth());
                         c.setProssimoPagamento(prossimoPagamento.toString());
                         // se aggiorno il prossimo pagamento aggiungo il canone al totale dovuto dall'inquilino
                         for (Inquilino i : inquilini) {

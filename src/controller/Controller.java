@@ -28,7 +28,7 @@ public class Controller {
             "del suo debito è ancora in sospeso. L''importo totale del debito, che la prego di estinguere al più presto, " +
             "è di {2, number, currency}.\nCordiali saluti,\n{3} {4}";
 
-    public boolean aggiungiUtente(Proprietario proprietario) {
+    public boolean aggiungiProprietario(Proprietario proprietario) {
         ProprietarioDAO proprietarioDao = new ProprietarioDAO();
         return proprietarioDao.insert(proprietario);
     }
@@ -121,7 +121,7 @@ public class Controller {
         return proprietarioDao.selectResoconti(proprietario.getCf());
     }
 
-    public boolean isUtente(String email, String password) {
+    public boolean isProprietario(String email, String password) {
         ProprietarioDAO proprietarioDao = new ProprietarioDAO();
         List<Proprietario> proprietari = proprietarioDao.selectAll("");
         for(Proprietario p: proprietari) {
@@ -327,7 +327,7 @@ public class Controller {
                 if(!c.getProssimoPagamento().isEmpty()) {
                     LocalDate prossimoPagamento = LocalDate.parse(c.getProssimoPagamento(), formatter);
                     if (!adesso.isAfter(LocalDate.parse(c.getDataFine(), formatter)) && adesso.isAfter(prossimoPagamento)) {
-                        prossimoPagamento = prossimoPagamento.plusMonths(1);
+                        prossimoPagamento = adesso.plusMonths(1).withDayOfMonth(prossimoPagamento.getDayOfMonth());
                         c.setProssimoPagamento(prossimoPagamento.toString());
                         // se aggiorno il prossimo pagamento aggiungo il canone al totale dovuto dall'inquilino
                         for (Inquilino i : inquilini) {

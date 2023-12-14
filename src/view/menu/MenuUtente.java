@@ -4,7 +4,6 @@ import controller.Controller;
 import model.Inquilino;
 import model.InquilinoBuilder;
 import model.Proprietario;
-import view.table.TabellaResoconto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +16,8 @@ public class MenuUtente extends Menu {
             " 4 - Password\n" +
             " x - Applica modifiche";
 
-    TabellaResoconto tabellaResoconto;
-
     public MenuUtente(Controller controller) {
         super(controller);
-        tabellaResoconto = new TabellaResoconto();
     }
 
     public void display() {

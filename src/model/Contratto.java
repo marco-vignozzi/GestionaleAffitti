@@ -1,8 +1,6 @@
 package model;
 
 
-import java.lang.reflect.Field;
-
 public class Contratto {
 
     public Contratto(int idImmobile, String cfInquilino, String cfProprietario, String dataInizio, String dataFine,
